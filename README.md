@@ -2,7 +2,7 @@
 
 
 ## ERR
-<img width="1315" alt="멍스파인더_EER" src="https://github.com/user-attachments/assets/8c4dd468-39f8-4cac-99e3-070463eee47e">
+<img width="1315" alt="멍스파인더_EER" src="https://github.com/user-attachments/assets/e6b6d4d3-0303-44bb-9b05-f13002c81f68">
 
 ## ⚙ Organization
 
