@@ -8,8 +8,7 @@ class Navigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PersistentTabView(
-        
+      return PersistentTabView(
         context,
         controller: _controller,
         screens: _screens(),
@@ -24,6 +23,7 @@ class Navigation extends StatelessWidget {
         isVisible: true,
         animationSettings: const NavBarAnimationSettings(
             navBarItemAnimation: ItemAnimationSettings( 
+
                 duration: Duration(milliseconds: 400),
                 curve: Curves.ease,
             ),
@@ -36,6 +36,7 @@ class Navigation extends StatelessWidget {
         navBarStyle: NavBarStyle.style8,
       );
   }
+
    List<Widget> _screens() {
     return [
       Scaffold(
