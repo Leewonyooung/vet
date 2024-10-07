@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/image_handler.dart';
 
-class LocationHandler extends ImageHandler{
+class LocationHandler extends ChatsHandler{
   double currentlat=0;
   double currentlng=0;
   double cliniclat=0;
@@ -15,7 +16,7 @@ class LocationHandler extends ImageHandler{
 
 
       // GPS 제공 동의 
-      checkLocationPermission() async {
+  checkLocationPermission() async {
     LocationPermission permission =
         await Geolocator.checkPermission(); 
     if (permission == LocationPermission.denied) {

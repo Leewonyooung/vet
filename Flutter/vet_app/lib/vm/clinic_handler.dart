@@ -32,9 +32,10 @@ class ClinicHandler extends TimeHandler{
       String? introduction = results[i][7] ?? '소개 없음';
       String? address = results[i][8]  ?? '주소 없음';
       String? phone = results[i][9] ?? '전화번호 없음';
+      String? image = results[i][10] ?? '이미지 없음';
 
 
-      returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!));}
+      returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!, image: image!));}
     search.value = returnData;
   }
 
@@ -58,9 +59,10 @@ class ClinicHandler extends TimeHandler{
       String? introduction = results[0][7];
       String? address = results[0][8];
       String? phone = results[0][9];
+      String? image = results[0][10];
 
 
-      returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!));
+      returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!, image: image!));
     detail.value = returnData;
       }
   }
