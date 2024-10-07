@@ -9,6 +9,7 @@ class Clinic {
   String introduction;
   String address;
   String phone;
+  String image;
 
   Clinic({
     this.id,
@@ -20,6 +21,21 @@ class Clinic {
     required this.endTime,
     required this.introduction,
     required this.address,
-    required this.phone
+    required this.phone,
+    required this.image,
   });
+
+  Clinic.fromMap(Map<dynamic, dynamic> res):
+    id = res['id'],
+    name = res['name'],
+    password = res['password'],
+    latitude = res['latitude'],
+    longitude = res['longitude'],
+    startTime = res['start_time'],
+    endTime = res['end_time'],
+    introduction = res['introduction'],
+    address = res['address'],
+    phone = res['phone'],
+    image = res['image']??'';
+
 }

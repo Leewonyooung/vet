@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.6
   firebase_core: ^3.6.0
   cloud_firestore: ^5.4.3
+  firebase_storage: ^12.3.2
   persistent_bottom_nav_bar: ^6.2.1 # 네비게이션 바
   http: ^1.2.2
   image_picker: ^1.1.2 #image picker
