@@ -38,22 +38,6 @@ class LocationHandler extends ImageHandler{
   }
 
 
-  polylines(cliniclat, cliniclng)async{
-    lines.add(Polyline(
-        polylineId: PolylineId("route1"),
-        visible: true,
-        patterns: [
-          PatternItem.dash(20.0),
-          PatternItem.gap(10)
-        ],
-        width: 3,
-        color: Colors.red,
-        points: [
-          LatLng(currentlat, currentlng),
-          LatLng(cliniclat, cliniclng)
-        ],
-      ));
-      update();
-  }  
+
 
 }
