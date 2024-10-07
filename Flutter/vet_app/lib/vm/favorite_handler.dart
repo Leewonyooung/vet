@@ -35,6 +35,7 @@ class FavoriteHandler extends ClinicHandler {
             String? introduction = results[i][9] ?? '소개 없음';
             String? address = results[i][10] ?? '주소 없음';
             String? phone = results[i][11] ?? '전화번호 없음';
+            String? image = results[i][12] ?? '전화번호 없음';
 
             returnData.add(Clinic(
               id: id,
@@ -47,6 +48,7 @@ class FavoriteHandler extends ClinicHandler {
               introduction: introduction!,
               address: address!,
               phone: phone!,
+              image: image!
             ));
           }
 

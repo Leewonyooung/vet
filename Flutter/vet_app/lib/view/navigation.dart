@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
-import 'package:vet_app/view/chat.dart';
+import 'package:vet_app/view/chat_room.dart';
 import 'package:vet_app/view/clinic_search.dart';
 import 'package:vet_app/view/favorite.dart';
 import 'package:vet_app/view/mypage.dart';
@@ -43,42 +43,6 @@ class Navigation extends StatelessWidget {
         navBarHeight: 60,
         navBarStyle: NavBarStyle.style8,
       ),
-import 'package:vet_app/view/chat_room.dart';
-import 'package:vet_app/view/chat_view.dart';
-import 'package:vet_app/view/reservation.dart';
-import 'package:vet_app/vm/vm_handler.dart';
-
-class Navigation extends StatelessWidget {
-  Navigation({super.key});
-  final PersistentTabController _controller = PersistentTabController(initialIndex: 0);
-  final vmHandler = Get.put(VmHandler());
-  @override
-  Widget build(BuildContext context) {
-    return PersistentTabView(
-      context,
-      controller: _controller,
-      screens: _screens(),
-      items: _items(),
-      handleAndroidBackButtonPress: true, 
-      resizeToAvoidBottomInset: true, 
-      stateManagement: true, 
-      hideNavigationBarWhenKeyboardAppears: true,
-      popBehaviorOnSelectedNavBarItemPress: PopBehavior.none,
-      padding: const EdgeInsets.only(top: 10),
-      backgroundColor: Colors.grey.shade900,
-      isVisible: true,
-      animationSettings: const NavBarAnimationSettings(
-        navBarItemAnimation: ItemAnimationSettings( 
-          duration: Duration(milliseconds: 400),
-          curve: Curves.ease,
-        ),
-        screenTransitionAnimation: ScreenTransitionAnimationSettings(
-          animateTabTransition: false,
-        ),
-      ),
-      confineToSafeArea: true,
-      navBarHeight: 60,
-      navBarStyle: NavBarStyle.style8,
     );
   }
 
@@ -198,7 +162,7 @@ class Navigation extends StatelessWidget {
       ),
       const ClinicSearch(),
       const QueryReservation(),
-      const Chat(),
+      ChatRoom(),
       const Mypage(),
     ];
   }
