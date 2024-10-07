@@ -1,3 +1,11 @@
-import 'package:vet_app/vm/user_handler.dart';
+import 'package:vet_app/vm/chat_handler.dart';
 
-class VmHandler extends UserHandler{}
+class VmHandler extends ChatsHandler{
+  
+  @override
+  void onInit() {
+    super.onInit();
+    getUserId();
+  }
+  
+}
