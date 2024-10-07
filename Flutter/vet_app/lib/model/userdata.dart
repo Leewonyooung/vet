@@ -1,15 +1,14 @@
-class User {
+class UserData {
   String? id;
   String password;
   String image;
   String name;
-  String email;
 
-  User({
+  UserData({
     this.id,
     required this.password,
     required this.image,
     required this.name,
-    required this.email,
   });
+  
 }
