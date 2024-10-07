@@ -54,6 +54,10 @@ dependencies:
   google_sign_in: ^6.2.1
   # 갤러리
   carousel_slider: ^5.0.0 
+  # getStroage
+  get_storage: ^2.1.1
+  #googlemap
+  google_maps_flutter: ^2.9.0
 
 dev_dependencies:
   flutter_test:

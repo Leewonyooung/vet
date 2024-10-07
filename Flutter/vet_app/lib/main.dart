@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/firebase_options.dart';
+import 'package:vet_app/view/clinic_search.dart';
 import 'package:vet_app/view/navigation.dart';
 
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Navigation(),
+      home: ClinicSearch(),
     );
   }
 }
