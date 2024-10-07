@@ -4,8 +4,7 @@ import 'package:get/get.dart';
 import 'package:vet_app/firebase_options.dart';
 import 'package:vet_app/view/navigation.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
