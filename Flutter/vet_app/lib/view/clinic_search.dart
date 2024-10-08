@@ -40,7 +40,7 @@ class ClinicSearch extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       height: 700,
                       child: 
-                         ListView.builder(
+                        ListView.builder(
                           itemCount: vmHandler.search.length,
                           itemBuilder: (context, index) {
                             final clinic = vmHandler.search;
@@ -66,8 +66,7 @@ class ClinicSearch extends StatelessWidget {
                               ),
                             );
                           },
-                          ),
-                    
+                        ),
                     ),
                   ],
                 );
