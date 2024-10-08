@@ -47,7 +47,7 @@ class ClinicSearch extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             height: 100,
                             child: GestureDetector(
-                              onTap: (){Get.to(ClinicInfo(),
+                              onTap: (){Get.to(const ClinicInfo(),
                               arguments:[
                                 clinic[index].id,]
                               );

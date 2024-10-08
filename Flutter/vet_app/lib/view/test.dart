@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/vm_handler.dart';
 
 class Test extends StatelessWidget {
   Test({super.key});
-  var value = Get.arguments??"__";
+  final value = Get.arguments??"__";
 
   @override
   Widget build(BuildContext context) {

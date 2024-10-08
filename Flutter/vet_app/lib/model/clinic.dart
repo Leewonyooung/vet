@@ -1,5 +1,5 @@
 class Clinic {
-  String? id;
+  String id;
   String name;
   String password;
   double latitude;
@@ -12,7 +12,7 @@ class Clinic {
   String image;
 
   Clinic({
-    this.id,
+    required this.id,
     required this.name,
     required this.password,
     required this.latitude,

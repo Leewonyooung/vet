@@ -128,6 +128,26 @@ async def all_clinic():
     conn.close()
     return {'results' : rows} # 결과 값 = list(key값 x)
 
+"""
+author: 이원영
+Fixed: 2024/10/7
+Usage: 채팅창 보여줄때 id > name
+"""
+@router.get('/select_clinic_name')
+async def all_clinic(name:str):
+    # name= ['adfki125', 'adkljzci9786']
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select name from clinic where id = %s"
+        curs.execute(sql,(name))
+        rows = curs.fetchall()
+        conn.close()
+        return {'results' : rows[0]}
+    except Exception as e:
+        conn.close()
+        print("Error :",e)
+        return {"result" : "Error"}
 
 # 병원 검색 활용
 @router.get('/select_search')

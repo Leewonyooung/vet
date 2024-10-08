@@ -14,7 +14,6 @@ class Login extends StatelessWidget {
       appBar: AppBar(
         title: const Text('title'),
       ),
-
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

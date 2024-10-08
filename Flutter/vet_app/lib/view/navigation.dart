@@ -15,7 +15,7 @@ class Navigation extends StatelessWidget {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
 
-  VmHandler vmHandler = Get.put(VmHandler());
+  final VmHandler vmHandler = Get.put(VmHandler());
   
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vet_app/vm/chat_handler.dart';
-import 'package:vet_app/vm/image_handler.dart';
 
 class LocationHandler extends ChatsHandler{
   double currentlat=0;
@@ -11,10 +9,6 @@ class LocationHandler extends ChatsHandler{
   double cliniclng=0;
 
   Set <Polyline> lines = {};
-
-
-
-
       // GPS 제공 동의 
   checkLocationPermission() async {
     LocationPermission permission =

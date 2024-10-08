@@ -21,7 +21,7 @@ class ClinicLocation extends StatelessWidget {
         body: GetBuilder<VmHandler>(
           builder: (controller) {
             return Center(
-              child: controller.currentlat==0 || controller.currentlng == 0? CircularProgressIndicator() : 
+              child: controller.currentlat==0 || controller.currentlng == 0? const CircularProgressIndicator() : 
                 GoogleMap(
                       mapType: MapType.hybrid,
                       initialCameraPosition: CameraPosition(
@@ -40,7 +40,7 @@ class ClinicLocation extends StatelessWidget {
                           position: LatLng(value[1], value[2])
                           ),
                           Marker(
-                            markerId: MarkerId('현위치'),
+                            markerId: const MarkerId('현위치'),
                             position: LatLng(controller.currentlat, controller.currentlng),
                             ),
                           },

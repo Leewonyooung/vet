@@ -38,7 +38,7 @@ class ClinicInfo extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               IconButton(
-                                  onPressed: () => Get.to(ClinicLocation(),
+                                  onPressed: () => Get.to(const ClinicLocation(),
                                           arguments: [
                                             result[0].name,
                                             result[0].latitude,
@@ -59,7 +59,7 @@ class ClinicInfo extends StatelessWidget {
                             const Icon(Icons.watch_later_outlined),
                             Text("${result[0].startTime}~${result[0].endTime}"),
                             const Icon(Icons.pin_drop_outlined),
-                            result[0].address=='null' ? Text('주소 미입력') : Text(result[0].address.substring(0, 8))
+                            result[0].address=='null' ? const Text('주소 미입력') : Text(result[0].address.substring(0, 8))
                           ],
                         ),
                         Padding(

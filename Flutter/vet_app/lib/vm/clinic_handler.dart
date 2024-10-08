@@ -11,11 +11,12 @@ class ClinicHandler extends TimeHandler{
   var detail = <Clinic>[].obs;
 
 
+
     // 병원 전체 목록
   getAllClinic()async{
     var url = Uri.parse('http://127.0.0.1:8000/clinic/select_clinic');
     var response = await http.get(url);
-    search.clear();
+    // search.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];
     List <Clinic> returnData = [];
@@ -35,7 +36,6 @@ class ClinicHandler extends TimeHandler{
       String? image = results[i][10] ?? '이미지 없음';
       returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!, image: image!));}
     search.value = returnData;
-    print(search);
   }
 
 //  // 병원 상세 정보

@@ -134,14 +134,14 @@ class ChatView extends StatelessWidget {
   }
 
   inputChat() async{
-    Chats chat = Chats(
+    Chats inputchat = Chats(
       reciever: vmHandler.currentClinicId.value,
       sender:vmHandler.box.read('userId'),
       text:chatController.text.trim(),
       timestamp: DateTime.now().toString(),
       );
     if(chatController.text !="" && chatController.text.isNotEmpty){
-      await vmHandler.addChat(chat);
+      await vmHandler.addChat(inputchat);
     }
     chatController.text='';
   }
