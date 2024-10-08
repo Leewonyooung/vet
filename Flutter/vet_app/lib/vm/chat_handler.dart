@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:vet_app/model/chatroom.dart';
 import 'package:vet_app/model/chats.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/vm/treatment_handler.dart';
+
 class ChatsHandler extends TreatmentHandler{
   final chats = <Chats>[].obs;
   final rooms = <Chatroom>[].obs;
@@ -14,7 +13,7 @@ class ChatsHandler extends TreatmentHandler{
   final lastchatroom = <Chatroom>[].obs;
   final lastChats = <Chats>[].obs;
 
-
+  List <Chatroom> result = [];
   ScrollController listViewContoller = ScrollController();
 
   final CollectionReference _rooms= FirebaseFirestore.instance.collection('chat');
@@ -37,28 +36,21 @@ class ChatsHandler extends TreatmentHandler{
     );
   }
 
-  queryLastChat(){
-    List <Chatroom> result = [];
-    _rooms.snapshots().listen((event) {
-      event.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>; 
-        print(data);
-        Chatroom chatroom = Chatroom(clinic: data['clinic'], user: data['user'], image: data['image']);
-        print(chatroom);
-        result.add(chatroom);
-        print(result);
-        });
-        },
-        // (doc) => Chatroom(clinic: doc.get('clinic'), user: doc.get('user'), image: doc.get('image')),).toList();
-      );
-      lastchatroom.value = result;
-    print(lastchatroom);
-    _rooms.doc('123_1234').collection('chats').orderBy('timestamp',descending: true).snapshots().listen((event) {
-      print(event.docs.first.data());
-      // print(event.docs.map((doc) =>  Chats.fromMap(doc.data(), doc.id),).toList());
-      lastChats.value = event.docs.map((doc) =>  Chats.fromMap(doc.data(), doc.id),).toList();
-      },
-    );
+  queryLastChat() async{
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance.collection("chat").get();
+    var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
+    for(int i = 0; i < tempresult.length; i++){
+      Chatroom chatroom = Chatroom(clinic: tempresult[i]['clinic'], user: tempresult[i]['user'], image: tempresult[i]['image']);
+      result.add(chatroom);
+    }
+    for(int i = 0; i < result.length; i++){
+      _rooms.doc("${result[i].clinic}_${box.read('userId')}").collection('chats').orderBy('timestamp',descending: false).limit(1).snapshots().listen((event) {
+        for(int i = 0; i < event.docs.length; i++){
+          var chat = event.docs[i].data();
+          lastChats.add(Chats(reciever: chat['reciever'], sender: chat['sender'], text: chat['text'], timestamp: chat['timestamp']));
+        }
+      },);
+    }
   }
 
   makeChatRoom() async{
@@ -77,9 +69,7 @@ class ChatsHandler extends TreatmentHandler{
         'sender': chat.sender,
         'text':chat.text,
         'timestamp':chat.timestamp,
-      }
-            
-      
+      } 
     );
   }
 }

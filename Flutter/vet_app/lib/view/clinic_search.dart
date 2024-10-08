@@ -10,7 +10,7 @@ class ClinicSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    VmHandler vmHandler = Get.put((VmHandler()));
+    VmHandler vmHandler = Get.find();
     return Scaffold(
       appBar: AppBar(
         title: const Text('검색'),
@@ -33,54 +33,48 @@ class ClinicSearch extends StatelessWidget {
                         controller: searchKeywardController,
                         onChanged: (value){
                           //
-                          } ,
+                        },
                       ),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      height: 700,
-                      child: 
-                         ListView.builder(
-                          itemCount: vmHandler.search.length,
-                          itemBuilder: (context, index) {
-                            final clinic = vmHandler.search;
-                            return SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: 100,
-                              child: GestureDetector(
-                                onTap: (){Get.to(ClinicInfo(),
-                                arguments:[
-                                  clinic[index].id,]
-                                );
-                                },
-                                child: Card(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      index % 2 ==0 ? const Icon(Icons.pets) : const Icon(Icons.local_hospital),
-                                      Text(clinic[index].name),
-                                      clinic[index].address.length >4 ? Text(clinic[index].address.substring(0,8)) : Text(clinic[index].address),
-                                    ],
-                                  ),
+                      height: MediaQuery.of(context).size.height/1.5,
+                      child: ListView.builder(
+                        itemCount: vmHandler.search.length,
+                        itemBuilder: (context, index) {
+                          final clinic = vmHandler.search;
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: 100,
+                            child: GestureDetector(
+                              onTap: (){Get.to(ClinicInfo(),
+                              arguments:[
+                                clinic[index].id,]
+                              );
+                              },
+                              child: Card(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    index % 2 ==0 ? const Icon(Icons.pets) : const Icon(Icons.local_hospital),
+                                    Text(clinic[index].name),
+                                    clinic[index].address.length >4 ? Text(clinic[index].address.substring(0,8)) : Text(clinic[index].address),
+                                  ],
                                 ),
                               ),
-                            );
-                          },
-                          ),
-                    
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 );
               }
             }
-            );
+          );
         },
       )
     );
   }
-
-
-//fff
-
 
 }

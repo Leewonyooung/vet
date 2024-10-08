@@ -5,10 +5,10 @@ Fixed:
 Usage: 
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import  APIRouter, HTTPException 
 import pymysql
 
-app = FastAPI()
+router = APIRouter()
 
 # MySQL 연결 함수
 def connection():
@@ -22,7 +22,7 @@ def connection():
     return conn
 
 # 사용자의 즐겨찾기 목록 불러오기
-@app.get('/favorite_clinics')
+@router.get('/favorite_clinics')
 async def get_favorite_clinics(user_id: str):
     conn = connection()
     curs = conn.cursor()
@@ -38,7 +38,7 @@ async def get_favorite_clinics(user_id: str):
     return {'results': rows}
 
 # 즐겨찾기 추가
-@app.post('/add_favorite')
+@router.post('/add_favorite')
 async def add_favorite(user_id: str, clinic_id: str):
     conn = connection()
     curs = conn.cursor()
@@ -60,7 +60,7 @@ async def add_favorite(user_id: str, clinic_id: str):
     return {"message": "즐겨찾기 병원이 추가되었습니다."}
 
 # 즐겨찾기 삭제
-@app.delete('/delete_favorite')
+@router.delete('/delete_favorite')
 async def delete_favorite(user_id: str, clinic_id: str):
     conn = connection()
     curs = conn.cursor()
@@ -76,6 +76,3 @@ async def delete_favorite(user_id: str, clinic_id: str):
 
     return {"message": "즐겨찾기 병원이 삭제되었습니다."}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host='127.0.0.1', port=8000)
