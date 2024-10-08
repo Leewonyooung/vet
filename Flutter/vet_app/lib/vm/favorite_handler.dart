@@ -11,7 +11,7 @@ class FavoriteHandler extends ClinicHandler {
   Future<void> getFavoriteClinics(String userId) async {
     try {
       var url = Uri.parse(
-          'http://127.0.0.1:8000/favorite_clinics?user_id=$userId'); // 사용자 ID 기반 즐겨찾기 요청
+          'http://127.0.0.1:8000/favorite/favorite_clinics?user_id=$userId'); // 사용자 ID 기반 즐겨찾기 요청
       var response = await http.get(url);
 
       // 응답 상태가 성공적인지 확인
@@ -71,7 +71,7 @@ class FavoriteHandler extends ClinicHandler {
   // 즐겨찾기 병원 추가
   Future<void> addFavoriteClinic(String userId, String clinicId) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/add_favorite?user_id=$userId&clinic_id=$clinicId');
+        'http://127.0.0.1:8000/favorite/add_favorite?user_id=$userId&clinic_id=$clinicId');
     var response = await http.post(url);
     if (response.statusCode == 200) {
       print("즐겨찾기 병원 추가 성공");
@@ -84,7 +84,7 @@ class FavoriteHandler extends ClinicHandler {
   Future<void> removeFavoriteClinic(String userId, String clinicId) async {
     try {
       var url = Uri.parse(
-          'http://127.0.0.1:8000/delete_favorite?user_id=$userId&clinic_id=$clinicId');
+          'http://127.0.0.1:8000/favorite/delete_favorite?user_id=$userId&clinic_id=$clinicId');
       var response = await http.delete(url);
 
       if (response.statusCode == 200) {

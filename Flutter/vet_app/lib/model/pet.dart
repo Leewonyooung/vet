@@ -7,6 +7,7 @@ class Pet {
   String birthday;
   String features;
   String gender;
+  String? image;
 
   Pet({
     this.id,
@@ -17,5 +18,6 @@ class Pet {
     required this.birthday,
     required this.features,
     required this.gender,
+    this.image,
   });
 }

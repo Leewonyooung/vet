@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:vet_app/vm/pet_handler.dart';
+import 'package:vet_app/vm/login_handler.dart';
+import 'package:vet_app/model/pet.dart';
 
-class PetRegister extends StatefulWidget {
-  const PetRegister({super.key});
+class PetRegister extends StatelessWidget {
+  PetRegister({super.key});
 
-  @override
-  _PetRegisterState createState() => _PetRegisterState();
-}
+  final PetHandler petHandler = Get.put(PetHandler());
+  final LoginHandler loginHandler = Get.find<LoginHandler>();
 
-class _PetRegisterState extends State<PetRegister> {
-  final _formKey = GlobalKey<FormState>();
-
-  // 폼 필드에 대한 컨트롤러
-  final TextEditingController _registrationNumberController =
+  final TextEditingController idController = TextEditingController();
+  final TextEditingController speciesTypeController = TextEditingController();
+  final TextEditingController speciesCategoryController =
       TextEditingController();
-  final TextEditingController _userIdController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _dateOfBirthController = TextEditingController();
-  final TextEditingController _featuresController = TextEditingController();
-  final TextEditingController _imageController = TextEditingController();
-
-  // 드롭다운 값 관리
-  String? _speciesType;
-  String? _speciesCategory;
-  String? _gender;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController birthdayController = TextEditingController();
+  final TextEditingController featuresController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
+  final TextEditingController imageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,203 +28,87 @@ class _PetRegisterState extends State<PetRegister> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              // 등록번호 입력
-              TextFormField(
-                controller: _registrationNumberController,
-                decoration: const InputDecoration(
-                  labelText: '등록번호',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '등록번호를 입력하세요';
+        child: Column(
+          children: [
+            TextField(
+              controller: idController,
+              decoration: const InputDecoration(labelText: 'ID'),
+            ),
+            TextField(
+              controller: speciesTypeController,
+              decoration: const InputDecoration(labelText: '종류'),
+            ),
+            TextField(
+              controller: speciesCategoryController,
+              decoration: const InputDecoration(labelText: '세부 종류'),
+            ),
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: '이름'),
+            ),
+            TextField(
+              controller: birthdayController,
+              decoration: const InputDecoration(labelText: '생일'),
+            ),
+            TextField(
+              controller: featuresController,
+              decoration: const InputDecoration(labelText: '특징'),
+            ),
+            TextField(
+              controller: genderController,
+              decoration: const InputDecoration(labelText: '성별'),
+            ),
+            TextField(
+              controller: imageController,
+              decoration: const InputDecoration(labelText: '이미지 URL (선택)'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // 로그인한 사용자의 ID(email)를 사용
+                String userId = loginHandler.getStoredEmail(); // 저장된 이메일 가져오기
+                if (userId.isEmpty) {
+                  Get.snackbar('오류', '로그인이 필요합니다.'); // 로그인되지 않은 경우 처리
+                  return;
+                }
+
+                // 입력 필드 값 가져오기
+                String id = idController.text;
+                String speciesType = speciesTypeController.text;
+                String speciesCategory = speciesCategoryController.text;
+                String name = nameController.text;
+                String birthday = birthdayController.text;
+                String features = featuresController.text;
+                String gender = genderController.text;
+                String image = imageController.text;
+
+                // Pet 모델 생성
+                Pet newPet = Pet(
+                  id: id,
+                  userId: userId, // 로그인된 사용자의 ID 사용
+                  speciesType: speciesType,
+                  speciesCategory: speciesCategory,
+                  name: name,
+                  birthday: birthday,
+                  features: features,
+                  gender: gender,
+                  image: image,
+                );
+
+                // Pet 등록 핸들러 호출
+                petHandler.addPet(newPet).then((success) {
+                  if (success) {
+                    Get.snackbar('등록 완료', '반려동물이 성공적으로 등록되었습니다.');
+                  } else {
+                    Get.snackbar('등록 실패', '반려동물 등록에 실패했습니다.');
                   }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // 사용자 ID 입력
-              TextFormField(
-                controller: _userIdController,
-                decoration: const InputDecoration(
-                  labelText: '사용자 ID',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '사용자 ID를 입력하세요';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // 동물 종류 선택 (species_type)
-              DropdownButtonFormField<String>(
-                value: _speciesType,
-                decoration: const InputDecoration(
-                  labelText: '동물 종류',
-                  border: OutlineInputBorder(),
-                ),
-                items: ['강아지'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _speciesType = newValue;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '동물 종류를 선택하세요';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // 동물 카테고리 선택 (species_category)
-              DropdownButtonFormField<String>(
-                value: _speciesCategory,
-                decoration: const InputDecoration(
-                  labelText: '동물 카테고리',
-                  border: OutlineInputBorder(),
-                ),
-                items: ['허스키', '샤모예드', '시바', '푸들', '비숑'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _speciesCategory = newValue;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '동물 카테고리를 선택하세요';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // 이름 입력
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: '이름',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '이름을 입력하세요';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // 생년월일 입력
-              TextFormField(
-                controller: _dateOfBirthController,
-                decoration: const InputDecoration(
-                  labelText: '생년월일',
-                  hintText: 'YYYY-MM-DD',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '생년월일을 입력하세요';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // 특징 입력
-              TextFormField(
-                controller: _featuresController,
-                decoration: const InputDecoration(
-                  labelText: '특징',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // 성별 선택
-              DropdownButtonFormField<String>(
-                value: _gender,
-                decoration: const InputDecoration(
-                  labelText: '성별',
-                  border: OutlineInputBorder(),
-                ),
-                items: ['암컷', '수컷'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _gender = newValue;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '성별을 선택하세요';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // 이미지 URL 입력
-              TextFormField(
-                controller: _imageController,
-                decoration: const InputDecoration(
-                  labelText: '이미지 URL',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // 제출 버튼
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // 추후에 DB 저장 로직 추가 예정
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('반려동물이 등록되었습니다.')),
-                    );
-                  }
-                },
-                child: const Text('등록'),
-              ),
-            ],
-          ),
+                });
+              },
+              child: const Text('등록하기'),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _registrationNumberController.dispose();
-    _userIdController.dispose();
-    _nameController.dispose();
-    _dateOfBirthController.dispose();
-    _featuresController.dispose();
-    _imageController.dispose();
-    super.dispose();
   }
 }
