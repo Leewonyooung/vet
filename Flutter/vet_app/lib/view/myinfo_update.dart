@@ -30,6 +30,10 @@ class MyinfoUpdate extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      if(userHandler.userImageFile == null){
+                      controller.updateUserName(nameController.text.trim(),'test');
+                      }else{
+                      }
                   }, 
                   child: const Text('저장')
                   )
@@ -41,7 +45,5 @@ class MyinfoUpdate extends StatelessWidget {
 
     );
   }
-
-
-  
+ 
 }

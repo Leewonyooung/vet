@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vet_app/model/userdata.dart';
 import 'package:vet_app/vm/time_handler.dart';
 import 'package:http/http.dart' as http;
 
 class UserHandler extends TimeHandler{
-  final box = GetStorage();
   var mypageUserInfo = <UserData>[].obs;
   String nameController =""; // 유저 이름 수정 텍스트필드
   XFile? userImageFile; 
@@ -20,9 +18,9 @@ class UserHandler extends TimeHandler{
     await box.write('userId', 'test');
   }
 
-  selectMyinfo()async{
+  selectMyinfo(String updatekey)async{
     await getUserId();
-    var url = Uri.parse('http://127.0.0.1:8000/mypage/select_mypage?id=${box.read('userId')}');
+    var url = Uri.parse('http://127.0.0.1:8000/mypage/select_mypage?id=$updatekey');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'][0];
@@ -36,7 +34,7 @@ class UserHandler extends TimeHandler{
   }
   
 
-
+  // user image 선택
   getImageFromDevice(imageSource)async{
   final XFile? pickedFile = await userImagePicker.pickImage(source: imageSource); //image 불러오기
   if(pickedFile != null){
@@ -46,5 +44,21 @@ class UserHandler extends TimeHandler{
     }
   }
 
-  
+
+  // user name update
+  updateUserName(String name, String id)async{
+  var url = Uri.parse('http://127.0.0.1:8000/mypage/name_update?name=$name&id=$id');
+  await http.get(url);
+  update();
+  // var dataConvertedData = json.decode(utf8.decode(response.bodyBytes));
+  // var results = dataConvertedData['result'];
+}
+
+  updateJSONDataAll() async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/mypage/all_update?=');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['result'];
+  }
 }
