@@ -8,7 +8,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vet_app/model/userdata.dart';
 import 'package:vet_app/view/navigation.dart';
 import 'package:http/http.dart' as http;
-import 'package:vet_app/view/test.dart';
 
 class LoginHandler extends GetxController{
   final box = GetStorage();
@@ -55,14 +54,11 @@ class LoginHandler extends GetxController{
 
     userEmail = gUser.email;
     userName = gUser.displayName!;
-    print(userEmail);
-    print(userName);
     // check whether the account is registered 
     bool isUserRegistered = await checkDatabase(userEmail);
-    print(isUserRegistered);
     // if the account is trying to login on the first time add the google account information to the mySQL DB
     if (!isUserRegistered){      
-      insertData(userEmail, userName!);
+      insertData(userEmail, userName);
     }
 
     // firbase Create a new credential
@@ -76,10 +72,8 @@ class LoginHandler extends GetxController{
         await FirebaseAuth.instance.signInWithCredential(credential);
 
     // Navigate to Navigation page after successful sign-in
-    if (userCredential != null) {
-      Get.to(Test(), arguments: [userEmail, userName]); // Navigate to home page
-    }
-    // print(userCredential);
+    Get.to(Navigation(), arguments: [userEmail, userName]); // Navigate to home page
+      // print(userCredential);
       // Return the UserCredential after successful sign-in
     return userCredential;
   }
@@ -140,9 +134,6 @@ class LoginHandler extends GetxController{
       //   name: name
       //   ));
       // userdata.value = returnResult;
-      print('ok');
-    }else{
-      print('no');
-    }
   }
+}
 }

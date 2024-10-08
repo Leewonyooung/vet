@@ -18,7 +18,7 @@ class ClinicSearch extends StatelessWidget {
       body: GetBuilder<VmHandler>(
         builder: (controller) {
           return FutureBuilder(
-            future: controller.getAllClinic(),// 
+            future: controller.getAllClinic(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -41,14 +41,15 @@ class ClinicSearch extends StatelessWidget {
                       height: 700,
                       child: 
                          ListView.builder(
-                          itemCount: vmHandler.search.length,
+                          itemCount: vmHandler.clinicSearch.length,
                           itemBuilder: (context, index) {
-                            final clinic = vmHandler.search;
+                            final clinic = vmHandler.clinicSearch;
                             return SizedBox(
                               width: MediaQuery.of(context).size.width,
                               height: 100,
                               child: GestureDetector(
-                                onTap: (){Get.to(ClinicInfo(),
+                                onTap: (){Get.to(
+                                  const ClinicInfo(),
                                 arguments:[
                                   clinic[index].id,]
                                 );

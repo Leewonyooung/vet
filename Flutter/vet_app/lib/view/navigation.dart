@@ -160,7 +160,7 @@ class Navigation extends StatelessWidget {
           ),
         ),
       ),
-       ClinicSearch(),
+      ClinicSearch(),
       const QueryReservation(),
       ChatRoom(),
       const Mypage(),

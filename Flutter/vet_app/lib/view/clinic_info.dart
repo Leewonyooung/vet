@@ -8,8 +8,8 @@ class ClinicInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? value = Get.arguments[0] ??"__";
     VmHandler vmHandler = Get.put(VmHandler());
+    var value = Get.arguments[0] ??"__";
     return Scaffold(
       appBar: AppBar(
         title: const Text('검색 결과'),
@@ -17,9 +17,9 @@ class ClinicInfo extends StatelessWidget {
       body: GetBuilder<VmHandler>(
         builder: (controller) {
           return FutureBuilder(
-              future: controller.getClinicDetail(value!),
+              future: controller.getClinicDetail(value),
               builder: (context, snapshot) {
-                final result = vmHandler.detail;
+                final result = vmHandler.clinicDetail;
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
@@ -38,7 +38,7 @@ class ClinicInfo extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               IconButton(
-                                  onPressed: () => Get.to(ClinicLocation(),
+                                  onPressed: () => Get.to(const ClinicLocation(),
                                           arguments: [
                                             result[0].name,
                                             result[0].latitude,
@@ -59,7 +59,7 @@ class ClinicInfo extends StatelessWidget {
                             const Icon(Icons.watch_later_outlined),
                             Text("${result[0].startTime}~${result[0].endTime}"),
                             const Icon(Icons.pin_drop_outlined),
-                            result[0].address=='null' ? Text('주소 미입력') : Text(result[0].address.substring(0, 8))
+                            result[0].address=='null' ?  Text('주소 미입력') : Text(result[0].address.substring(0, 8))
                           ],
                         ),
                         Padding(
