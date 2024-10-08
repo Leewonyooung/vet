@@ -41,7 +41,7 @@ class ClinicLocation extends StatelessWidget {
                         infoWindow: InfoWindow(
                             title: value[0], snippet: value[0]), //병원 이름 표시
                         markerId: MarkerId(value[0]),
-                        position: LatLng(value[1], value[2])),
+                        position: LatLng(double.parse(value[1]), double.parse(value[2]))),
                     Marker(
                       markerId: const MarkerId('병원'),
                       position:

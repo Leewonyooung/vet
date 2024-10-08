@@ -39,6 +39,7 @@ class ChatsHandler extends TreatmentHandler {
   }
 
   queryLastChat() async {
+    print(box.read('userId'));
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await FirebaseFirestore.instance.collection("chat").get();
     var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
@@ -66,6 +67,7 @@ class ChatsHandler extends TreatmentHandler {
                 text: chat['text'],
                 timestamp: chat['timestamp']));
           }
+          print(lastChats);
         },
       );
     }
