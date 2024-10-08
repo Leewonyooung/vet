@@ -60,6 +60,9 @@ class LoginHandler extends GetxController {
 
     userEmail = gUser.email;
     userName = gUser.displayName!;
+    // 이메일 정보를 저장
+    box.write('userEmail', userEmail);
+    box.write('userName', userName);
     print(gUser.email);
 
     // check whether the account is registered (안창빈)
@@ -76,6 +79,7 @@ class LoginHandler extends GetxController {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+    
 
     // Sign in to Firebase with the Google credentials (안창빈)
     final UserCredential userCredential =
@@ -111,7 +115,7 @@ class LoginHandler extends GetxController {
   // insert the account information to mysql(db) (안창빈)
   userloginInsertData(String userEmail, String userName) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/user/insertuser?id=$userEmail&password=""&image=images/usericon.jpg&name=$userName&phone=""');
+        'http://127.0.0.1:8000/user/insertuser?id=$userEmail&password=""&image="images/usericon.jpg"&name=$userName&phone=""');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];

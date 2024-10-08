@@ -9,7 +9,7 @@ class ClinicInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     VmHandler vmHandler = Get.put(VmHandler());
-    var value = Get.arguments[0] ?? "__";
+    var value = Get.arguments[0] ??"__";
     return Scaffold(
       appBar: AppBar(
         title: const Text('검색 결과'),
@@ -38,14 +38,14 @@ class ClinicInfo extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               IconButton(
-                                  onPressed: () => Get.to(
-                                          const ClinicLocation(),
+                                  onPressed: () => Get.to(const ClinicLocation(),
                                           arguments: [
                                             result[0].name,
                                             result[0].latitude,
                                             result[0].longitude,
                                             result[0].address
-                                          ]),
+                                          ]
+                                          ),
                                   icon: const Icon(Icons.pin_drop_outlined)),
                               IconButton(
                                   onPressed: () {},
@@ -59,9 +59,7 @@ class ClinicInfo extends StatelessWidget {
                             const Icon(Icons.watch_later_outlined),
                             Text("${result[0].startTime}~${result[0].endTime}"),
                             const Icon(Icons.pin_drop_outlined),
-                            result[0].address == 'null'
-                                ? const Text('주소 미입력')
-                                : Text(result[0].address.substring(0, 8))
+                            result[0].address=='null' ? const Text('주소 미입력') : Text(result[0].address.substring(0, 8))
                           ],
                         ),
                         Padding(

@@ -14,7 +14,7 @@ class UserHandler extends TimeHandler {
 
   getUserId() async {
     // api를 통해 userID가져옴
-    await box.write('userId', 'test');
+    await box.write('userId', '1234');
   }
 
   selectMyinfo() async {
