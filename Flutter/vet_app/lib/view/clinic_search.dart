@@ -40,9 +40,9 @@ class ClinicSearch extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height/1.5,
                       child: ListView.builder(
-                        itemCount: vmHandler.search.length,
+                        itemCount: vmHandler.clinicSearch.length,
                         itemBuilder: (context, index) {
-                          final clinic = vmHandler.search;
+                          final clinic = vmHandler.clinicSearch;
                           return SizedBox(
                             width: MediaQuery.of(context).size.width,
                             height: 100,

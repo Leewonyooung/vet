@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vet_app/model/userdata.dart';
 import 'package:vet_app/vm/time_handler.dart';
 import 'package:http/http.dart' as http;
 
 class UserHandler extends TimeHandler{
-  final box = GetStorage();
   var mypageUserInfo = <UserData>[].obs;
   String nameController =""; // 유저 이름 수정 텍스트필드
   XFile? userImageFile; 
@@ -36,7 +34,6 @@ class UserHandler extends TimeHandler{
   }
   
 
-
   getImageFromDevice(imageSource)async{
   final XFile? pickedFile = await userImagePicker.pickImage(source: imageSource); //image 불러오기
   if(pickedFile != null){
@@ -45,6 +42,4 @@ class UserHandler extends TimeHandler{
     update();
     }
   }
-
-  
 }

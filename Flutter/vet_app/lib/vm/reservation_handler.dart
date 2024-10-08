@@ -12,7 +12,7 @@ class ReservationHandler extends PetHandler{
   getReservation() async{
     var url = Uri.parse('http://127.0.0.1:8000/');
     var response = await http.get(url);
-    search.clear();
+    clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];
     List <Reservation> returnData = [];
@@ -21,7 +21,7 @@ class ReservationHandler extends PetHandler{
   getQuickReservation() async{
     var url = Uri.parse('http://127.0.0.1:8000/');
     var response = await http.get(url);
-    search.clear();
+    clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];
     List <AvailableTime> returnData = [];

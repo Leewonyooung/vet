@@ -33,7 +33,6 @@ class PetHandler extends FavoriteHandler {
         throw Exception("Failed to load pets");
       }
     } catch (e) {
-      print("Error fetching pets: $e");
       pets.clear(); // 오류 발생 시 pets 리스트 초기화
     }
   }

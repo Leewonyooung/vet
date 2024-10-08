@@ -40,8 +40,6 @@ class LocationHandler extends ChatsHandler{
     Position position = await Geolocator.getCurrentPosition(); 
     currentlat = position.latitude; 
     currentlng = position.longitude;
-    print(currentlat);
-    print(currentlng);
     // print("현위치 :$currentlat");
     // print("현위치 $currentlng");
     update();
@@ -92,7 +90,7 @@ class LocationHandler extends ChatsHandler{
   route = polyline.map((point) => LatLng(point.latitude ,point.longitude),).toList();
   lines.add(
     Polyline(
-      polylineId: PolylineId('route'),
+      polylineId: const PolylineId('route'),
       points: route,
       color: Colors.red
       ),

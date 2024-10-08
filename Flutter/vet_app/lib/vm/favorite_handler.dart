@@ -63,47 +63,39 @@ class FavoriteHandler extends ClinicHandler {
         throw Exception('데이터를 불러오는 데 실패했습니다: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
       // 필요 시 에러 메시지를 UI에 전달
     }
   }
 
   // 즐겨찾기 병원 추가
-  Future<void> addFavoriteClinic(String userId, String clinicId) async {
+  addFavoriteClinic(String userId, String clinicId) async {
     var url = Uri.parse(
         'http://127.0.0.1:8000/favorite/add_favorite?user_id=$userId&clinic_id=$clinicId');
     var response = await http.post(url);
     if (response.statusCode == 200) {
-      print("즐겨찾기 병원 추가 성공");
+      return "OK";
     } else {
-      print("즐겨찾기 병원 추가 실패");
+     return;
     }
   }
 
 // 즐겨찾기 병원 삭제
   Future<void> removeFavoriteClinic(String userId, String clinicId) async {
-    try {
-      var url = Uri.parse(
-          'http://127.0.0.1:8000/favorite/delete_favorite?user_id=$userId&clinic_id=$clinicId');
-      var response = await http.delete(url);
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/favorite/delete_favorite?user_id=$userId&clinic_id=$clinicId');
+    var response = await http.delete(url);
 
-      if (response.statusCode == 200) {
-        print("즐겨찾기 병원 삭제 성공");
+    if (response.statusCode == 200) {
 
-        // 마지막 데이터 삭제 후 리스트 비우기
-        favoriteClinics.removeWhere((clinic) => clinic.id == clinicId);
+      // 마지막 데이터 삭제 후 리스트 비우기
+      favoriteClinics.removeWhere((clinic) => clinic.id == clinicId);
 
-        // 만약 리스트가 비어있으면 명시적으로 리스트를 비움
-        if (favoriteClinics.isEmpty) {
-          favoriteClinics.clear(); // 빈 리스트 명시적으로 비우기
-        }
-
-        update(); // 상태 업데이트
-      } else {
-        print("즐겨찾기 병원 삭제 실패: ${response.statusCode}");
+      // 만약 리스트가 비어있으면 명시적으로 리스트를 비움
+      if (favoriteClinics.isEmpty) {
+        favoriteClinics.clear(); // 빈 리스트 명시적으로 비우기
       }
-    } catch (e) {
-      print("Error: $e");
-    }
+
+      update(); // 상태 업데이트
+    } 
   }
 }

@@ -18,7 +18,7 @@ class Navigation extends StatelessWidget {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
 
-  VmHandler vmHandler = Get.put(VmHandler());
+  final VmHandler vmHandler = Get.put(VmHandler());
   final LoginHandler loginHandler = Get.put(LoginHandler());
 
   @override
@@ -134,7 +134,7 @@ class Navigation extends StatelessWidget {
                       onTap: () {
                         if (loginHandler.isLoggedIn()) {
                           // 로그인되어 있으면 페이지 이동
-                          Get.to(const Reservation());
+                          Get.to(Reservation());
                         } else {
                           // 로그인 페이지로 이동
                           Get.to(const Login());

@@ -59,7 +59,6 @@ class LoginHandler extends GetxController {
 
     userEmail = gUser.email;
     userName = gUser.displayName!;
-    print('로그인 성공 후 사용자 이메일: $userEmail');
 
     // 이메일 정보를 저장
     box.write('userEmail', userEmail);
@@ -67,7 +66,6 @@ class LoginHandler extends GetxController {
 
     // MySQL에서 계정 등록 여부 확인
     bool isUserRegistered = await checkDatabase(userEmail);
-    print(isUserRegistered);
 
     // MySQL에 계정이 없으면 새로 등록
     if (!isUserRegistered) {
@@ -114,9 +112,7 @@ class LoginHandler extends GetxController {
     var result = dataConvertedJSON['results'];
 
     if (result == 'OK') {
-      print('User data inserted successfully');
-    } else {
-      print('User data insertion failed');
-    }
+      return "ok";
+    } 
   }
 }
