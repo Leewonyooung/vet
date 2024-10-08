@@ -18,7 +18,7 @@ class ClinicSearch extends StatelessWidget {
       body: GetBuilder<VmHandler>(
         builder: (controller) {
           return FutureBuilder(
-            future: controller.getAllClinic(),// 
+            future: controller.getAllClinic(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

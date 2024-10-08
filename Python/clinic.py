@@ -174,3 +174,41 @@ async def detail_clinic(id: str):
 
 
 
+   
+
+    # 병원 전체 목록
+@router.get('/select_clinic')
+async def all_clinic():
+    conn = connect()
+    curs = conn.cursor()
+    sql = "select * from clinic"
+    curs.execute(sql)
+    rows = curs.fetchall()
+    conn.close()
+    return {'results' : rows} # 결과 값 = list(key값 x)
+
+
+# 병원 검색 활용
+@router.get('/select_search')
+async def search_clinic(name:str=None):
+    conn = connect()
+    curs = conn.cursor()
+    sql = 'select * from clinic where id = %s'
+    curs.execute(sql,(name))
+    rows = curs.fetchall()
+    conn.close()
+    return{'results' : rows}
+
+# 상세화면 정보 불러오기
+@router.get('/detail_clinic')
+async def detail_clinic(id: str):
+    conn = connect()
+    curs = conn.cursor()
+    sql = "select * from clinic where id=%s"
+    curs.execute(sql,(id))
+    rows = curs.fetchall()
+    conn.close()
+    print(rows)
+    return {'results' : rows} # 결과 값 = list(key값 x)
+
+

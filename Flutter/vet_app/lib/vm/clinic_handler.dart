@@ -7,16 +7,16 @@ import 'package:http/http.dart' as http;
 
 class ClinicHandler extends TimeHandler{
   String searchkeyward ="";
-  var search = <Clinic>[].obs;
-  var detail = <Clinic>[].obs;
+  var  clinicSearch = <Clinic>[].obs;
+  var clinicDetail = <Clinic>[].obs;
 
 
 
     // 병원 전체 목록
-  getAllClinic()async{
+    getAllClinic()async{
     var url = Uri.parse('http://127.0.0.1:8000/clinic/select_clinic');
     var response = await http.get(url);
-    // search.clear();
+    clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];
     List <Clinic> returnData = [];
@@ -35,16 +35,15 @@ class ClinicHandler extends TimeHandler{
       String? phone = results[i][9] ?? '전화번호 없음';
       String? image = results[i][10] ?? '이미지 없음';
       returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!, image: image!));}
-    search.value = returnData;
+    clinicSearch.value = returnData;
   }
 
 //  // 병원 상세 정보
-  getClinicDetail(String clinicid)async{
+      getClinicDetail(String clinicid)async{
     var url = Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$clinicid');
     var response = await http.get(url);
-    detail.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    List results = dataConvertedJSON['results'];
+    List results = dataConvertedJSON['results'][0];
     List <Clinic> returnData = [];
     String id= results[0][0];
     String name = results[0][1];
@@ -58,8 +57,20 @@ class ClinicHandler extends TimeHandler{
     String? phone = results[0][9];
     String? image = results[0][10];
 
-    returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!, image: image!));
-    detail.value = returnData;
+      String id= results[0];
+      String name = results[1];
+      String password = results[2];
+      double latitude = results[3];
+      double longitude = results[4];
+      String startTime = results[5];
+      String endTime = results[6];
+      String? introduction = results[7];
+      String? address = results[8];
+      String? phone = results[9];
+      String? image = results[10];
+      returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!, image: image!));
+    clinicDetail.value = returnData;
+      }
   }
 }
 
