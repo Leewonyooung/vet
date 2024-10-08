@@ -1,25 +1,34 @@
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vet_app/model/userdata.dart';
-import 'package:vet_app/view/navigation.dart';
 import 'package:http/http.dart' as http;
+import 'package:vet_app/view/navigation.dart';
 
-class LoginHandler extends GetxController{
+class LoginHandler extends GetxController {
   final box = GetStorage();
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
   List data = [];
   String userEmail = '';
   String userName = '';
-  
 
-  queryUser(userEmail) async{
-    var url = Uri.parse('http://127.0.0.1:8000/select?id=$userEmail');
+  // 로그인 상태 확인
+  bool isLoggedIn() {
+    return FirebaseAuth.instance.currentUser != null &&
+        getStoredEmail().isNotEmpty;
+  }
+
+  // GetStorage에서 저장된 이메일을 가져옴
+  String getStoredEmail() {
+    return box.read('userEmail') ?? '';
+  }
+
+  // 사용자 정보를 데이터베이스에서 쿼리
+  queryUser(String userEmail) async {
+    var url = Uri.parse('http://127.0.0.1:8000/user/select?id=$userEmail');
     var response = await http.get(url);
     data.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -27,113 +36,87 @@ class LoginHandler extends GetxController{
     data.addAll(result);
 
     List<UserData> savedData = [];
-      String id = result[0]['id'];
-      String password = result[0]['password'];
-      String image = result[0]['image'];
-      String name = result[0]['name'];
+    String id = result[0]['id'];
+    String password = result[0]['password'];
+    String image = result[0]['image'];
+    String name = result[0]['name'];
 
-      savedData.add(UserData(
-        id: id, 
-        password: password, 
-        image: image, 
-        name: name
-        ));
+    savedData
+        .add(UserData(id: id, password: password, image: image, name: name));
   }
 
-  // Google Sign in pop up
-  signInWithGoogle() async {
+  // Google Sign in pop-up
+  Future<UserCredential?> signInWithGoogle() async {
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
-    // to prevent the error whitch when user return to the login page without signing in
+    // 로그인 취소 시 null 반환
     if (gUser == null) {
       return null;
     }
 
-    // Obtain the auth details from the request
+    // Google 로그인 정보 획득
     final GoogleSignInAuthentication googleAuth = await gUser.authentication;
 
     userEmail = gUser.email;
     userName = gUser.displayName!;
-    // check whether the account is registered 
+    print('로그인 성공 후 사용자 이메일: $userEmail');
+
+    // 이메일 정보를 저장
+    box.write('userEmail', userEmail);
+    box.write('userName', userName);
+
+    // MySQL에서 계정 등록 여부 확인
     bool isUserRegistered = await checkDatabase(userEmail);
-    // if the account is trying to login on the first time add the google account information to the mySQL DB
-    if (!isUserRegistered){      
-      insertData(userEmail, userName);
+    print(isUserRegistered);
+
+    // MySQL에 계정이 없으면 새로 등록
+    if (!isUserRegistered) {
+      await insertData(userEmail, userName);
     }
 
-    // firbase Create a new credential
+    // Firebase 인증 처리
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
-    // Sign in to Firebase with the Google credentials
     final UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    // Navigate to Navigation page after successful sign-in
-    Get.to(Navigation(), arguments: [userEmail, userName]); // Navigate to home page
-      // print(userCredential);
-      // Return the UserCredential after successful sign-in
+    // 로그인 후 메인 화면으로 이동
+    Get.to(() => Navigation(), arguments: [userEmail, userName]);
+
     return userCredential;
   }
 
-
-  checkDatabase(String email)async{
-    checkJSONData(email);
-    if (data.isEmpty){
-      return false;
-    }else{
-      return true;
-    }
+  // 데이터베이스에서 사용자 존재 여부 확인
+  Future<bool> checkDatabase(String email) async {
+    await checkJSONData(email);
+    return data.isNotEmpty;
   }
 
-  checkJSONData(email)async{
-    var url = Uri.parse('http://127.0.0.1:8000/select?id=$email');
+  // MySQL 데이터 확인
+  checkJSONData(String email) async {
+    var url = Uri.parse('http://127.0.0.1:8000/user/select?id=$email');
     var response = await http.get(url);
     data.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List result = dataConvertedJSON['results'];
     data.addAll(result);
-
-    // if (result.isNotEmpty){
-    //   List<UserData> returnResult = [];
-    //   String id = result[0]['id'];
-    //   String password = result[0]['password'];
-    //   String image = result[0]['image'];
-    //   String name = result[0]['name'];
-
-    //   returnResult.add(UserData(
-    //     id: id, 
-    //     password: password, 
-    //     image: image, 
-    //     name: name
-    //     ));
-    //   userdata.value = returnResult;
-
-    // }
   }
 
-  insertData(String userEmail, String userName)async{
-    var url = Uri.parse('http://127.0.0.1:8000/insert?id=$userEmail&password=""&image=${Image.asset('images/usericon.png')}&name=$userName');
+  // MySQL에 새로운 사용자 데이터 삽입
+  insertData(String userEmail, String userName) async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/user/insert?id=$userEmail&password=""&image=""&name=$userName');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];
 
-    if(result == 'OK'){
-      // List<UserData> returnResult = [];
-      // String id = result[0]['id'];
-      // String password = result[0]['password'];
-      // String image = result[0]['image'];
-      // String name = result[0]['name'];
-
-      // returnResult.add(UserData(
-      //   id: id, 
-      //   password: password, 
-      //   image: image, 
-      //   name: name
-      //   ));
-      // userdata.value = returnResult;
+    if (result == 'OK') {
+      print('User data inserted successfully');
+    } else {
+      print('User data insertion failed');
+    }
   }
-}
 }

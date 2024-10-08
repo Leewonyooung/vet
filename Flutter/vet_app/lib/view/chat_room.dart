@@ -6,31 +6,33 @@ import 'package:vet_app/vm/vm_handler.dart';
 
 class ChatRoom extends StatelessWidget {
   ChatRoom({super.key});
-  
+
   final VmHandler vmHandler = Get.find();
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('상담방'),
-      ),
-      body: Obx(() => chatRoomList(context),)
-    );
+        appBar: AppBar(
+          title: const Text('상담방'),
+        ),
+        body: Obx(
+          () => chatRoomList(context),
+        ));
   }
 
-  chatRoomList(context){
+  chatRoomList(context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height/1.5,
+      height: MediaQuery.of(context).size.height / 1.5,
       child: ListView.builder(
         itemCount: vmHandler.rooms.length,
         itemBuilder: (context, index) {
           Chatroom room = vmHandler.rooms[index];
           return GestureDetector(
-            onTap: () async{
+            onTap: () async {
               vmHandler.currentClinicId.value = room.clinic;
               await vmHandler.queryChat();
-              Get.to(() => ChatView(),);
+              Get.to(
+                () => ChatView(),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),

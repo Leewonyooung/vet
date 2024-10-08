@@ -15,11 +15,10 @@ class Login extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: () async{
-                await LoginHandler().signInWithGoogle();
-              },
-              child: 
-                Image.asset('images/web_light_rd_SI@1x.png')),
+                onTap: () async {
+                  await LoginHandler().signInWithGoogle();
+                },
+                child: Image.asset('images/web_light_rd_SI@1x.png')),
           ],
         ),
       ),

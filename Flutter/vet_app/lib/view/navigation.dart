@@ -4,11 +4,13 @@ import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:vet_app/view/chat_room.dart';
 import 'package:vet_app/view/clinic_search.dart';
 import 'package:vet_app/view/favorite.dart';
+import 'package:vet_app/view/login.dart';
 import 'package:vet_app/view/mypage.dart';
 import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/view/reservation.dart';
 import 'package:vet_app/vm/vm_handler.dart';
+import 'package:vet_app/vm/login_handler.dart';
 
 class Navigation extends StatelessWidget {
   Navigation({super.key});
@@ -16,8 +18,9 @@ class Navigation extends StatelessWidget {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
 
-  final VmHandler vmHandler = Get.put(VmHandler());
-  
+  VmHandler vmHandler = Get.put(VmHandler());
+  final LoginHandler loginHandler = Get.put(LoginHandler());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +37,12 @@ class Navigation extends StatelessWidget {
         padding: const EdgeInsets.only(top: 10),
         backgroundColor: Colors.grey.shade900,
         isVisible: true,
+        onItemSelected: (index) {
+          // 검색 탭(1번)을 제외하고 로그인 체크
+          if (index != 1 && !loginHandler.isLoggedIn()) {
+            Get.to(const Login());
+          }
+        },
         animationSettings: const NavBarAnimationSettings(
           navBarItemAnimation: ItemAnimationSettings(
             duration: Duration(milliseconds: 400),
@@ -59,13 +68,25 @@ class Navigation extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.favorite),
               onPressed: () {
-                Get.to(const Favorite());
+                if (loginHandler.isLoggedIn()) {
+                  // 로그인되어 있으면 페이지 이동
+                  Get.to(const Favorite());
+                } else {
+                  // 로그인 페이지로 이동
+                  Get.to(const Login());
+                }
               },
             ),
             IconButton(
               icon: const Icon(Icons.person),
               onPressed: () {
-                Get.to(const Mypage());
+                if (loginHandler.isLoggedIn()) {
+                  // 로그인되어 있으면 페이지 이동
+                  Get.to(const Mypage());
+                } else {
+                  // 로그인 페이지로 이동
+                  Get.to(const Login());
+                }
               },
             ),
           ],
@@ -111,7 +132,13 @@ class Navigation extends StatelessWidget {
                       text: '긴급 예약',
                       color: Colors.red.shade400,
                       onTap: () {
-                        Get.to(Reservation()); // 긴급 예약 페이지 
+                        if (loginHandler.isLoggedIn()) {
+                          // 로그인되어 있으면 페이지 이동
+                          Get.to(const Reservation());
+                        } else {
+                          // 로그인 페이지로 이동
+                          Get.to(const Login());
+                        }
                       },
                     ),
                     _buildButton(
@@ -119,7 +146,13 @@ class Navigation extends StatelessWidget {
                       text: '예약 내역',
                       color: Colors.amber.shade400,
                       onTap: () {
-                        // 예약 내역 확인
+                        if (loginHandler.isLoggedIn()) {
+                          // 로그인되어 있으면 페이지 이동
+                          Get.to(const QueryReservation());
+                        } else {
+                          // 로그인 페이지로 이동
+                          Get.to(const Login());
+                        }
                       },
                     ),
                   ],
@@ -129,7 +162,13 @@ class Navigation extends StatelessWidget {
               // 반려동물 등록
               GestureDetector(
                 onTap: () {
-                  Get.to(const PetRegister());
+                  if (loginHandler.isLoggedIn()) {
+                    // 로그인되어 있으면 페이지 이동
+                    Get.to(PetRegister());
+                  } else {
+                    // 로그인 페이지로 이동
+                    Get.to(const Login());
+                  }
                 },
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -216,7 +255,6 @@ class Navigation extends StatelessWidget {
     );
   }
 
-  // --- Functions ---
   Widget _buildButton({
     required IconData icon,
     required String text,
@@ -245,4 +283,4 @@ class Navigation extends StatelessWidget {
       ),
     );
   }
-} // end
+}

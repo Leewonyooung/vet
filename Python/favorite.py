@@ -5,7 +5,7 @@ Fixed:
 Usage: 
 """
 
-from fastapi import  APIRouter, HTTPException 
+from fastapi import APIRouter, HTTPException 
 import pymysql
 
 router = APIRouter()
@@ -51,9 +51,13 @@ async def add_favorite(user_id: str, clinic_id: str):
     if result:
         raise HTTPException(status_code=400, detail="이미 즐겨찾기 목록에 있습니다.")
 
-    # 즐겨찾기 추가
-    sql = "INSERT INTO favorite (user_id, clinic_id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone) SELECT id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone FROM clinic WHERE id = %s"
-    curs.execute(sql, (clinic_id,))
+    # 즐겨찾기 추가 (clinic 테이블에서 데이터를 가져와 favorite 테이블에 삽입)
+    sql = """
+        INSERT INTO favorite (user_id, clinic_id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone)
+        SELECT %s, id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone
+        FROM clinic WHERE id = %s
+    """
+    curs.execute(sql, (user_id, clinic_id))
     conn.commit()
     conn.close()
 

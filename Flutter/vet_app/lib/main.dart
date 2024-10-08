@@ -8,8 +8,7 @@ import 'package:vet_app/view/login.dart';
 import 'package:vet_app/view/mypage.dart';
 import 'package:vet_app/view/navigation.dart';
 
-
-void main() async{
+void main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

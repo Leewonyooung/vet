@@ -5,7 +5,7 @@ Fixed: 07/Oct/2024
 Usage: store user acoount information
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 import pymysql
 
 router = APIRouter()
@@ -15,7 +15,7 @@ def connect():
         host='192.168.50.91',
         user='root',
         passwd='qwer1234',
-        db='vet',
+        db='veterinarian',
         charset='utf8'
     )
     return conn

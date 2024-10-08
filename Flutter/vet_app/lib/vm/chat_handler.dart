@@ -49,11 +49,15 @@ class ChatsHandler extends TreatmentHandler{
 
   makeChatRoom() async{
     _rooms.snapshots().listen((event) {
-        rooms.value = event.docs.map(
-          (doc) => Chatroom(clinic: doc.get('clinic'), user: doc.get('user'), image: doc.get('image')),
-        ).toList();
-      }
-    );
+      rooms.value = event.docs
+          .map(
+            (doc) => Chatroom(
+                clinic: doc.get('clinic'),
+                user: doc.get('user'),
+                image: doc.get('image')),
+          )
+          .toList();
+    });
   }
 
   getlastName() async{
