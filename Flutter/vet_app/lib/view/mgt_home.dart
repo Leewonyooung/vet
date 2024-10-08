@@ -9,7 +9,6 @@ class MgtHome extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Management Page'),
       ),
-
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -17,20 +16,18 @@ class MgtHome extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
-                onPressed: () {
-                  //
-                }, 
-                child: const Text('Create Clinic account')
-              ),
+                  onPressed: () {
+                    //
+                  },
+                  child: const Text('Create Clinic account')),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
-                onPressed: () {
-                  //
-                }, 
-                child: const Text('Create Species')
-              ),
+                  onPressed: () {
+                    //
+                  },
+                  child: const Text('Create Species')),
             ),
           ],
         ),

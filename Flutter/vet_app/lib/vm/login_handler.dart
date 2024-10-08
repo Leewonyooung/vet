@@ -67,7 +67,7 @@ class LoginHandler extends GetxController {
     print(isUserRegistered);
 
     // if the account is trying to login on the first time add the google account information to the mySQL DB (안창빈)
-    if (!isUserRegistered){      
+    if (!isUserRegistered) {
       userloginInsertData(userEmail, userName);
     }
 
@@ -82,26 +82,24 @@ class LoginHandler extends GetxController {
         await FirebaseAuth.instance.signInWithCredential(credential);
 
     // Navigate to Navigation page after successful sign-in (안창빈)
-    if (userCredential != null) {
-      Get.to(Navigation()); 
-    }
+    Get.to(Navigation());
 
     // print(userCredential);
-      // Return the UserCredential after successful sign-in (안창빈)
+    // Return the UserCredential after successful sign-in (안창빈)
     return userCredential;
   }
 
   // check whether the account is registered (안창빈)
-  userloginCheckDatabase(String email)async{
+  userloginCheckDatabase(String email) async {
     userloginCheckJSONData(email);
-    if (data.isEmpty){
+    if (data.isEmpty) {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
 
-  userloginCheckJSONData(email)async{
+  userloginCheckJSONData(email) async {
     var url = Uri.parse('http://127.0.0.1:8000/user/selectuser?id=$email');
     var response = await http.get(url);
     data.clear();
@@ -111,47 +109,45 @@ class LoginHandler extends GetxController {
   }
 
   // insert the account information to mysql(db) (안창빈)
-  userloginInsertData(String userEmail, String userName)async{
-    var url = Uri.parse('http://127.0.0.1:8000/user/insertuser?id=$userEmail&password=""&image=images/usericon.jpg&name=$userName&phone=""');
+  userloginInsertData(String userEmail, String userName) async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/user/insertuser?id=$userEmail&password=""&image=images/usericon.jpg&name=$userName&phone=""');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];
 
-    if(result == 'OK'){
-    }else{
+    if (result == 'OK') {
+    } else {
       print('no');
     }
   }
 
-
   //////////////////////////// Clinic /////////////////////////////
-  
+
   ///Login Clinic (안창빈)
 
   var cliniclogindata = <ClinicLogin>[].obs;
 
-    clincgetJSONData() async {
+  clincgetJSONData() async {
     cliniclogindata.clear();
-    var url=Uri.parse('http://127.0.0.1:8000/user/selectclinic');
+    var url = Uri.parse('http://127.0.0.1:8000/user/selectclinic');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      List results = dataConvertedJSON['results'];
+    List results = dataConvertedJSON['results'];
 
     List<ClinicLogin> returnResult = [];
-      String id = results[0]['id'];
-      String password = results[0]['password'];
+    String id = results[0]['id'];
+    String password = results[0]['password'];
 
-      returnResult.add(ClinicLogin(
-        id: id,
-        password: password 
-      ));
+    returnResult.add(ClinicLogin(id: id, password: password));
 
     cliniclogindata.value = returnResult;
-}
+  }
   // check whether account trying to login is registerd in our db (안창빈)
 
-  clinicloginJsonCheck(String id, String password)async{
-    var url = Uri.parse('http://127.0.0.1:8000/user/selectclinic?id=$id&password=$password');
+  clinicloginJsonCheck(String id, String password) async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/user/selectclinic?id=$id&password=$password');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List result = dataConvertedJSON['results'];

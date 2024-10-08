@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
 import 'package:vet_app/vm/time_handler.dart';
@@ -66,42 +65,50 @@ class ClinicHandler extends TimeHandler {
     String? phone = results[0][9];
     String? image = results[0][10];
 
-      String id= results[0][0];
-      String name = results[0][1];
-      String password = results[0][2];
-      double latitude = results[0][3];
-      double longitude = results[0][4];
-      String startTime = results[0][5];
-      String endTime = results[0][6];
-      String? introduction = results[0][7];
-      String? address = results[0][8];
-      String? phone = results[0][9];
-      String? image = results[0][10];
-
-
-      returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!, image: image!));
-    detail.value = returnData;
-      }
-
+    returnData.add(Clinic(
+        id: id,
+        name: name,
+        password: password,
+        latitude: latitude,
+        longitude: longitude,
+        startTime: startTime,
+        endTime: endTime,
+        introduction: introduction!,
+        address: address!,
+        phone: phone!,
+        image: image!));
+    clinicDetail.value = returnData;
+  }
 
   // insert clinic (안창빈)
 
-      getClinicInsert(String id, String name, String password, double latitude, double longitude, String stime, String etime, String introduction, String address, String phone, String image)async{
-        var url = Uri.parse("http://127.0.0.1:8000/clinic/insert?id=${id}&name=${name}&password=${password}&latitude=${latitude}&longitude=${longitude}&stime=${stime}&etime=${etime}&introduction=${introduction}&address=${address}&phone=${phone}&image=${image}");
-        var response = await http.get(url);
-        var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-        var results = dataConvertedJSON['results'];
-        return results;       
-      }
+  getClinicInsert(
+      String id,
+      String name,
+      String password,
+      double latitude,
+      double longitude,
+      String stime,
+      String etime,
+      String introduction,
+      String address,
+      String phone,
+      String image) async {
+    var url = Uri.parse(
+        "http://127.0.0.1:8000/clinic/insert?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&stime=$stime&etime=$etime&introduction=$introduction&address=$address&phone=$phone&image=$image");
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var results = dataConvertedJSON['results'];
+    return results;
+  }
 
-    // update clinic (안창빈)
+  // update clinic (안창빈)
 
-      getClinicUpdate()async{
-        var url = Uri.parse("http://127.0.0.1:8000/clinic/update?");
-        var response = await http.get(url);
-        var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-        var results = dataConvertedJSON['results'];
-        return results;       
-      }
+  getClinicUpdate() async {
+    var url = Uri.parse("http://127.0.0.1:8000/clinic/update?");
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var results = dataConvertedJSON['results'];
+    return results;
   }
 }

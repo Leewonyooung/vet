@@ -7,7 +7,7 @@ class ClinicLogin {
     required this.password,
   });
 
-  ClinicLogin.fromMap(Map<dynamic, dynamic> res):
-    id = res['id'],
-    password = res['password'];
+  ClinicLogin.fromMap(Map<dynamic, dynamic> res)
+      : id = res['id'],
+        password = res['password'];
 }
