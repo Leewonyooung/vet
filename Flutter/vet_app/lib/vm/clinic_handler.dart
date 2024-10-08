@@ -13,7 +13,7 @@ class ClinicHandler extends TimeHandler{
 
     // 병원 전체 목록
     getAllClinic()async{
-    var url = Uri.parse('http://127.0.0.1:8000/select_clinic');
+    var url = Uri.parse('http://127.0.0.1:8000/clinic/select_clinic');
     var response = await http.get(url);
     search.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -41,7 +41,7 @@ class ClinicHandler extends TimeHandler{
 
 //  // 병원 상세 정보
       getClinicDetail(String clinicid)async{
-    var url = Uri.parse('http://127.0.0.1:8000/detail_clinic?id=$clinicid');
+    var url = Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$clinicid');
     var response = await http.get(url);
     detail.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
