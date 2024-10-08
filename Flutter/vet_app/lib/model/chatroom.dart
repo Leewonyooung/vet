@@ -13,7 +13,7 @@ class Chatroom {
     return Chatroom(
       clinic: map['clinic']??'',
       user: map['user']??'',
-      image: map['image'],
+      image: map['image']??'',
     );
   }
 }

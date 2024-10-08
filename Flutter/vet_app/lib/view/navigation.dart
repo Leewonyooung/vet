@@ -7,6 +7,7 @@ import 'package:vet_app/view/favorite.dart';
 import 'package:vet_app/view/mypage.dart';
 import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
+import 'package:vet_app/vm/vm_handler.dart';
 
 class Navigation extends StatelessWidget {
   Navigation({super.key});
@@ -14,6 +15,8 @@ class Navigation extends StatelessWidget {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
 
+  VmHandler vmHandler = Get.put(VmHandler());
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

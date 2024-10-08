@@ -11,7 +11,9 @@ class ChatsHandler extends TreatmentHandler{
   final rooms = <Chatroom>[].obs;
   final currentClinicId = "".obs;
   final imagePath = [].obs;
+  final lastchatroom = <Chatroom>[].obs;
   final lastChats = <Chats>[].obs;
+
 
   ScrollController listViewContoller = ScrollController();
 
@@ -36,27 +38,28 @@ class ChatsHandler extends TreatmentHandler{
   }
 
   queryLastChat(){
-    print('run');
-    _rooms.doc("${currentClinicId.value}_${box.read('userId')}").collection('chats').snapshots().distinct().listen((event) {
-      print(event.docs);
-        lastChats.value = event.docs.map(
-          (doc) => Chats(
-            reciever: doc.get('reciever'), 
-            sender: doc.get('sender'), 
-            text: doc.get('text'), 
-            timestamp: doc.get('timestamp')
-          ),
-        ).toList();
+    List <Chatroom> result = [];
+    _rooms.snapshots().listen((event) {
+      event.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>; 
+        print(data);
+        Chatroom chatroom = Chatroom(clinic: data['clinic'], user: data['user'], image: data['image']);
+        print(chatroom);
+        result.add(chatroom);
+        print(result);
+        });
+        },
+        // (doc) => Chatroom(clinic: doc.get('clinic'), user: doc.get('user'), image: doc.get('image')),).toList();
+      );
+      lastchatroom.value = result;
+    print(lastchatroom);
+    _rooms.doc('123_1234').collection('chats').orderBy('timestamp',descending: true).snapshots().listen((event) {
+      print(event.docs.first.data());
+      // print(event.docs.map((doc) =>  Chats.fromMap(doc.data(), doc.id),).toList());
+      lastChats.value = event.docs.map((doc) =>  Chats.fromMap(doc.data(), doc.id),).toList();
       },
     );
   }
-
-  // preparingImage()async{
-  //   final firebaseStorage = FirebaseStorage.instance.ref().child('images').child("${codeController.text}.png");
-  //   await firebaseStorage.putFile(imgFile!);
-  //   String downloadURL = await firebaseStorage.getDownloadURL();
-  //   return downloadURL;
-  // }
 
   makeChatRoom() async{
     _rooms.snapshots().listen((event) {

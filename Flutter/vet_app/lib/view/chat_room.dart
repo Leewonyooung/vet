@@ -62,6 +62,7 @@ class ChatRoom extends StatelessWidget {
                               ),
                             ),
                           ),
+                          Text(vmHandler.lastChats[index].text)
                         ],
                       ),
                     ),
