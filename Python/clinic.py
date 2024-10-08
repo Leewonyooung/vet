@@ -212,3 +212,80 @@ async def detail_clinic(id: str):
     return {'results' : rows} # 결과 값 = list(key값 x)
 
 
+# insert clinic (안창빈)
+
+@router.get("/insert")
+async def insert(
+    id: str=None, 
+    name: str=None, 
+    password: str=None, 
+    latitude: float=None, 
+    longitude: float=None, 
+    start_time: str=None, 
+    end_time: str=None, 
+    introduction: str=None, 
+    address: str=None, 
+    phone: str=None, 
+    image: str=None,
+):
+    conn = connect()
+    curs = conn.cursor()
+
+    try:
+        sql ="insert into clinic(id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image) values (%s,%s,%s,%s,%s)"
+        curs.execute(sql, (id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image))
+        conn.commit()
+        conn.close()
+        return {'results': 'OK'}
+
+    except Exception as e:
+        conn.close()
+        print("Error :", e)
+        return {'result': 'Error'}    
+    
+# update clinic (안창빈)
+
+@router.get("/update")
+async def update(
+    id: str=None, 
+    name: str=None, 
+    password: str=None, 
+    latitude: float=None, 
+    longitude: float=None, 
+    start_time: str=None, 
+    end_time: str=None, 
+    introduction: str=None, 
+    address: str=None, 
+    phone: str=None, 
+    image: str=None,
+):
+    conn = connect()
+    curs = conn.cursor()
+
+    try:
+        sql = """
+        UPDATE clinic
+        SET name = %s,
+        password = %s,
+        latitude = %s,
+        longitude = %s,
+        start_time = %s,
+        end_time = %s,
+        introduction = %s,
+        address = %s,
+        phone = %s,
+        image = %s
+        WHERE id = %s
+        """
+        curs.execute(sql, (name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image, id))
+        conn.commit()
+        conn.close
+        return {'results': 'OK'} 
+    
+
+
+    except Exception as e:
+        conn.close()
+        print("Error :", e)
+        return {'result': 'Error'}    
+

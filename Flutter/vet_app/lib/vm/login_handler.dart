@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:vet_app/model/clinic_login.dart';
 import 'package:vet_app/model/userdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_app/view/navigation.dart';
@@ -45,57 +46,63 @@ class LoginHandler extends GetxController {
         .add(UserData(id: id, password: password, image: image, name: name));
   }
 
-  // Google Sign in pop-up
-  Future<UserCredential?> signInWithGoogle() async {
+  // Google Sign in pop up (안창빈)
+  signInWithGoogle() async {
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
-    // 로그인 취소 시 null 반환
+    // to prevent the error whitch when user return to the login page without signing in (안창빈)
     if (gUser == null) {
       return null;
     }
 
-    // Google 로그인 정보 획득
+    // Obtain the auth details from the request (안창빈)
     final GoogleSignInAuthentication googleAuth = await gUser.authentication;
 
     userEmail = gUser.email;
     userName = gUser.displayName!;
+    print(gUser.email);
 
-    // 이메일 정보를 저장
-    box.write('userEmail', userEmail);
-    box.write('userName', userName);
+    // check whether the account is registered (안창빈)
+    bool isUserRegistered = await userloginCheckDatabase(userEmail);
+    print(isUserRegistered);
 
-    // MySQL에서 계정 등록 여부 확인
-    bool isUserRegistered = await checkDatabase(userEmail);
-
-    // MySQL에 계정이 없으면 새로 등록
-    if (!isUserRegistered) {
-      await insertData(userEmail, userName);
+    // if the account is trying to login on the first time add the google account information to the mySQL DB (안창빈)
+    if (!isUserRegistered){      
+      userloginInsertData(userEmail, userName);
     }
 
-    // Firebase 인증 처리
+    // firbase Create a new credential (안창빈)
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
+    // Sign in to Firebase with the Google credentials (안창빈)
     final UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    // 로그인 후 메인 화면으로 이동
-    Get.to(() => Navigation(), arguments: [userEmail, userName]);
+    // Navigate to Navigation page after successful sign-in (안창빈)
+    if (userCredential != null) {
+      Get.to(Navigation()); 
+    }
 
+    // print(userCredential);
+      // Return the UserCredential after successful sign-in (안창빈)
     return userCredential;
   }
 
-  // 데이터베이스에서 사용자 존재 여부 확인
-  Future<bool> checkDatabase(String email) async {
-    await checkJSONData(email);
-    return data.isNotEmpty;
+  // check whether the account is registered (안창빈)
+  userloginCheckDatabase(String email)async{
+    userloginCheckJSONData(email);
+    if (data.isEmpty){
+      return false;
+    }else{
+      return true;
+    }
   }
 
-  // MySQL 데이터 확인
-  checkJSONData(String email) async {
-    var url = Uri.parse('http://127.0.0.1:8000/user/select?id=$email');
+  userloginCheckJSONData(email)async{
+    var url = Uri.parse('http://127.0.0.1:8000/user/selectuser?id=$email');
     var response = await http.get(url);
     data.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -103,16 +110,51 @@ class LoginHandler extends GetxController {
     data.addAll(result);
   }
 
-  // MySQL에 새로운 사용자 데이터 삽입
-  insertData(String userEmail, String userName) async {
-    var url = Uri.parse(
-        'http://127.0.0.1:8000/user/insert?id=$userEmail&password=""&image=""&name=$userName');
+  // insert the account information to mysql(db) (안창빈)
+  userloginInsertData(String userEmail, String userName)async{
+    var url = Uri.parse('http://127.0.0.1:8000/user/insertuser?id=$userEmail&password=""&image=images/usericon.jpg&name=$userName&phone=""');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];
 
-    if (result == 'OK') {
-      return "ok";
+    if(result == 'OK'){
+    }else{
+      print('no');
     }
+  }
+
+
+  //////////////////////////// Clinic /////////////////////////////
+  
+  ///Login Clinic (안창빈)
+
+  var cliniclogindata = <ClinicLogin>[].obs;
+
+    clincgetJSONData() async {
+    cliniclogindata.clear();
+    var url=Uri.parse('http://127.0.0.1:8000/user/selectclinic');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+      List results = dataConvertedJSON['results'];
+
+    List<ClinicLogin> returnResult = [];
+      String id = results[0]['id'];
+      String password = results[0]['password'];
+
+      returnResult.add(ClinicLogin(
+        id: id,
+        password: password 
+      ));
+
+    cliniclogindata.value = returnResult;
+}
+  // check whether account trying to login is registerd in our db (안창빈)
+
+  clinicloginJsonCheck(String id, String password)async{
+    var url = Uri.parse('http://127.0.0.1:8000/user/selectclinic?id=$id&password=$password');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    List result = dataConvertedJSON['results'];
+    return result;
   }
 }
