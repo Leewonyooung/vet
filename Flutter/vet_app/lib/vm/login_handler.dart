@@ -113,6 +113,6 @@ class LoginHandler extends GetxController {
 
     if (result == 'OK') {
       return "ok";
-    } 
+    }
   }
 }

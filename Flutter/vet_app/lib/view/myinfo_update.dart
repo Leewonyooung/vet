@@ -20,28 +20,21 @@ class MyinfoUpdate extends StatelessWidget {
           return Center(
             child: Column(
               children: [
-                  Image.asset(value[2],
+                Image.asset(
+                  value[2],
                   width: 100,
                   height: 100,
-                  ), //3: image
-                  Text("ID : ${value[0]}"),
-                  TextField(
-                    controller: nameController,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                  }, 
-                  child: const Text('저장')
-                  )
+                ), //3: image
+                Text("ID : ${value[0]}"),
+                TextField(
+                  controller: nameController,
+                ),
+                ElevatedButton(onPressed: () {}, child: const Text('저장'))
               ],
             ),
           );
         },
-        ),
-
+      ),
     );
   }
-
-
-  
 }

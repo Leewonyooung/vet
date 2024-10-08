@@ -3,7 +3,7 @@ class Treatment {
   String userId;
   String clinicId;
   String content;
-  
+
   Treatment({
     this.id,
     required this.userId,

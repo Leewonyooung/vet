@@ -9,11 +9,11 @@ class Chatroom {
     required this.image,
   });
 
-  factory Chatroom.fromMap(Map<String, dynamic>map, String id){
+  factory Chatroom.fromMap(Map<String, dynamic> map, String id) {
     return Chatroom(
-      clinic: map['clinic']??'',
-      user: map['user']??'',
-      image: map['image']??'',
+      clinic: map['clinic'] ?? '',
+      user: map['user'] ?? '',
+      image: map['image'] ?? '',
     );
   }
 }

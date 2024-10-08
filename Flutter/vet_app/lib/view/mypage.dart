@@ -53,14 +53,11 @@ class Mypage extends StatelessWidget {
                           )),
                       ElevatedButton(
                           onPressed: () {
-                            Get.to(
-                              MyinfoUpdate(), 
-                                arguments: [
-                                  result.id,
-                                  result.name,
-                                  result.image
-                                ]
-                            );
+                            Get.to(MyinfoUpdate(), arguments: [
+                              result.id,
+                              result.name,
+                              result.image
+                            ]);
                           },
                           child: const Column(
                             children: [

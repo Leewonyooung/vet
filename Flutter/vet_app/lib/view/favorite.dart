@@ -44,8 +44,7 @@ class Favorite extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.local_hospital),
                   title: Text(clinic.name),
-                  subtitle: Text(
-                      '${clinic.address}\n전화: ${clinic.phone}'),
+                  subtitle: Text('${clinic.address}\n전화: ${clinic.phone}'),
                   onTap: () {
                     // 병원 ID를 넘겨서 clinic_location.dart 페이지로 이동
                     Get.to(

@@ -75,7 +75,7 @@ class FavoriteHandler extends ClinicHandler {
     if (response.statusCode == 200) {
       return "OK";
     } else {
-     return;
+      return;
     }
   }
 
@@ -86,7 +86,6 @@ class FavoriteHandler extends ClinicHandler {
     var response = await http.delete(url);
 
     if (response.statusCode == 200) {
-
       // 마지막 데이터 삭제 후 리스트 비우기
       favoriteClinics.removeWhere((clinic) => clinic.id == clinicId);
 
@@ -96,6 +95,6 @@ class FavoriteHandler extends ClinicHandler {
       }
 
       update(); // 상태 업데이트
-    } 
+    }
   }
 }

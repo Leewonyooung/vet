@@ -10,5 +10,4 @@ class UserData {
     required this.image,
     required this.name,
   });
-  
 }
