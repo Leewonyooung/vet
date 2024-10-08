@@ -35,21 +35,20 @@ class FavoriteHandler extends ClinicHandler {
             String? introduction = results[i][9] ?? '소개 없음';
             String? address = results[i][10] ?? '주소 없음';
             String? phone = results[i][11] ?? '전화번호 없음';
-            String? image = results[i][12] ?? '전화번호 없음';
+            String? image = results[i][12] ?? '이미지 없음';
 
             returnData.add(Clinic(
-              id: id,
-              name: name,
-              password: password,
-              latitude: latitude,
-              longitude: longitude,
-              startTime: startTime,
-              endTime: endTime,
-              introduction: introduction!,
-              address: address!,
-              phone: phone!,
-              image: image!
-            ));
+                id: id,
+                name: name,
+                password: password,
+                latitude: latitude,
+                longitude: longitude,
+                startTime: startTime,
+                endTime: endTime,
+                introduction: introduction!,
+                address: address!,
+                phone: phone!,
+                image: image!));
           }
 
           // 즐겨찾기 병원 목록 업데이트 (assignAll 사용)

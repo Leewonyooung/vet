@@ -16,22 +16,29 @@ class ChatsHandler extends TreatmentHandler{
   List <Chatroom> result = [];
   ScrollController listViewContoller = ScrollController();
 
-  final CollectionReference _rooms= FirebaseFirestore.instance.collection('chat');
-
+  final CollectionReference _rooms =
+      FirebaseFirestore.instance.collection('chat');
 
   @override
-  void onInit() async{
+  void onInit() async {
     super.onInit();
     await makeChatRoom();
     await queryLastChat();
   }
-  
 
-  queryChat(){
-    _rooms.doc("${currentClinicId.value}_${box.read('userId')}").collection('chats').orderBy('timestamp',descending: false).snapshots().listen((event) {
-        chats.value = event.docs.map(
-          (doc) => Chats.fromMap(doc.data(), doc.id),
-        ).toList();
+  queryChat() {
+    _rooms
+        .doc("${currentClinicId.value}_${box.read('userId')}")
+        .collection('chats')
+        .orderBy('timestamp', descending: false)
+        .snapshots()
+        .listen(
+      (event) {
+        chats.value = event.docs
+            .map(
+              (doc) => Chats.fromMap(doc.data(), doc.id),
+            )
+            .toList();
       },
     );
   }
@@ -55,11 +62,15 @@ class ChatsHandler extends TreatmentHandler{
 
   makeChatRoom() async{
     _rooms.snapshots().listen((event) {
-        rooms.value = event.docs.map(
-          (doc) => Chatroom(clinic: doc.get('clinic'), user: doc.get('user'), image: doc.get('image')),
-        ).toList();
-      }
-    );
+      rooms.value = event.docs
+          .map(
+            (doc) => Chatroom(
+                clinic: doc.get('clinic'),
+                user: doc.get('user'),
+                image: doc.get('image')),
+          )
+          .toList();
+    });
   }
 
   addChat(Chats chat){

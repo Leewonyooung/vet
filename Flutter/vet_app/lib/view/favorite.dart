@@ -42,7 +42,7 @@ class Favorite extends StatelessWidget {
                   leading: const Icon(Icons.local_hospital),
                   title: Text(clinic.name),
                   subtitle: Text(
-                      '${clinic.address ?? '주소 없음'}\n전화: ${clinic.phone ?? '전화번호 없음'}'), // null 안전 연산자
+                      '${clinic.address ?? '주소 없음'}\n전화: ${clinic.phone ?? '전화번호 없음'}'),
                   onTap: () {
                     // 병원 ID를 넘겨서 clinic_location.dart 페이지로 이동
                     Get.to(

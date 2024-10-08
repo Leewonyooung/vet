@@ -6,20 +6,18 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vet_app/model/userdata.dart';
-import 'package:vet_app/view/navigation.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_app/view/test.dart';
 
-class LoginHandler extends GetxController{
+class LoginHandler extends GetxController {
   final box = GetStorage();
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
   List data = [];
   String userEmail = '';
   String userName = '';
-  
 
-  queryUser(userEmail) async{
+  queryUser(userEmail) async {
     var url = Uri.parse('http://127.0.0.1:8000/select?id=$userEmail');
     var response = await http.get(url);
     data.clear();
@@ -28,17 +26,13 @@ class LoginHandler extends GetxController{
     data.addAll(result);
 
     List<UserData> savedData = [];
-      String id = result[0]['id'];
-      String password = result[0]['password'];
-      String image = result[0]['image'];
-      String name = result[0]['name'];
+    String id = result[0]['id'];
+    String password = result[0]['password'];
+    String image = result[0]['image'];
+    String name = result[0]['name'];
 
-      savedData.add(UserData(
-        id: id, 
-        password: password, 
-        image: image, 
-        name: name
-        ));
+    savedData
+        .add(UserData(id: id, password: password, image: image, name: name));
   }
 
   // Google Sign in pop up
@@ -57,12 +51,12 @@ class LoginHandler extends GetxController{
     userName = gUser.displayName!;
     print(userEmail);
     print(userName);
-    // check whether the account is registered 
+    // check whether the account is registered
     bool isUserRegistered = await checkDatabase(userEmail);
     print(isUserRegistered);
     // if the account is trying to login on the first time add the google account information to the mySQL DB
-    if (!isUserRegistered){      
-      insertData(userEmail, userName!);
+    if (!isUserRegistered) {
+      insertData(userEmail, userName);
     }
 
     // firbase Create a new credential
@@ -76,25 +70,22 @@ class LoginHandler extends GetxController{
         await FirebaseAuth.instance.signInWithCredential(credential);
 
     // Navigate to Navigation page after successful sign-in
-    if (userCredential != null) {
-      Get.to(Test(), arguments: [userEmail, userName]); // Navigate to home page
-    }
+    Get.to(Test(), arguments: [userEmail, userName]); // Navigate to home page
     // print(userCredential);
-      // Return the UserCredential after successful sign-in
+    // Return the UserCredential after successful sign-in
     return userCredential;
   }
 
-
-  checkDatabase(String email)async{
+  checkDatabase(String email) async {
     checkJSONData(email);
-    if (data.isEmpty){
+    if (data.isEmpty) {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
 
-  checkJSONData(email)async{
+  checkJSONData(email) async {
     var url = Uri.parse('http://127.0.0.1:8000/select?id=$email');
     var response = await http.get(url);
     data.clear();
@@ -110,9 +101,9 @@ class LoginHandler extends GetxController{
     //   String name = result[0]['name'];
 
     //   returnResult.add(UserData(
-    //     id: id, 
-    //     password: password, 
-    //     image: image, 
+    //     id: id,
+    //     password: password,
+    //     image: image,
     //     name: name
     //     ));
     //   userdata.value = returnResult;
@@ -120,13 +111,14 @@ class LoginHandler extends GetxController{
     // }
   }
 
-  insertData(String userEmail, String userName)async{
-    var url = Uri.parse('http://127.0.0.1:8000/insert?id=$userEmail&password=""&image=${Image.asset('images/usericon.png')}&name=$userName');
+  insertData(String userEmail, String userName) async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/insert?id=$userEmail&password=""&image=${Image.asset('images/usericon.png')}&name=$userName');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];
 
-    if(result == 'OK'){
+    if (result == 'OK') {
       // List<UserData> returnResult = [];
       // String id = result[0]['id'];
       // String password = result[0]['password'];
@@ -134,14 +126,14 @@ class LoginHandler extends GetxController{
       // String name = result[0]['name'];
 
       // returnResult.add(UserData(
-      //   id: id, 
-      //   password: password, 
-      //   image: image, 
+      //   id: id,
+      //   password: password,
+      //   image: image,
       //   name: name
       //   ));
       // userdata.value = returnResult;
       print('ok');
-    }else{
+    } else {
       print('no');
     }
   }
