@@ -7,6 +7,7 @@ import 'package:vet_app/view/favorite.dart';
 import 'package:vet_app/view/mypage.dart';
 import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
+import 'package:vet_app/view/reservation.dart';
 import 'package:vet_app/vm/vm_handler.dart';
 
 class Navigation extends StatelessWidget {
@@ -110,7 +111,7 @@ class Navigation extends StatelessWidget {
                       text: '긴급 예약',
                       color: Colors.red.shade400,
                       onTap: () {
-                        // 긴급 예약 기능
+                        Get.to(Reservation()); // 긴급 예약 페이지 
                       },
                     ),
                     _buildButton(
@@ -163,7 +164,7 @@ class Navigation extends StatelessWidget {
           ),
         ),
       ),
-       ClinicSearch(),
+      ClinicSearch(),
       const QueryReservation(),
       ChatRoom(),
       const Mypage(),
