@@ -49,38 +49,46 @@ class ChatView extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: vmHandler.checkToday(chat)?
                   Container(
+                    width: MediaQuery.of(context).size.width,
                     alignment: Alignment.center,
                     child: Text(chat.text.substring(3,13), style: const TextStyle(fontSize: 18,),),
                   ):
                   vmHandler.box.read('userId') == chat.sender? 
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 5),
-                        child: Text(chat.timestamp.substring(11,16)),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.green[200],
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child:
-                              Text(
-                                chat.text,
-                                style: const TextStyle(fontSize: 22),
-                              )
-                            ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/10,0,0,0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Text(chat.timestamp.substring(11,16)),
+                        ),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.green[200],
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child:
+                                  SizedBox(
+                                    child: Text(
+                                      chat.text,
+                                      style: const TextStyle(fontSize: 22),
+                                    ),
+                                  )
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   )
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,8 +98,8 @@ class ChatView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            width: 70,
-                            height: 70,
+                            width: 60,
+                            height: 60,
                             child: Image.network(
                               value[0],
                               fit: BoxFit.cover,
@@ -100,7 +108,7 @@ class ChatView extends StatelessWidget {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top:8.0),
+                        padding: const EdgeInsets.only(top:8.0,left: 8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -116,28 +124,30 @@ class ChatView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Container(
+                                width: MediaQuery.of(context).size.width/1.8,
                                 decoration: BoxDecoration(
                                   color: Colors.green[200],
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                child: Row(
+                                child: Row( 
                                   children: [
-                                    SizedBox(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(15),
-                                        child: chat.text.length == vmHandler.isToday()?
-                                          Container(
-                                            decoration: const BoxDecoration(color: Colors.grey),
-                                            child: Text(chat.text.substring(3,chat.text.length-4)),
-                                          ):
-                                          SizedBox(
-                                            child: Text(
+                                    Flexible(
+                                      child: SizedBox(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(15),
+                                          child: chat.text.length == vmHandler.isToday()?
+                                            SizedBox(
+                                              child: Text(chat.text.substring(3,chat.text.length-4)),
+                                            ):
+                                            Text(
                                               chat.text,
-                                              style: const TextStyle(fontSize: 22),
+                                              style: const TextStyle(fontSize: 20,
+                                              // overflow: TextOverflow.ellipsis
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                    ),
                                     ],
                                   ),
                                 ),
