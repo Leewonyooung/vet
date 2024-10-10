@@ -38,7 +38,7 @@ class Navigation extends StatelessWidget {
         onItemSelected: (index) {
           // 검색 탭(1번)을 제외하고 로그인 체크
           if (index != 1 && !loginHandler.isLoggedIn()) {
-            Get.to(() => const Login());
+            Get.to(() => Login());
           }
         },
         animationSettings: const NavBarAnimationSettings(
@@ -71,7 +71,7 @@ class Navigation extends StatelessWidget {
                   Get.to(const Favorite());
                 } else {
                   // 로그인 페이지로 이동
-                  Get.to(const Login());
+                  Get.to( Login());
                 }
               },
             ),
@@ -83,7 +83,7 @@ class Navigation extends StatelessWidget {
                   Get.to(const Mypage());
                 } else {
                   // 로그인 페이지로 이동
-                  Get.to(const Login());
+                  Get.to( Login());
                 }
               },
             ),
@@ -135,7 +135,7 @@ class Navigation extends StatelessWidget {
                           Get.to(Reservation());
                         } else {
                           // 로그인 페이지로 이동
-                          Get.to(const Login());
+                          Get.to( Login());
                         }
                       },
                     ),
@@ -149,7 +149,7 @@ class Navigation extends StatelessWidget {
                           Get.to(const QueryReservation());
                         } else {
                           // 로그인 페이지로 이동
-                          Get.to(const Login());
+                          Get.to( Login());
                         }
                       },
                     ),
@@ -165,7 +165,7 @@ class Navigation extends StatelessWidget {
                     Get.to(PetRegister());
                   } else {
                     // 로그인 페이지로 이동
-                    Get.to(const Login());
+                    Get.to( Login());
                   }
                 },
                 child: Container(

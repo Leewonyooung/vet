@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:vet_app/view/myinfo_update.dart';
 import 'package:vet_app/view/pet_info.dart';
 import 'package:vet_app/vm/login_handler.dart';
-import 'package:vet_app/vm/user_handler.dart';
 
 class Mypage extends StatelessWidget {
   const Mypage({super.key});
@@ -18,12 +17,12 @@ class Mypage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('마이페이지'),
       ),
-      body: GetBuilder<UserHandler>(
-        builder: (controller) {
-          if (controller.mypageUserInfo.isEmpty) {
+      body: GetBuilder<LoginHandler>(
+        builder: (_) {
+          if (loginHandler.mypageUserInfo.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           } else {
-            final result = controller.mypageUserInfo[0];
+            final result = loginHandler.mypageUserInfo[0];
               return
               Obx(
                 () {
@@ -33,7 +32,7 @@ class Mypage extends StatelessWidget {
                       Row(
                         children: [
                           Image.asset(
-                            controller.mypageUserInfo[0].image,
+                            loginHandler.mypageUserInfo[0].image,
                             width: 100,
                             height: 100,
                           ),
