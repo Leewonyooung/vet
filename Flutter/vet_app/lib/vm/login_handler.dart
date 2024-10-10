@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vet_app/model/userdata.dart';
-import 'package:vet_app/view/navigation.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_app/view/test.dart';
 
