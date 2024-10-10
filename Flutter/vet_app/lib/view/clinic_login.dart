@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/mgt_home.dart';
-import 'package:vet_app/vm/vm_handler.dart';
+import 'package:vet_app/vm/login_handler.dart';
 
 class ClinicLogin extends StatelessWidget {
   ClinicLogin({super.key});
 
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final vmHandler = Get.put(LoginHandler());
 
   @override
   Widget build(BuildContext context) {
-    final vmHandler = Get.put(VmHandler());
     return Scaffold(
         appBar: AppBar(
           title: const Text('Login'),
         ),
-        body: GetBuilder<VmHandler>(
+        body: GetBuilder<LoginHandler>(
           builder: (controller) {
             return Center(
               child: Column(
@@ -30,7 +30,7 @@ class ClinicLogin extends StatelessWidget {
                     decoration: const InputDecoration(labelText: '비밀번호를 입력하세요'),
                   ),
                   ElevatedButton(
-                    onPressed: () => clinicloginJsonCheck(vmHandler),
+                    onPressed: () => clinicloginJsonCheck(),
                     child: const Text('입력'),
                   ),
                 ],
@@ -41,7 +41,7 @@ class ClinicLogin extends StatelessWidget {
   }
 
   //Function
-  clinicloginJsonCheck(VmHandler vmHandler) async {
+  clinicloginJsonCheck() async {
     String id = idController.text.trim();
     String password = passwordController.text.trim();
 

@@ -12,7 +12,7 @@ class ClinicLocation extends StatelessWidget {
   Widget build(BuildContext context) {
     final Completer<GoogleMapController> mapController =
         Completer<GoogleMapController>();
-    VmHandler vmHandler = Get.put(VmHandler());
+    ClinicHandler vmHandler = Get.put(ClinicHandler());
     final value = Get.arguments ?? "__"; 
     vmHandler.checkLocationPermission();
     vmHandler.getClinicDetail(value[0]);
@@ -34,7 +34,7 @@ class ClinicLocation extends StatelessWidget {
                 child: Text('오류 발생: ${snapshot.error}'),
               );
             } else {
-              return GetBuilder<VmHandler>(builder: (controller) {
+              return GetBuilder<ClinicHandler>(builder: (controller) {
                 if (vmHandler.lines.isEmpty) {
                   return const Center(child: CircularProgressIndicator());
                 } else {

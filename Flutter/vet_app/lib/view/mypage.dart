@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/myinfo_update.dart';
 import 'package:vet_app/view/pet_info.dart';
+import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/user_handler.dart';
 
 class Mypage extends StatelessWidget {
@@ -9,9 +10,9 @@ class Mypage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserHandler userHandler = Get.put(UserHandler());
-    String userid = userHandler.getStoredEmail();
-    userHandler.selectMyinfo(userid);
+    final LoginHandler loginHandler = Get.put(LoginHandler());
+    String userid = loginHandler.getStoredEmail();
+    loginHandler.selectMyinfo(userid);
 
     return Scaffold(
       appBar: AppBar(
@@ -64,7 +65,7 @@ class Mypage extends StatelessWidget {
                                       result.id,
                                       result.name,
                                       result.image
-                                ])!.then((value) => userHandler.selectMyinfo(userid));
+                                ])!.then((value) => loginHandler.selectMyinfo(userid));
                               },
                               child: const Column(
                                 children: [

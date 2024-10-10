@@ -5,7 +5,7 @@ import 'package:vet_app/model/reservation.dart';
 import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:http/http.dart' as http;
 
-class ReservationHandler extends PetHandler {
+class ReservationHandler extends ClinicHandler {
   final reservations = <Reservation>[].obs;
   final availableclinic = <AvailableClinic>[].obs;
   String reservationTime = "";
@@ -14,7 +14,7 @@ class ReservationHandler extends PetHandler {
   getReservation() async {
     var url = Uri.parse('http://127.0.0.1:8000/'); //미완성
     var response = await http.get(url);
-    search.clear();
+    clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     // ignore: unused_local_variable
     List results = dataConvertedJSON['results'];
@@ -50,7 +50,6 @@ class ReservationHandler extends PetHandler {
           time: time)
           );
           availableclinic.value = returnData;
-          print(availableclinic[0].address);
     }
   }
 

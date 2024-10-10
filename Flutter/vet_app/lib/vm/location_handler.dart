@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_app/vm/image_handler.dart';
 
-class LocationHandler extends ChatsHandler {
+class LocationHandler extends ImageHandler {
   double currentlat = 0;
   double currentlng = 0;
   String currentPlaceID = "";
@@ -87,9 +87,9 @@ class LocationHandler extends ChatsHandler {
     );
   }
 
-     maploading(double clinic_lat, double clinic_long)async{
+     maploading(double clinicLat, double clinicLong)async{
       await getCurrentPlaceID();
-      await getClinicPlaceId(clinic_lat, clinic_long);
+      await getClinicPlaceId(clinicLat, clinicLong);
       await createRoute();
       update();
     }

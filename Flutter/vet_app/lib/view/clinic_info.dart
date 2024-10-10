@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_location.dart';
 import 'package:vet_app/vm/clinic_handler.dart';
+import 'package:vet_app/vm/favorite_handler.dart';
 
 class ClinicInfo extends StatelessWidget {
   const ClinicInfo({super.key});
 
   @override
   Widget build(BuildContext context) {
-    VmHandler vmHandler = Get.put(VmHandler());
+    ClinicHandler vmHandler = Get.put(ClinicHandler());
+    FavoriteHandler favoriteHandler = Get.find();
     var value = Get.arguments[0] ?? "__";
-    vmHandler.searchFavoriteClinic(vmHandler.getStoredEmail(), value);
+    favoriteHandler.searchFavoriteClinic(vmHandler.getStoredEmail(), value);
     return Scaffold(
       appBar: AppBar(
         title: const Text('검색 결과'),
@@ -66,7 +68,7 @@ class ClinicInfo extends StatelessWidget {
                                                 Icons.pin_drop_outlined)),
 
                                                 // 즐겨찾기 등록 버튼
-                                                vmHandler.favoriteButtonIcon
+                                                favoriteHandler.favoriteButtonIcon
                                       ],
                                     ),
                                   ],

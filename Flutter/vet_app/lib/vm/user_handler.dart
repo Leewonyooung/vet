@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vet_app/model/userdata.dart';
 import 'package:vet_app/vm/location_handler.dart';
@@ -18,14 +19,6 @@ class UserHandler extends LocationHandler {
     await box.write('userId', '1234');
   }
 
-  selectMyinfo() async {
-    await getUserId();
-    var url = Uri.parse(
-        'http://127.0.0.1:8000/mypage/select_mypage?id=${box.read('userId')}');
-    var response = await http.get(url);
-    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    var result = dataConvertedJSON['result'][0];
-    mypageUserInfo.clear();
   selectMyinfo(String userid) async {
     await getUserId();
     var url = Uri.parse(
@@ -43,6 +36,7 @@ class UserHandler extends LocationHandler {
         .add(UserData(password: password, image: image, name: name, id: id));
     update();
   }
+  }
 
   getImageFromDevice(imageSource) async {
     final XFile? pickedFile =
@@ -53,10 +47,6 @@ class UserHandler extends LocationHandler {
       update();
     }
   }
-}
-  }
-
-}
 
     // user name update
   updateUserName(String name, String id)async{

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 import 'package:get/get.dart';
-import 'package:vet_app/vm/vm_handler.dart';
 
 class Reservation extends StatelessWidget {
   Reservation({super.key});
@@ -31,7 +30,7 @@ class Reservation extends StatelessWidget {
                 icon: const Icon(Icons.account_circle_outlined)),
           ],
         ),
-        body: GetBuilder<VmHandler>(builder: (_) {
+        body: GetBuilder<ReservationHandler>(builder: (_) {
           return FutureBuilder(
               future: vmHnadler.getQuickReservation(),
               builder: (context, snapshot) {
@@ -45,7 +44,6 @@ class Reservation extends StatelessWidget {
                   );
                 } else {
                   return Obx(() {
-                    print(vmHnadler.availableclinic);
                     return ListView.builder(
                         itemCount: vmHnadler.availableclinic.length,
                         itemBuilder: (context, index) {
@@ -61,7 +59,7 @@ class Reservation extends StatelessWidget {
                                 // Text('  ${clinic.address}'),
                                 ElevatedButton(
                                   onPressed: () {
-                                    Get.to(() => QueryReservation(), arguments: [
+                                    Get.to(() => const QueryReservation(), arguments: [
                                       clinic.name,
                                       clinic.latitude,
                                       clinic.longitude,
