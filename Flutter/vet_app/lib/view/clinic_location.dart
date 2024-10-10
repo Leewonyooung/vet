@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:vet_app/vm/vm_handler.dart';
+import 'package:vet_app/vm/clinic_handler.dart';
 
 class ClinicLocation extends StatelessWidget {
   const ClinicLocation({super.key});
@@ -12,7 +12,7 @@ class ClinicLocation extends StatelessWidget {
   Widget build(BuildContext context) {
     final Completer<GoogleMapController> mapController =
         Completer<GoogleMapController>();
-    VmHandler vmHandler = Get.put(VmHandler());
+    ClinicHandler vmHandler = Get.find();
     final value = Get.arguments ?? "__"; // 0:이름, 1:병원위도, 2:병원경도, 3:병원 도로명 주소
     vmHandler.checkLocationPermission();
     vmHandler.getCurrentPlaceID();
@@ -20,7 +20,7 @@ class ClinicLocation extends StatelessWidget {
         appBar: AppBar(
           title: const Text('위치보기'),
         ),
-        body: GetBuilder<VmHandler>(builder: (controller) {
+        body: GetBuilder<ClinicHandler>(builder: (controller) {
           if (controller.currentlat == 0 || controller.currentlng == 0) {
             return const Center(child: CircularProgressIndicator());
           } else {
@@ -41,7 +41,7 @@ class ClinicLocation extends StatelessWidget {
                         infoWindow: InfoWindow(
                             title: value[0], snippet: value[0]), //병원 이름 표시
                         markerId: MarkerId(value[0]),
-                        position: LatLng(double.parse(value[1]), double.parse(value[2]))),
+                        position: LatLng(value[1],value[2])),
                     Marker(
                       markerId: const MarkerId('병원'),
                       position:

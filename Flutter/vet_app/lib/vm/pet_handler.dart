@@ -1,10 +1,11 @@
-import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/model/pet.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class PetHandler extends FavoriteHandler {
+import 'package:vet_app/vm/species_handler.dart';
+
+class PetHandler extends SpeciesHandler {
   var pets = <Pet>[].obs;
 
   // 유저 ID를 기반으로 반려동물 정보 가져오기

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_location.dart';
-import 'package:vet_app/vm/vm_handler.dart';
+import 'package:vet_app/vm/clinic_handler.dart';
 
 class ClinicInfo extends StatelessWidget {
   const ClinicInfo({super.key});
 
   @override
   Widget build(BuildContext context) {
-    VmHandler vmHandler = Get.put(VmHandler());
+    ClinicHandler vmHandler = Get.put(ClinicHandler());
     var value = Get.arguments[0] ??"__";
     return Scaffold(
       appBar: AppBar(
         title: const Text('검색 결과'),
       ),
-      body: GetBuilder<VmHandler>(
+      body: GetBuilder<ClinicHandler>(
         builder: (controller) {
           return FutureBuilder(
               future: controller.getClinicDetail(value),

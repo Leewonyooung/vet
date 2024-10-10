@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
 import 'package:http/http.dart' as http;
+import 'package:vet_app/vm/treatment_handler.dart';
 
-class FavoriteHandler extends ClinicHandler {
+class FavoriteHandler extends TreatmentHandler {
   var favoriteClinics = <Clinic>[].obs; // 즐겨찾기 병원 목록
 
   // 즐겨찾기 목록 불러오기

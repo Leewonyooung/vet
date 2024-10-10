@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:get/state_manager.dart';
 import 'package:vet_app/model/available_time.dart';
 import 'package:vet_app/model/reservation.dart';
-import 'package:vet_app/vm/pet_handler.dart';
+import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:http/http.dart' as http;
 
-class ReservationHandler extends PetHandler {
+class ReservationHandler extends ClinicHandler {
   final reservations = <Reservation>[].obs;
   final availabletime = <AvailableTime>[].obs;
 

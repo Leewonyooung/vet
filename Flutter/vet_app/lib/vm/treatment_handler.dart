@@ -1,3 +1,3 @@
-import 'package:vet_app/vm/species_handler.dart';
+import 'package:vet_app/vm/time_handler.dart';
 
-class TreatmentHandler extends SpeciesHandler {}
+class TreatmentHandler extends TimeHandler {}

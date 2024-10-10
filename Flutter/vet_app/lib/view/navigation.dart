@@ -9,7 +9,6 @@ import 'package:vet_app/view/mypage.dart';
 import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/view/reservation.dart';
-import 'package:vet_app/vm/vm_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 
 class Navigation extends StatelessWidget {
@@ -17,8 +16,6 @@ class Navigation extends StatelessWidget {
 
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
-
-  final VmHandler vmHandler = Get.put(VmHandler());
   final LoginHandler loginHandler = Get.put(LoginHandler());
 
   @override
@@ -40,7 +37,7 @@ class Navigation extends StatelessWidget {
         onItemSelected: (index) {
           // 검색 탭(1번)을 제외하고 로그인 체크
           if (index != 1 && !loginHandler.isLoggedIn()) {
-            Get.to(const Login());
+            Get.to(() => const Login());
           }
         },
         animationSettings: const NavBarAnimationSettings(

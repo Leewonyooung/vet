@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/chatroom.dart';
 import 'package:vet_app/view/chat_view.dart';
-import 'package:vet_app/vm/vm_handler.dart';
+import 'package:vet_app/vm/chat_handler.dart';
 
 class ChatRoom extends StatelessWidget {
   ChatRoom({super.key});
 
-  final VmHandler vmHandler = Get.find();
+  final ChatsHandler vmHandler = Get.put(ChatsHandler());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +31,7 @@ class ChatRoom extends StatelessWidget {
               vmHandler.currentClinicId.value = room.clinic;
               await vmHandler.queryChat();
               Get.to(
-                () => ChatView(),
+                () => ChatView(),arguments: [room.image, vmHandler.roomName[index]]
               );
             },
             child: Padding(

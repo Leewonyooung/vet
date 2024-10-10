@@ -1,16 +1,19 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
-import 'package:vet_app/vm/time_handler.dart';
 import 'package:http/http.dart' as http;
+import 'package:vet_app/vm/treatment_handler.dart';
 
-class ClinicHandler extends TimeHandler{
+class ClinicHandler extends TreatmentHandler{
   String searchkeyward ="";
   var  clinicSearch = <Clinic>[].obs;
   var clinicDetail = <Clinic>[].obs;
 
-
+  @override
+  void onInit() async {
+    super.onInit();
+    await getAllClinic();
+  }
     // 병원 전체 목록
     getAllClinic()async{
     var url = Uri.parse('http://127.0.0.1:8000/clinic/select_clinic');

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:vet_app/model/chatroom.dart';
 import 'package:vet_app/model/chats.dart';
 import 'package:get/get.dart';
-import 'package:vet_app/vm/treatment_handler.dart';
+import 'package:vet_app/vm/login_handler.dart';
 import 'package:http/http.dart' as http;
 
-class ChatsHandler extends TreatmentHandler {
+class ChatsHandler extends LoginHandler {
   final chats = <Chats>[].obs;
   final rooms = <Chatroom>[].obs;
   final currentClinicId = "".obs;
@@ -20,12 +20,20 @@ class ChatsHandler extends TreatmentHandler {
 
   final CollectionReference _rooms =
       FirebaseFirestore.instance.collection('chat');
+      
+  @override
+  void onInit() async {
+    super.onInit();
+    await makeChatRoom();
+    await queryLastChat();
+    await getlastName();
+  }
 
   queryChat() {
     _rooms
         .doc("${currentClinicId.value}_${box.read('userId')}")
         .collection('chats')
-        .orderBy('timestamp', descending: true)
+        .orderBy('timestamp', descending: false)
         .snapshots()
         .listen(
       (event) {
@@ -39,7 +47,6 @@ class ChatsHandler extends TreatmentHandler {
   }
 
   queryLastChat() async {
-    print(box.read('userId'));
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await FirebaseFirestore.instance.collection("chat").get();
     var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
@@ -67,7 +74,6 @@ class ChatsHandler extends TreatmentHandler {
                 text: chat['text'],
                 timestamp: chat['timestamp']));
           }
-          print(lastChats);
         },
       );
     }
@@ -100,7 +106,31 @@ class ChatsHandler extends TreatmentHandler {
     }
   }
 
-  addChat(Chats chat) {
+  isToday() async{
+    bool istoday = true;
+    chats[chats.length-1].timestamp.toString().substring(0,16) == DateTime.now().toString().substring(0,16)?
+    istoday : istoday = false;
+    return istoday;
+  }
+
+  checkToday(Chats chat){
+    return chat.text.length==17 && chat.text.substring(0,3) == "set" &&chat.text.substring(13,17) =="time";
+  }
+
+  addChat(Chats chat) async{
+    bool istoday = await isToday();
+    if(!istoday){
+      await _rooms
+        .doc("${currentClinicId.value}_${box.read('userId')}")
+        .collection('chats')
+        .add({
+      'reciever': chat.reciever,
+      'sender': chat.sender,
+      'text': "set${DateTime.now().toString().substring(0,10)}time",
+      'timestamp': DateTime.now().toString(),
+    });
+    }
+
     _rooms
         .doc("${currentClinicId.value}_${box.read('userId')}")
         .collection('chats')
@@ -108,7 +138,7 @@ class ChatsHandler extends TreatmentHandler {
       'reciever': chat.reciever,
       'sender': chat.sender,
       'text': chat.text,
-      'timestamp': chat.timestamp,
+      'timestamp': DateTime.now().toString(),
     });
   }
 }

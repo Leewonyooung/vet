@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 
 class Reservation extends StatelessWidget {
   Reservation({super.key});
 
-  final vmHnadler = ReservationHandler();
+  final vmHnadler = Get.put(ReservationHandler());
 
   @override
   Widget build(BuildContext context) {

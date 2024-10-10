@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vet_app/model/clinic_login.dart';
 import 'package:vet_app/model/userdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_app/view/navigation.dart';
+import 'package:vet_app/vm/user_handler.dart';
 
-class LoginHandler extends GetxController {
-  final box = GetStorage();
+class LoginHandler extends UserHandler {
+
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
   List data = [];
@@ -118,7 +118,6 @@ class LoginHandler extends GetxController {
 
     if (result == 'OK') {
     } else {
-      print('no');
     }
   }
 

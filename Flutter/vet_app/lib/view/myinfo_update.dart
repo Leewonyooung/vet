@@ -8,7 +8,7 @@ class MyinfoUpdate extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final UserHandler userHandler = Get.put(UserHandler());
+    final UserHandler userHandler = Get.find();
     var value = Get.arguments;
     nameController.text = value[1];
     return Scaffold(
