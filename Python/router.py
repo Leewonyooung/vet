@@ -11,6 +11,7 @@ from favorite import router as favorite_router
 from user import router as user_router
 from pet import router as pet_router
 from profile import mypage_router as mypage_router
+from available_time import router as available_router
 
 app = FastAPI()
 app.include_router(clinic_router, prefix="/clinic", tags=["clinic"])
@@ -18,6 +19,7 @@ app.include_router(favorite_router, prefix="/favorite", tags=["favorite"])
 app.include_router(user_router, prefix="/user", tags=["user"])
 app.include_router(pet_router, prefix="/pet", tags=["pet"])
 app.include_router(mypage_router, prefix="/mypage", tags=["mypage"])
+app.include_router(available_router, prefix="/available", tags=["available"])
 
 
 

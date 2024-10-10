@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:vet_app/vm/login_handler.dart';
 
-class ImageHandler extends LoginHandler {
+class ImageHandler extends GetxController {
 
   XFile? imageFile;
   late int firstDisp = 0;

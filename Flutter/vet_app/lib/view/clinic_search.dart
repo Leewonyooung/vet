@@ -8,7 +8,7 @@ class ClinicSearch extends StatelessWidget {
 
   final TextEditingController searchKeywardController = TextEditingController();
   final ClinicHandler vmHandler = Get.put(ClinicHandler());
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,9 +16,9 @@ class ClinicSearch extends StatelessWidget {
           title: const Text('검색'),
         ),
         body: GetBuilder<ClinicHandler>(
-          builder: (controller) {
+          builder: (_) {
             return FutureBuilder(
-                future: controller.getAllClinic(),
+                future: vmHandler.getAllClinic(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -43,29 +43,36 @@ class ClinicSearch extends StatelessWidget {
                             itemCount: vmHandler.clinicSearch.length,
                             itemBuilder: (context, index) {
                               final clinic = vmHandler.clinicSearch;
-                              return SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: 100,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(const ClinicInfo(), arguments: [
-                                      clinic[index].id,
-                                    ]);
-                                  },
-                                  child: Card(
+                              return GestureDetector(
+                                onTap: () {
+                                  vmHandler.updateCurrentIndex(clinic[index].id);
+                                  Get.to(ClinicInfo(), arguments: [
+                                    clinic[index].id,
+                                  ]);
+                                },
+                                child: Card(
+                                  child: Center(
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.center,
                                       children: [
-                                        index % 2 == 0
-                                            ? const Icon(Icons.pets)
-                                            : const Icon(Icons.local_hospital),
-                                        Text(clinic[index].name),
-                                        clinic[index].address.length > 4
-                                            ? Text(clinic[index]
-                                                .address
-                                                .substring(0, 8))
-                                            : Text(clinic[index].address),
+                                        Image.network('http://127.0.0.1:8000/clinic/view/${clinic[index].image}',
+                                        width:MediaQuery.of(context).size.width*0.3,
+                                        height: MediaQuery.of(context).size.height*0.1
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(clinic[index].name,
+                                              overflow: TextOverflow.ellipsis,
+                                              ),
+                                          Text(clinic[index].address,
+                                          overflow: TextOverflow.ellipsis,
+                                          )
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),

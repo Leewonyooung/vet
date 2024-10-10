@@ -17,6 +17,9 @@ class LocationHandler extends ImageHandler {
   List<PointLatLng> polyline = [];
   List<LatLng> route = [];
   var lines = <Polyline>[].obs;
+
+
+
   // GPS 제공 동의
   checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();

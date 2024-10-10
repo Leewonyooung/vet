@@ -9,10 +9,17 @@ class ClinicHandler extends TreatmentHandler{
   var clinicSearch = <Clinic>[].obs;
   var clinicDetail = <Clinic>[].obs;
 
+  RxString currentIndex = ''.obs;
+
   @override
   void onInit() async {
     super.onInit();
     await getAllClinic();
+    await checkLocationPermission();
+  }
+  updateCurrentIndex(String str){
+    currentIndex.value = str;
+    update();
   }
     // 병원 전체 목록
     getAllClinic()async{
@@ -43,7 +50,7 @@ class ClinicHandler extends TreatmentHandler{
   }
 
 //  // 병원 상세 정보
-      getClinicDetail(String clinicid)async{
+  getClinicDetail(String clinicid)async{
     var url = Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$clinicid');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -63,8 +70,8 @@ class ClinicHandler extends TreatmentHandler{
       String? phone = results[9];
       String? image = results[10];
       returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!, image: image!));
-    clinicDetail.value = returnData;
-      }
+      clinicDetail.value = returnData;
+    }
 
   // insert clinic (안창빈)
 

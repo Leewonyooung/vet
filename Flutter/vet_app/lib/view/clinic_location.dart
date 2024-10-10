@@ -6,13 +6,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vet_app/vm/clinic_handler.dart';
 
 class ClinicLocation extends StatelessWidget {
-  const ClinicLocation({super.key});
+  ClinicLocation({super.key});
+  // final LocationHandler vmHandler = Get.put(LocationHandler()); 
+  final ClinicHandler vmHandler = Get.find();
 
   @override
   Widget build(BuildContext context) {
     final Completer<GoogleMapController> mapController =
         Completer<GoogleMapController>();
-    ClinicHandler vmHandler = Get.put(ClinicHandler());
     final value = Get.arguments ?? "__"; 
     vmHandler.checkLocationPermission();
     vmHandler.getClinicDetail(value[0]);
@@ -34,7 +35,7 @@ class ClinicLocation extends StatelessWidget {
                 child: Text('오류 발생: ${snapshot.error}'),
               );
             } else {
-              return GetBuilder<ClinicHandler>(builder: (controller) {
+              return GetBuilder<ClinicHandler>(builder: (_) {
                 if (vmHandler.lines.isEmpty) {
                   return const Center(child: CircularProgressIndicator());
                 } else {
@@ -46,7 +47,7 @@ class ClinicLocation extends StatelessWidget {
                         initialCameraPosition: CameraPosition(
                           zoom: 15,
                           target: LatLng(
-                              controller.currentlat, controller.currentlng),
+                              vmHandler.currentlat, vmHandler.currentlng),
                         ),
                         onMapCreated: (GoogleMapController controller) {
                           mapController.complete(controller);
@@ -62,7 +63,7 @@ class ClinicLocation extends StatelessWidget {
                           Marker(
                             markerId: const MarkerId('병원'),
                             position: LatLng(
-                                controller.currentlat, controller.currentlng),
+                                vmHandler.currentlat, vmHandler.currentlng),
                           ),
                         },
                         polylines: vmHandler.lines.toSet(),

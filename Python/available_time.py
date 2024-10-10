@@ -5,12 +5,12 @@ Fixed:
 Usage: 
 """
 
-from fastapi import FastAPI, HTTPException, File, UploadFile
+from fastapi import APIRouter, HTTPException, File, UploadFile
 from fastapi.responses import FileResponse
 import pymysql
 import os
 
-app = FastAPI()
+router = APIRouter()
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -28,7 +28,7 @@ def connect():
     return conn
 
 # 예약 가능한 병원id, 이름, password, 경도, 위도, 주소, 이미지, 예약 시간 (예약된 리스트 빼고 나타냄)
-@app.get('/available_clinic')
+@router.get('/available_clinic')
 async def get_available_clinic(time:str):
     conn = connect()
     curs = conn.cursor()
@@ -55,15 +55,10 @@ async def get_available_clinic(time:str):
     
     return {'results': rows}
 
-@app.get("/view/{file_name}")
+@router.get("/view/{file_name}")
 async def get_file(file_name: str):
     file_path = os.path.join(UPLOAD_FOLDER, file_name)
     if os.path.exists(file_path):
         return FileResponse(path=file_path, filename=file_name)
     return {'result' : 'Error'}
 
-
-
-if __name__ == "__main":
-    import uvicorn
-    uvicorn.run(app, host='127.0.0.1', port=8000)

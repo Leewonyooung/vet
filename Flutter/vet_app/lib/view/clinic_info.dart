@@ -5,12 +5,11 @@ import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
 
 class ClinicInfo extends StatelessWidget {
-  const ClinicInfo({super.key});
-
+  ClinicInfo({super.key});
+  final ClinicHandler vmHandler = Get.find();
   @override
   Widget build(BuildContext context) {
-    ClinicHandler vmHandler = Get.put(ClinicHandler());
-    FavoriteHandler favoriteHandler = Get.find();
+    FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
     var value = Get.arguments[0] ?? "__";
     favoriteHandler.searchFavoriteClinic(vmHandler.getStoredEmail(), value);
     return Scaffold(
@@ -18,9 +17,9 @@ class ClinicInfo extends StatelessWidget {
         title: const Text('검색 결과'),
       ),
       body: GetBuilder<ClinicHandler>(
-        builder: (controller) {
+        builder: (_) {
           return FutureBuilder(
-              future: controller.getClinicDetail(value),
+              future: vmHandler.getClinicDetail(value),
               builder: (context, snapshot) {
                 final result = vmHandler.clinicDetail;
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -28,47 +27,47 @@ class ClinicInfo extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error:${snapshot.error}'));
                 } else {
-                  return Obx(
-                    () {
-                    return 
-                     Center(
+                  return Obx(() {
+                    return Center(
                       child: Column(
                         children: [
-                          Text(result[0].name,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          Text(
+                            result[0].name,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Container(
                             alignment: Alignment.center,
-                            width: (MediaQuery.of(context).size.width)*0.7,
-                            height: MediaQuery.of(context).size.height*0.35,
+                            width: (MediaQuery.of(context).size.width) * 0.7,
+                            height: MediaQuery.of(context).size.height * 0.35,
                             child: Card(
                               child: Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Image.network(
-                                        'http://127.0.0.1:8000/clinic/view/${result[0].image}',
-                                        height: MediaQuery.of(context).size.height*0.4*0.7,
-                                        ),
+                                      'http://127.0.0.1:8000/clinic/view/${result[0].image}',
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.4 *
+                                              0.7,
+                                    ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         // 지도 보는 버튼
                                         IconButton(
                                             onPressed: () => Get.to(
-                                                    const ClinicLocation(),
-                                                    arguments: [
-                                                      result[0].id
-                                                    ]
-                                                    ),
+                                                ClinicLocation(),
+                                                arguments: [result[0].id]),
                                             icon: const Icon(
                                                 Icons.pin_drop_outlined)),
 
-                                                // 즐겨찾기 등록 버튼
-                                                favoriteHandler.favoriteButtonIcon
+                                        // 즐겨찾기 등록 버튼
+                                        favoriteHandler.favoriteButtonIcon
                                       ],
                                     ),
                                   ],
@@ -80,10 +79,11 @@ class ClinicInfo extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Icon(Icons.watch_later_outlined),
-                              Text("${result[0].startTime}~${result[0].endTime}"),
+                              Text(
+                                  "${result[0].startTime}~${result[0].endTime}"),
                               // ignore: prefer_const_constructors
                               const Icon(Icons.pin_drop_outlined),
-                                  Text(result[0].address.substring(0, 7))
+                              Text(result[0].address.substring(0, 7))
                             ],
                           ),
 
@@ -100,11 +100,11 @@ class ClinicInfo extends StatelessWidget {
                                       const Color.fromARGB(255, 237, 220, 61)),
                               child: const Text('예약하기'),
                             ),
-                          ),                        ],
+                          ),
+                        ],
                       ),
                     );
-                    }
-                  );
+                  });
                 }
               });
         },

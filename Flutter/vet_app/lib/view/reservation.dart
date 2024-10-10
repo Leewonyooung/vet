@@ -5,12 +5,9 @@ import 'package:get/get.dart';
 
 class Reservation extends StatelessWidget {
   Reservation({super.key});
-
   final vmHnadler = Get.put(ReservationHandler());
-
   @override
   Widget build(BuildContext context) {
-    final vmHnadler = Get.put(ReservationHandler());
 
     return Scaffold(
         appBar: AppBar(
@@ -52,7 +49,7 @@ class Reservation extends StatelessWidget {
                             child: Row(
                               children: [
                                 Image.network (
-                                  'http://127.0.1:8000/view/${clinic.image}',
+                                  'http://127.0.1:8000/available/view/${clinic.image}',
                                   width: 100,
                                   height: 80,),
                                 Text('  ${clinic.name}'),

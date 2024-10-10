@@ -26,7 +26,7 @@ class ReservationHandler extends ClinicHandler {
   getQuickReservation() async {
     await adjustedTime();
     var url = Uri.parse(
-        'http://127.0.0.1:8000/available_clinic?time=$reservationTime'); // 미완성
+        'http://127.0.0.1:8000/available/available_clinic?time=$reservationTime'); // 미완성
     var response = await http.get(url);
     clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));

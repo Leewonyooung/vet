@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vet_app/vm/image_handler.dart';
-import 'package:vet_app/vm/vm_handler.dart';
+import 'package:vet_app/vm/login_handler.dart';
 
 class MgtClinicAdd extends StatelessWidget {
   MgtClinicAdd({super.key});
@@ -20,8 +20,7 @@ class MgtClinicAdd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vmHandler = Get.put(VmHandler());
-    final imageHandler = Get.put(ImageHandler());
+    final loginHandler = Get.put(LoginHandler());
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: Scaffold(
@@ -29,7 +28,7 @@ class MgtClinicAdd extends StatelessWidget {
           title: const Text('병원 추가',style: TextStyle(fontSize: 30),),
           leading: IconButton(
               onPressed: () {
-                imageHandler.imageFile = null;
+                loginHandler.imageFile = null;
                 Get.back();
               },
               icon: const Icon(Icons.arrow_back_ios)),
@@ -63,7 +62,7 @@ class MgtClinicAdd extends StatelessWidget {
                               padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
                               child: ElevatedButton(
                                   onPressed: () {
-                                    imageHandler
+                                    loginHandler
                                         .getImageFromGallery(ImageSource.gallery);
                                   },
                                   child: const Text('이미지 가져오기')),
@@ -113,7 +112,7 @@ class MgtClinicAdd extends StatelessWidget {
                                             suffixIcon: IconButton(
                                             onPressed: () {
                                               passwordController.clear();
-                                              passwordController.text = imageHandler.randomPasswordNumberClinic();
+                                              passwordController.text = loginHandler.randomPasswordNumberClinic();
                                             }, 
                                             icon: const Icon(Icons.add_outlined)
                                             ),
@@ -253,7 +252,7 @@ class MgtClinicAdd extends StatelessWidget {
                                   padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                   child: SizedBox(
                                     width: 400,
-                                    child: Container(
+                                    child: SizedBox(
                                       height: 200,
                                       child: TextField(
                                         maxLength: 150,
