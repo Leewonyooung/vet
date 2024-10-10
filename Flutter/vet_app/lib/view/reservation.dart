@@ -39,7 +39,8 @@ class Reservation extends StatelessWidget {
                   return Center(
                     child: Text('Error : ${snapshot.error}'),
                   );
-                } else {
+                }
+                else {
                   return Obx(() {
                     return ListView.builder(
                         itemCount: vmHnadler.availableclinic.length,

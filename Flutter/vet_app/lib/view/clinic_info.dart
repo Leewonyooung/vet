@@ -10,7 +10,7 @@ class ClinicInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
-    var value = Get.arguments[0] ?? "__";
+    var value = Get.arguments[0] ?? "__"; // clinicid = value
     favoriteHandler.searchFavoriteClinic(vmHandler.getStoredEmail(), value);
     return Scaffold(
       appBar: AppBar(
@@ -67,7 +67,12 @@ class ClinicInfo extends StatelessWidget {
                                                 Icons.pin_drop_outlined)),
 
                                         // 즐겨찾기 등록 버튼
-                                        favoriteHandler.favoriteButtonIcon
+                                      IconButton(
+                                        onPressed: () {
+                                        favoriteHandler.favoriteIconValueMgt(favoriteHandler.getStoredEmail(), value);
+                                      }, 
+                                      icon: favoriteHandler.favoriteIconValue.value ? Icon(Icons.favorite, color: Colors.red,) : Icon(Icons.favorite_border_outlined), 
+                                      )
                                       ],
                                     ),
                                   ],
@@ -81,7 +86,6 @@ class ClinicInfo extends StatelessWidget {
                               const Icon(Icons.watch_later_outlined),
                               Text(
                                   "${result[0].startTime}~${result[0].endTime}"),
-                              // ignore: prefer_const_constructors
                               const Icon(Icons.pin_drop_outlined),
                               Text(result[0].address.substring(0, 7))
                             ],
@@ -92,7 +96,6 @@ class ClinicInfo extends StatelessWidget {
                             padding: const EdgeInsets.all(60),
                             child: ElevatedButton(
                               onPressed: () {
-                                //
                               },
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(300, 40),

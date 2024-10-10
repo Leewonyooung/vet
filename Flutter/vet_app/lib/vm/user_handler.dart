@@ -34,7 +34,6 @@ class UserHandler extends LocationHandler {
     String name = result[3];
     mypageUserInfo
         .add(UserData(password: password, image: image, name: name, id: id));
-    update();
   }
   }
 
@@ -55,9 +54,9 @@ class UserHandler extends LocationHandler {
   update();
 }
 
-  updateJSONDataAll() async {
+  updateJSONDataAll(String name, String image, String id) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/mypage/all_update?=');
+        'http://127.0.0.1:8000/mypage/all_update?=name=$name&image=$image&id=$id');
     await http.get(url);
     update();
   }
