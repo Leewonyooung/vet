@@ -10,7 +10,6 @@ class ClinicLogin extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final vmHandler = Get.put(LoginHandler());
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,61 +18,65 @@ class ClinicLogin extends StatelessWidget {
         ),
         body: GetBuilder<LoginHandler>(
           builder: (controller) {
-            return Obx((){ 
-            return SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 300, 0, 50),
-                      child: Text('Login',style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: 500,
-                        child: TextField(
-                          controller: idController,
-                          decoration: const InputDecoration(
-                            labelText: '아이디를 입력하세요',
-                            border: OutlineInputBorder()
-                            ),
+            return Obx(() {
+              return SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 300, 0, 50),
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                              fontSize: 60, fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: 500,
-                        child: TextField(
-                          controller: passwordController,
-                          obscureText: vmHandler.isObscured.value,
-                          decoration: InputDecoration(
-                            labelText: '비밀번호를 입력하세요',
-                            border: const OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                vmHandler.togglePasswordVisibility();
-                              }, 
-                              icon: Icon(vmHandler.isObscured.value ? Icons.visibility_off : Icons.visibility),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: 500,
+                          child: TextField(
+                            controller: idController,
+                            decoration: const InputDecoration(
+                                labelText: '아이디를 입력하세요',
+                                border: OutlineInputBorder()),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: 500,
+                          child: TextField(
+                            controller: passwordController,
+                            obscureText: vmHandler.isObscured.value,
+                            decoration: InputDecoration(
+                              labelText: '비밀번호를 입력하세요',
+                              border: const OutlineInputBorder(),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  vmHandler.togglePasswordVisibility();
+                                },
+                                icon: Icon(vmHandler.isObscured.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
                               ),
                             ),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: ElevatedButton(
-                        onPressed: () => clinicloginJsonCheck(),
-                        child: const Text('login'),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ElevatedButton(
+                          onPressed: () => clinicloginJsonCheck(),
+                          child: const Text('login'),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-            }
-            );
+              );
+            });
           },
         ));
   }

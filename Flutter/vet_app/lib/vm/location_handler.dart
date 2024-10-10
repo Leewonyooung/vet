@@ -12,13 +12,11 @@ class LocationHandler extends ImageHandler {
   double currentlng = 0;
   String currentPlaceID = "";
   String clinicPlaceID = "";
-  String durationText="";
+  String durationText = "";
   PolylinePoints polylinePoints = PolylinePoints();
   List<PointLatLng> polyline = [];
   List<LatLng> route = [];
   var lines = <Polyline>[].obs;
-
-
 
   // GPS 제공 동의
   checkLocationPermission() async {
@@ -42,17 +40,17 @@ class LocationHandler extends ImageHandler {
     currentlng = position.longitude;
   }
 
-
   //지도 경로
   //1. 현위치를 주소 id 로 가져오기
   getCurrentPlaceID() async {
     var url = Uri.parse(
         "https://maps.googleapis.com/maps/api/geocode/json?latlng=$currentlat,$currentlng&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
     var response = await http.get(url);
-    if(response.statusCode == 200){
-    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    // print(dataConvertedJSON['results'][0]['formatted_address']); // place id
-    currentPlaceID = await dataConvertedJSON['results'][0]['formatted_address'];
+    if (response.statusCode == 200) {
+      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+      // print(dataConvertedJSON['results'][0]['formatted_address']); // place id
+      currentPlaceID =
+          await dataConvertedJSON['results'][0]['formatted_address'];
     }
   }
 
@@ -74,29 +72,24 @@ class LocationHandler extends ImageHandler {
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     polyline = polylinePoints.decodePolyline(
         dataConvertedJSON['routes'][0]['overview_polyline']['points']);
-        // durationText=dataConvertedJSON['routes'][0]['legs'][0]['duration']['text']; // 소요시간
-        // print(dataConvertedJSON['routes'][0]['legs'][0]['distance']['text']); // 거리
+    // durationText=dataConvertedJSON['routes'][0]['legs'][0]['duration']['text']; // 소요시간
+    // print(dataConvertedJSON['routes'][0]['legs'][0]['distance']['text']); // 거리
 
     route = polyline
         .map(
           (point) => LatLng(point.latitude, point.longitude),
         )
         .toList();
-    lines.add(
-      Polyline(
-          polylineId: const PolylineId('route'),
-          points: route,
-          color: Colors.red)
-    );
+    lines.add(Polyline(
+        polylineId: const PolylineId('route'),
+        points: route,
+        color: Colors.red));
   }
 
-     maploading(double clinicLat, double clinicLong)async{
-      await getCurrentPlaceID();
-      await getClinicPlaceId(clinicLat, clinicLong);
-      await createRoute();
-      update();
-    }
-
-
-
+  maploading(double clinicLat, double clinicLong) async {
+    await getCurrentPlaceID();
+    await getClinicPlaceId(clinicLat, clinicLong);
+    await createRoute();
+    update();
+  }
 }

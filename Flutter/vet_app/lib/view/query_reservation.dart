@@ -16,7 +16,7 @@ class QueryReservation extends StatelessWidget {
       // body: GetBuilder<VmHandler>(
       //   builder: (controller) {
       //     return FutureBuilder(
-      //       future: controller., 
+      //       future: controller.,
       //       builder: (context, snapshot) {
       //         if (snapshot.connectionState == ConnectionState.waiting) {
       //             return const Center(

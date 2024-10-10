@@ -49,12 +49,9 @@ class Favorite extends StatelessWidget {
                   onTap: () {
                     clinicHandler.updateCurrentIndex(clinic.id);
                     // 병원 ID를 넘겨서 clinic_location.dart 페이지로 이동
-                    Get.to(
-                      () => ClinicLocation(),
-                      arguments: [
-                        clinic.id,// 병원의 ID 넘기기
-                      ] 
-                    );
+                    Get.to(() => ClinicLocation(), arguments: [
+                      clinic.id, // 병원의 ID 넘기기
+                    ]);
                   },
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),

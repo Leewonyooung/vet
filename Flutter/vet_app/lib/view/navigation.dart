@@ -18,7 +18,6 @@ class Navigation extends StatelessWidget {
       PersistentTabController(initialIndex: 0);
   final LoginHandler loginHandler = Get.put(LoginHandler());
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
