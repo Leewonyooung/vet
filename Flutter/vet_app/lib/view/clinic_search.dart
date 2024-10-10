@@ -46,7 +46,7 @@ class ClinicSearch extends StatelessWidget {
                               return GestureDetector(
                                 onTap: () {
                                   vmHandler.updateCurrentIndex(clinic[index].id);
-                                  Get.to(ClinicInfo(), arguments: [
+                                  Get.to(() => ClinicInfo(), arguments: [
                                     clinic[index].id,
                                   ]);
                                 },

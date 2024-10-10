@@ -60,7 +60,7 @@ class ClinicInfo extends StatelessWidget {
                                       children: [
                                         // 지도 보는 버튼
                                         IconButton(
-                                            onPressed: () => Get.to(
+                                            onPressed: () => Get.to(() =>
                                                 ClinicLocation(),
                                                 arguments: [result[0].id]),
                                             icon: const Icon(
