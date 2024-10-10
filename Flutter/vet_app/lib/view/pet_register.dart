@@ -99,6 +99,7 @@ class PetRegister extends StatelessWidget {
                 petHandler.addPet(newPet).then((success) {
                   if (success) {
                     Get.snackbar('등록 완료', '반려동물이 성공적으로 등록되었습니다.');
+                    Get.back();
                   } else {
                     Get.snackbar('등록 실패', '반려동물 등록에 실패했습니다.');
                   }

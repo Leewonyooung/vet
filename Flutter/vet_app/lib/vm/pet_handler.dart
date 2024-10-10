@@ -45,11 +45,13 @@ class PetHandler extends SpeciesHandler {
 
   // 반려동물 등록
   Future<bool> addPet(Pet pet) async {
-    var url = Uri.parse('http://127.0.0.1:8000/pet/pets');
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/pet/insert?id=${pet.id}&user_id=${pet.userId}&species_type=${pet.speciesType}&species_category=${pet.speciesCategory}&name=${pet.name}&birthday=${pet.birthday}&features=${pet.features}&gender=${pet.gender}&image=${pet.image}');
     var response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
+        'id': pet.id,
         'user_id': pet.userId,
         'species_type': pet.speciesType,
         'species_category': pet.speciesCategory,
