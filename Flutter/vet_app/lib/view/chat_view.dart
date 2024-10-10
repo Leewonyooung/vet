@@ -79,7 +79,7 @@ class ChatView extends StatelessWidget {
                                   SizedBox(
                                     child: Text(
                                       chat.text,
-                                      style: const TextStyle(fontSize: 22),
+                                      style: const TextStyle(fontSize: 20),
                                     ),
                                   )
                                 ),
@@ -90,80 +90,69 @@ class ChatView extends StatelessWidget {
                       ],
                     ),
                   )
-                : Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 60,
-                            height: 60,
-                            child: Image.network(
-                              value[0],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top:8.0,left: 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                : Padding(
+                  padding: const EdgeInsets.only(right:15.0),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
                           children: [
-                            Row(
-                              children: [
-                                Text(
-                                  value[1],
-                                  style: const TextStyle(fontSize: 18,),
-                                ),
-                              ],
+                            SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: Image.network(
+                                value[0],
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left:8.0),
+                          child: Column(
                             children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width/1.8,
-                                decoration: BoxDecoration(
-                                  color: Colors.green[200],
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Row( 
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width/1.4,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Flexible(
-                                      child: SizedBox(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(15),
-                                          child: chat.text.length == vmHandler.isToday()?
-                                            SizedBox(
-                                              child: Text(chat.text.substring(3,chat.text.length-4)),
-                                            ):
-                                            Text(
-                                              chat.text,
-                                              style: const TextStyle(fontSize: 20,
-                                              // overflow: TextOverflow.ellipsis
+                                    Text(value[1],style: const TextStyle(fontSize: 20),),
+                                    chat.text.length == vmHandler.isToday()?
+                                    Text(chat.text.substring(3,chat.text.length-4)):
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Flexible(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.green[200],
+                                              borderRadius: BorderRadius.circular(15),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(12),
+                                              child: Text(
+                                                chat.text,
+                                                style: const TextStyle(fontSize: 20,
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left:8.0),
+                                          child: Text(chat.timestamp.substring(11,16)),
+                                        ),
+                                      ],
                                     ),
-                                    ],
-                                  ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left:8.0),
-                                  child: SizedBox(
-                                    child: Text(chat.timestamp.substring(11,16))
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                ),
                 ),
               );
             },

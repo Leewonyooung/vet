@@ -18,68 +18,63 @@ class Mypage extends StatelessWidget {
       ),
       body: GetBuilder<LoginHandler>(
         builder: (_) {
+          if (loginHandler.mypageUserInfo.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            final result = loginHandler.mypageUserInfo[0];
               return
-              FutureBuilder(
-                future: loginHandler.selectMyinfo(loginHandler.getStoredEmail()),
-                builder: (context, snapshot) {
-                if(snapshot.connectionState == ConnectionState.waiting){
-                  return Center(child: CircularProgressIndicator(),);
-                }else if(snapshot.hasError){
-                  return Center(child: Text("${snapshot.error}"));
-                }else{
-                    final result = loginHandler.mypageUserInfo[0];
-                return Obx(
-                  () {
-                  return Center(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset(
-                              result.image,
-                              width: 100,
-                              height: 100,
-                            ),
-                            Text(result.name),
-                          ],
-                        ),
-                        Text(result.id!),
-                        const Divider(
-                          color: Colors.grey, // 선의 색상
-                          thickness: 1, // 선의 두께
-                          indent: 16, // 왼쪽 여백
-                          endIndent: 16,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const PetInfo());
-                                },
-                                child: const Column(
-                                  children: [Icon(Icons.pets), Text('반려동물')],
-                                )),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Get.to(
-                                    MyinfoUpdate(), 
-                                    arguments: [
-                                        result.id,
-                                  ])!.then((value) => loginHandler.selectMyinfo(loginHandler.getStoredEmail()));
-                                },
-                                child: const Column(
-                                  children: [
-                                    Icon(Icons.account_circle),
-                                    Text('내정보 수정')
-                                  ],
-                                )),
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                  }
+              Obx(
+                () {
+                return Center(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Image.asset(
+                            loginHandler.mypageUserInfo[0].image,
+                            width: 100,
+                            height: 100,
+                          ),
+                          Text(result.name),
+                        ],
+                      ),
+                      Text(result.id!),
+                      const Divider(
+                        color: Colors.grey, // 선의 색상
+                        thickness: 1, // 선의 두께
+                        indent: 16, // 왼쪽 여백
+                        endIndent: 16,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                Get.to(const PetInfo());
+                              },
+                              child: const Column(
+                                children: [Icon(Icons.pets), Text('반려동물')],
+                              )),
+                          ElevatedButton(
+                              onPressed: () {
+                                Get.to(
+                                  MyinfoUpdate(), 
+                                  arguments: [
+                                      result.id,
+                                      result.name,
+                                      result.image
+                                ])!.then((value) => loginHandler.selectMyinfo(userid));
+                              },
+                              child: const Column(
+                                children: [
+                                  Icon(Icons.account_circle),
+                                  Text('내정보 수정')
+                                ],
+                              )),
+                        ],
+                      )
+                    ],
+                  ),
                 );
                 }
                 }

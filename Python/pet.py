@@ -26,7 +26,7 @@ async def get_pets(user_id: str):
     conn = connection()
     try:
         with conn.cursor() as cursor:
-            sql = "SELECT * FROM pets WHERE user_id = %s"
+            sql = "SELECT * FROM pet WHERE user_id = %s"
             cursor.execute(sql, (user_id,))
             pets = cursor.fetchall()
 
@@ -52,17 +52,17 @@ async def get_pets(user_id: str):
         conn.close()
 
 # 반려동물 등록 API (POST)
-@router.post("/pets")
-async def add_pet(user_id: str, species_type: str, species_category: str, name: str, birthday: str, features: str, gender: str, image: str = None):
+@router.post("/insert")
+async def add_pet(id:str, user_id: str, species_type: str, species_category: str, name: str, birthday: str, features: str, gender: str, image: str = None):
     conn = connection()
     try:
         with conn.cursor() as cursor:
             sql = """
-                INSERT INTO pets (id, user_id, species_type, species_category, name, birthday, features, gender, image)
+                INSERT INTO pet (id, user_id, species_type, species_category, name, birthday, features, gender, image)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
             cursor.execute(sql, (
-                user_id, species_type, species_category, name, 
+                id, user_id, species_type, species_category, name, 
                 birthday, features, gender, image
             ))
             conn.commit()

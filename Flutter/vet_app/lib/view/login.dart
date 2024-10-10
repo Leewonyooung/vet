@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:vet_app/vm/login_handler.dart';
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+  Login({super.key});
+  final LoginHandler loginhandler = Get.find();
 
   @override
   Widget build(BuildContext context) {
