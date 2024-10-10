@@ -182,8 +182,6 @@ async def detail_clinic(id: str):
         return {'Error' : 'error'}
 
 
-   
-
     # 병원 전체 목록
 @router.get('/select_clinic')
 async def all_clinic():

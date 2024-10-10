@@ -10,31 +10,69 @@ class ClinicLogin extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final vmHandler = Get.put(LoginHandler());
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Login'),
+          title: const Text(''),
         ),
         body: GetBuilder<LoginHandler>(
           builder: (controller) {
-            return Center(
-              child: Column(
-                children: [
-                  TextField(
-                    controller: idController,
-                    decoration: const InputDecoration(labelText: '아이디를 입력하세요'),
-                  ),
-                  TextField(
-                    controller: passwordController,
-                    decoration: const InputDecoration(labelText: '비밀번호를 입력하세요'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => clinicloginJsonCheck(),
-                    child: const Text('입력'),
-                  ),
-                ],
+            return Obx((){ 
+            return SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 300, 0, 50),
+                      child: Text('Login',style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: 500,
+                        child: TextField(
+                          controller: idController,
+                          decoration: const InputDecoration(
+                            labelText: '아이디를 입력하세요',
+                            border: OutlineInputBorder()
+                            ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: 500,
+                        child: TextField(
+                          controller: passwordController,
+                          obscureText: vmHandler.isObscured.value,
+                          decoration: InputDecoration(
+                            labelText: '비밀번호를 입력하세요',
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                vmHandler.togglePasswordVisibility();
+                              }, 
+                              icon: Icon(vmHandler.isObscured.value ? Icons.visibility_off : Icons.visibility),
+                              ),
+                            ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: ElevatedButton(
+                        onPressed: () => clinicloginJsonCheck(vmHandler),
+                        child: const Text('login'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+            );
+            }
             );
           },
         ));

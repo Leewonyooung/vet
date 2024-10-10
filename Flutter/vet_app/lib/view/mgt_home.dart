@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:vet_app/view/mgt_clinic_add.dart';
 
 class MgtHome extends StatelessWidget {
   const MgtHome({super.key});
@@ -17,7 +19,7 @@ class MgtHome extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                   onPressed: () {
-                    //
+                    Get.to(()=> MgtClinicAdd());
                   },
                   child: const Text('Create Clinic account')),
             ),
