@@ -152,26 +152,34 @@ async def all_clinic(name:str):
 # 병원 검색 활용
 @router.get('/select_search')
 async def search_clinic(name:str=None):
-    conn = connect()
-    curs = conn.cursor()
-    sql = 'select * from clinic where id = %s'
-    curs.execute(sql,(name))
-    rows = curs.fetchall()
-    conn.close()
-    return{'results' : rows}
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = 'select * from clinic where id = %s'
+        curs.execute(sql,(name))
+        rows = curs.fetchall()
+        conn.close()
+        return{'results' : rows}
+    except Exception as e:
+        conn.close()
+        print("Error : ", e)
+        return{'result' " 'error"}
 
 # 상세화면 정보 불러오기
 @router.get('/detail_clinic')
 async def detail_clinic(id: str):
-    conn = connect()
-    curs = conn.cursor()
-    sql = "select * from clinic where id=%s"
-    curs.execute(sql,(id))
-    rows = curs.fetchall()
-    conn.close()
-    print(rows)
-    return {'results' : rows} # 결과 값 = list(key값 x)
-
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select * from clinic where id=%s"
+        curs.execute(sql,(id))
+        rows = curs.fetchall()
+        conn.close()
+        return {'results' : rows} # 결과 값 = list(key값 x)
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return {'Error' : 'error'}
 
 
    
@@ -179,38 +187,51 @@ async def detail_clinic(id: str):
     # 병원 전체 목록
 @router.get('/select_clinic')
 async def all_clinic():
-    conn = connect()
-    curs = conn.cursor()
-    sql = "select * from clinic"
-    curs.execute(sql)
-    rows = curs.fetchall()
-    conn.close()
-    return {'results' : rows} # 결과 값 = list(key값 x)
-
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select * from clinic"
+        curs.execute(sql)
+        rows = curs.fetchall()
+        conn.close()
+        return {'results' : rows} # 결과 값 = list(key값 x)
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return {'Error' : 'error'}
 
 # 병원 검색 활용
 @router.get('/select_search')
 async def search_clinic(name:str=None):
-    conn = connect()
-    curs = conn.cursor()
-    sql = 'select * from clinic where id = %s'
-    curs.execute(sql,(name))
-    rows = curs.fetchall()
-    conn.close()
-    return{'results' : rows}
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = 'select * from clinic where id = %s'
+        curs.execute(sql,(name))
+        rows = curs.fetchall()
+        conn.close()
+        return{'results' : rows}
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return {'Error' : 'error'}
 
 # 상세화면 정보 불러오기
 @router.get('/detail_clinic')
 async def detail_clinic(id: str):
-    conn = connect()
-    curs = conn.cursor()
-    sql = "select * from clinic where id=%s"
-    curs.execute(sql,(id))
-    rows = curs.fetchall()
-    conn.close()
-    print(rows)
-    return {'results' : rows} # 결과 값 = list(key값 x)
-
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select * from clinic where id=%s"
+        curs.execute(sql,(id))
+        rows = curs.fetchall()
+        conn.close()
+        print(rows)
+        return {'results' : rows} # 결과 값 = list(key값 x)
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return {'Error' : 'error'}
 
 # insert clinic (안창빈)
 

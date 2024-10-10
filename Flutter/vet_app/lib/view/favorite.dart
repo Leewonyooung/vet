@@ -49,7 +49,9 @@ class Favorite extends StatelessWidget {
                     // 병원 ID를 넘겨서 clinic_location.dart 페이지로 이동
                     Get.to(
                       () => const ClinicLocation(),
-                      arguments: clinic.id, // 병원의 ID 넘기기
+                      arguments: [
+                        clinic.id,// 병원의 ID 넘기기
+                      ] 
                     );
                   },
                   trailing: IconButton(

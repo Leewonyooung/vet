@@ -41,6 +41,7 @@ def select_mypage(id:str):
     curs.execute(sql,(id))
     rows = curs.fetchall()
     conn.close()
+    print(rows)
     return {'result' : rows}
 
 
@@ -98,7 +99,7 @@ async def get_userimage(file_name : str):
     file_path = os.path.join(UPLOAD_FOLDER, file_name)
     if os.path.exists(file_path):
         return FileResponse(path=file_path, filename=file_name)
-    return {'results' : 'error'}
+    return {'result' : 'error'}
 
 
 

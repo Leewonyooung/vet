@@ -76,6 +76,7 @@ class LoginHandler extends UserHandler {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+    
 
     // Sign in to Firebase with the Google credentials (안창빈)
     final UserCredential userCredential =

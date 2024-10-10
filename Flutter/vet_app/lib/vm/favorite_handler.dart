@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
 import 'package:http/http.dart' as http;
@@ -6,6 +8,7 @@ import 'package:vet_app/vm/treatment_handler.dart';
 
 class FavoriteHandler extends TreatmentHandler {
   var favoriteClinics = <Clinic>[].obs; // 즐겨찾기 병원 목록
+  IconButton favoriteButtonIcon = IconButton(onPressed: () {},icon: Icon(Icons.favorite_outline));
 
   // 즐겨찾기 목록 불러오기
   Future<void> getFavoriteClinics(String userId) async {
@@ -97,4 +100,19 @@ class FavoriteHandler extends TreatmentHandler {
       update(); // 상태 업데이트
     }
   }
+
+      searchFavoriteClinic(String userId, String clinicId)async{
+    var url = Uri.parse(
+      'http://127.0.0.1:8000/favorite/search_favorite_clinic?user_id=$userId&clinic_id=$clinicId'
+    );
+    var response = await http.get(url);
+      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+      int result = dataConvertedJSON['results'];
+      if(result == 1){
+        favoriteButtonIcon =  IconButton(onPressed: ()=>removeFavoriteClinic(userId, clinicId),icon: Icon(Icons.favorite, color: Colors.red),);
+      }else{
+        favoriteButtonIcon = IconButton(onPressed: () => addFavoriteClinic(userId, clinicId), icon: Icon(Icons.favorite_outline,)) ;
+      }
+  }
+
 }

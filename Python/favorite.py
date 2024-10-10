@@ -80,3 +80,14 @@ async def delete_favorite(user_id: str, clinic_id: str):
 
     return {"message": "즐겨찾기 병원이 삭제되었습니다."}
 
+# 즐겨찾기 여부 검사
+@router.get('/search_favorite_clinic')
+async def search_favorit_clinic(user_id:str, clinic_id:str):
+    conn = connection()
+    curs = conn.cursor()
+
+    sql = 'select count(*) from favorite where user_id=%s and clinic_id=%s'
+    curs.execute(sql,(user_id,clinic_id))
+    rows = curs.fetchall()
+    conn.close()
+    return {'results' : rows[0][0]}
