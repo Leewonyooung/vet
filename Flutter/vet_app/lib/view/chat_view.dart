@@ -5,7 +5,9 @@ import 'package:vet_app/model/chats.dart';
 import 'package:vet_app/vm/vm_handler.dart';
 
 class ChatView extends StatelessWidget {
-  ChatView({super.key, });
+  ChatView({
+    super.key,
+  });
   final VmHandler vmHandler = Get.find();
   final TextEditingController chatController = TextEditingController();
   @override
@@ -17,26 +19,26 @@ class ChatView extends StatelessWidget {
           IconButton(
             onPressed: () {
               //
-            }, 
+            },
             icon: const Icon(Icons.search_outlined),
           )
         ],
       ),
-      body: Obx(() {return chatList(context);}
-      ),
+      body: Obx(() {
+        return chatList(context);
+      }),
     );
   }
-  
 
-  chatList(context){
+  chatList(context) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       vmHandler.listViewContoller
-      	.jumpTo(vmHandler.listViewContoller.position.maxScrollExtent);
+          .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent);
     });
     return Column(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height/1.35,
+          height: MediaQuery.of(context).size.height / 1.35,
           child: ListView.builder(
             controller: vmHandler.listViewContoller,
             itemCount: vmHandler.chats.length,
@@ -46,56 +48,53 @@ class ChatView extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: vmHandler.box.read('userId')==chat.sender?Row(
-                    mainAxisAlignment:MainAxisAlignment.end,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.green[200],
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Text(
-                                chat.text,
-                                style: const TextStyle(
-                                  fontSize: 22
+                  child: vmHandler.box.read('userId') == chat.sender
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.green[200],
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15),
+                                    child: Text(
+                                      chat.text,
+                                      style: const TextStyle(fontSize: 22),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ):
-                  Row(
-                    mainAxisAlignment:MainAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.green[200],
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Text(
-                                chat.text,
-                                style: const TextStyle(
-                                  fontSize: 22
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.green[200],
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15),
+                                    child: Text(
+                                      chat.text,
+                                      style: const TextStyle(fontSize: 22),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                          ],
+                        ),
                 ),
               );
             },
@@ -103,27 +102,25 @@ class ChatView extends StatelessWidget {
         ),
         Container(
           decoration: const BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.all(Radius.circular(15))
-          ),
-          height: MediaQuery.of(context).size.height /14,
-          width: MediaQuery.of(context).size.width /1.1,
+              color: Colors.grey,
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          height: MediaQuery.of(context).size.height / 14,
+          width: MediaQuery.of(context).size.width / 1.1,
           child: Row(
             children: [
               SizedBox(
-                width:  MediaQuery.of(context).size.width /1.3,
+                width: MediaQuery.of(context).size.width / 1.3,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
                     controller: chatController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder()
-                    ),
+                    decoration:
+                        const InputDecoration(border: OutlineInputBorder()),
                   ),
                 ),
               ),
               IconButton(
-                onPressed: () => inputChat(), 
+                onPressed: () => inputChat(),
                 icon: const Icon(Icons.arrow_circle_up_outlined),
               ),
             ],
@@ -133,18 +130,16 @@ class ChatView extends StatelessWidget {
     );
   }
 
-  inputChat() async{
-    Chats chat = Chats(
+  inputChat() async {
+    Chats inputchat = Chats(
       reciever: vmHandler.currentClinicId.value,
-      sender:vmHandler.box.read('userId'),
-      text:chatController.text.trim(),
+      sender: vmHandler.box.read('userId'),
+      text: chatController.text.trim(),
       timestamp: DateTime.now().toString(),
-      );
-    if(chatController.text !="" && chatController.text.isNotEmpty){
-      await vmHandler.addChat(chat);
+    );
+    if (chatController.text != "" && chatController.text.isNotEmpty) {
+      await vmHandler.addChat(inputchat);
     }
-    chatController.text='';
+    chatController.text = '';
   }
-
-
 }

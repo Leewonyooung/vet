@@ -115,8 +115,7 @@ async def delete_file(file_name : str):
     except Exception as e:
         print("Error:", e)
         return {"result" : "Error"}
-
-   
+    
 
     # 병원 전체 목록
 @router.get('/select_clinic')
@@ -129,28 +128,185 @@ async def all_clinic():
     conn.close()
     return {'results' : rows} # 결과 값 = list(key값 x)
 
+"""
+author: 이원영
+Fixed: 2024/10/7
+Usage: 채팅창 보여줄때 id > name
+"""
+@router.get('/select_clinic_name')
+async def all_clinic(name:str):
+    # name= ['adfki125', 'adkljzci9786']
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select name from clinic where id = %s"
+        curs.execute(sql,(name))
+        rows = curs.fetchall()
+        conn.close()
+        return {'results' : rows[0]}
+    except Exception as e:
+        conn.close()
+        print("Error :",e)
+        return {"result" : "Error"}
 
 # 병원 검색 활용
 @router.get('/select_search')
 async def search_clinic(name:str=None):
-    conn = connect()
-    curs = conn.cursor()
-    sql = 'select * from clinic where id = %s'
-    curs.execute(sql,(name))
-    rows = curs.fetchall()
-    conn.close()
-    return{'results' : rows}
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = 'select * from clinic where id = %s'
+        curs.execute(sql,(name))
+        rows = curs.fetchall()
+        conn.close()
+        return{'results' : rows}
+    except Exception as e:
+        conn.close()
+        print("Error : ", e)
+        return{'result' " 'error"}
 
 # 상세화면 정보 불러오기
 @router.get('/detail_clinic')
 async def detail_clinic(id: str):
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select * from clinic where id=%s"
+        curs.execute(sql,(id))
+        rows = curs.fetchall()
+        conn.close()
+        return {'results' : rows} # 결과 값 = list(key값 x)
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return {'Error' : 'error'}
+
+
+   
+
+    # 병원 전체 목록
+@router.get('/select_clinic')
+async def all_clinic():
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select * from clinic"
+        curs.execute(sql)
+        rows = curs.fetchall()
+        conn.close()
+        return {'results' : rows} # 결과 값 = list(key값 x)
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return {'Error' : 'error'}
+
+# 병원 검색 활용
+@router.get('/select_search')
+async def search_clinic(name:str=None):
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = 'select * from clinic where id = %s'
+        curs.execute(sql,(name))
+        rows = curs.fetchall()
+        conn.close()
+        return{'results' : rows}
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return {'Error' : 'error'}
+
+# 상세화면 정보 불러오기
+@router.get('/detail_clinic')
+async def detail_clinic(id: str):
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select * from clinic where id=%s"
+        curs.execute(sql,(id))
+        rows = curs.fetchall()
+        conn.close()
+        print(rows)
+        return {'results' : rows} # 결과 값 = list(key값 x)
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return {'Error' : 'error'}
+
+# insert clinic (안창빈)
+
+@router.get("/insert")
+async def insert(
+    id: str=None, 
+    name: str=None, 
+    password: str=None, 
+    latitude: float=None, 
+    longitude: float=None, 
+    start_time: str=None, 
+    end_time: str=None, 
+    introduction: str=None, 
+    address: str=None, 
+    phone: str=None, 
+    image: str=None,
+):
     conn = connect()
     curs = conn.cursor()
-    sql = "select * from clinic where id=%s"
-    curs.execute(sql,(id))
-    rows = curs.fetchall()
-    conn.close()
-    print(rows)
-    return {'results' : rows} # 결과 값 = list(key값 x)
 
+    try:
+        sql ="insert into clinic(id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image) values (%s,%s,%s,%s,%s)"
+        curs.execute(sql, (id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image))
+        conn.commit()
+        conn.close()
+        return {'results': 'OK'}
+
+    except Exception as e:
+        conn.close()
+        print("Error :", e)
+        return {'result': 'Error'}    
+    
+# update clinic (안창빈)
+
+@router.get("/update")
+async def update(
+    id: str=None, 
+    name: str=None, 
+    password: str=None, 
+    latitude: float=None, 
+    longitude: float=None, 
+    start_time: str=None, 
+    end_time: str=None, 
+    introduction: str=None, 
+    address: str=None, 
+    phone: str=None, 
+    image: str=None,
+):
+    conn = connect()
+    curs = conn.cursor()
+
+    try:
+        sql = """
+        UPDATE clinic
+        SET name = %s,
+        password = %s,
+        latitude = %s,
+        longitude = %s,
+        start_time = %s,
+        end_time = %s,
+        introduction = %s,
+        address = %s,
+        phone = %s,
+        image = %s
+        WHERE id = %s
+        """
+        curs.execute(sql, (name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image, id))
+        conn.commit()
+        conn.close
+        return {'results': 'OK'} 
+    
+
+
+    except Exception as e:
+        conn.close()
+        print("Error :", e)
+        return {'result': 'Error'}    
 

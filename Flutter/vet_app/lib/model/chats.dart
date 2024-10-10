@@ -11,12 +11,11 @@ class Chats {
     required this.timestamp,
   });
 
-  factory Chats.fromMap(Map<String, dynamic>map, String id){
+  factory Chats.fromMap(Map<String, dynamic> map, String id) {
     return Chats(
-      reciever: map['reciever']??'',
-      sender: map['sender']??'',
-      text: map['text']?? '',
-      timestamp: map['timestamp']??''
-    );
+        reciever: map['reciever'] ?? '',
+        sender: map['sender'] ?? '',
+        text: map['text'] ?? '',
+        timestamp: map['timestamp'] ?? '');
   }
 }

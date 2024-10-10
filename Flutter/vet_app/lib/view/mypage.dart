@@ -10,7 +10,9 @@ class Mypage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserHandler userHandler = Get.put(UserHandler());
-    userHandler.selectMyinfo();
+    String userid = userHandler.getStoredEmail();
+    userHandler.selectMyinfo(userid);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('마이페이지'),
@@ -21,61 +23,65 @@ class Mypage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else {
             final result = controller.mypageUserInfo[0];
-            return Center(
-              child: Column(
-                children: [
-                  Row(
+              return
+              Obx(
+                () {
+                return Center(
+                  child: Column(
                     children: [
-                      Image.asset(
-                        controller.mypageUserInfo[0].image,
-                        width: 100,
-                        height: 100,
+                      Row(
+                        children: [
+                          Image.asset(
+                            controller.mypageUserInfo[0].image,
+                            width: 100,
+                            height: 100,
+                          ),
+                          Text(result.name),
+                        ],
                       ),
-                      Text(result.name),
+                      Text(result.id!),
+                      const Divider(
+                        color: Colors.grey, // 선의 색상
+                        thickness: 1, // 선의 두께
+                        indent: 16, // 왼쪽 여백
+                        endIndent: 16,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                Get.to(const PetInfo());
+                              },
+                              child: const Column(
+                                children: [Icon(Icons.pets), Text('반려동물')],
+                              )),
+                          ElevatedButton(
+                              onPressed: () {
+                                Get.to(
+                                  MyinfoUpdate(), 
+                                  arguments: [
+                                      result.id,
+                                      result.name,
+                                      result.image
+                                ])!.then((value) => userHandler.selectMyinfo(userid));
+                              },
+                              child: const Column(
+                                children: [
+                                  Icon(Icons.account_circle),
+                                  Text('내정보 수정')
+                                ],
+                              )),
+                        ],
+                      )
                     ],
                   ),
-                  Text(result.id!),
-                  const Divider(
-                    color: Colors.grey, // 선의 색상
-                    thickness: 1, // 선의 두께
-                    indent: 16, // 왼쪽 여백
-                    endIndent: 16,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                          onPressed: () {
-                            Get.to(const PetInfo());
-                          },
-                          child: const Column(
-                            children: [Icon(Icons.pets), Text('반려동물')],
-                          )),
-                      ElevatedButton(
-                          onPressed: () {
-                            Get.to(
-                              MyinfoUpdate(), 
-                                arguments: [
-                                  result.id,
-                                  result.name,
-                                  result.image
-                                ]
-                            );
-                          },
-                          child: const Column(
-                            children: [
-                              Icon(Icons.account_circle),
-                              Text('내정보 수정')
-                            ],
-                          )),
-                    ],
-                  )
-                ],
-              ),
-            );
+                );
+                }
+              );
+              }
           }
-        },
-      ),
+            )
     );
-  }
+}
 }

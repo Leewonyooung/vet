@@ -17,33 +17,36 @@ class MyinfoUpdate extends StatelessWidget {
       ),
       body: GetBuilder<UserHandler>(
         builder: (controller) {
-          return Center(
-            child: Column(
-              children: [
-                  Image.asset(value[2],
-                  width: 100,
-                  height: 100,
-                  ), //3: image
-                  Text("ID : ${value[0]}"),
-                  TextField(
-                    controller: nameController,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if(userHandler.userImageFile == null){
-                      controller.updateUserName(nameController.text.trim(),'test');
-                      }else{
-                      }
-                  }, 
-                  child: const Text('저장')
-                  )
-              ],
-            ),
-          );
-        },
-        ),
+            return Center(
+              child: Column(
+                children: [
+                    Image.asset(value[2],
+                    width: 100,
+                    height: 100,
+                    ), //3: image
+                    Text("ID : ${value[0]}"),
+                    TextField(
+                      controller: nameController,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if(controller.userImageFile == null){
+                          userHandler.updateUserName(nameController.text.trim(), value[0]);
+                          Get.back();
+                        }else{
+                          // userUpdateAll();
+                        }
+                    }, 
+                    child: const Text('저장')
+                    )
+                ],
+              ),
+            );
+          }
+          ),
+        );
+        }
 
-    );
+    
   }
- 
-}
+  

@@ -5,55 +5,48 @@ Fixed: 07/Oct/2024
 Usage: store user acoount information
 """
 
-from fastapi import FastAPI
+from fastapi import APIRouter 
 import pymysql
 
-app = FastAPI()
+
+router = APIRouter()
 
 def connect():
     conn = pymysql.connect(
         host='192.168.50.91',
         user='root',
         passwd='qwer1234',
-        db='vet',
+        db='veterinarian',
         charset='utf8'
     )
     return conn
 
-@app.get("/select")
+    ## Check User account from db  (안창빈)
+
+@router.get("/selectuser")
 async def select(id: str=None):
     conn = connect()
     curs = conn.cursor()
 
-    sql = "select id, password, image, name from user where id=%s"
+    sql = "select id, password, image, name, phone from user where id=%s"
     curs.execute(sql, (id,))
     rows = curs.fetchall()
     conn.close()
 
-    result = [{'id' : row[0], 'password' : row[1],'image' : row[2],'name' : row[3]} for row in rows]
+    result = [{'id' : row[0], 'password' : row[1],'image' : row[2],'name' : row[3], 'phone' : row[3]} for row in rows]
     return {'results' : result}
 
-# @app.get("/select")
-# async def select():
-#     conn = connect()
-#     curs = conn.cursor()
 
-#     sql = "select id, password, image, name from user"
-#     curs.execute(sql)
-#     rows = curs.fetchall()
-#     conn.close()
+    ## add google acount to sql db if it is an new user  (안창빈)
 
-#     result = [{'id' : row[0], 'password' : row[1],'image' : row[2],'name' : row[3]} for row in rows]
-#     return {'results' : result}
-
-@app.get("/insert")
-async def insert(id: str=None, password: str=None, image: str=None, name: str=None):
+@router.get("/insertuser")
+async def insert(id: str=None, password: str=None, image: str=None, name: str=None, phone: str=None):
     conn = connect()
     curs = conn.cursor()
 
     try:
-        sql ="insert into user(id, password, image, name) values (%s,%s,%s,%s)"
-        curs.execute(sql, (id, password, image, name))
+        sql ="insert into user(id, password, image, name, phone) values (%s,%s,%s,%s,%s)"
+        curs.execute(sql, (id, password, image, name, phone))
         conn.commit()
         conn.close()
         return {'results': 'OK'}
@@ -64,6 +57,19 @@ async def insert(id: str=None, password: str=None, image: str=None, name: str=No
         return {'result': 'Error'}
     
 
-if __name__=="__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+## Check clinic account from db  (안창빈)
+
+@router.get("/selectclinic")
+async def select(id: str=None, password: str=None):
+    conn = connect()
+    curs = conn.cursor()
+
+    sql = "select id, password from clinic where id=%s and password=%s"
+    curs.execute(sql, (id, password,))
+    rows = curs.fetchall()
+    conn.close()
+
+    result = [{'id' : row[0], 'password' : row[1]} for row in rows]
+    return {'results' : result}
+
+

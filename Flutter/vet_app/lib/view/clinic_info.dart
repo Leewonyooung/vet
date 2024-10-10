@@ -9,7 +9,8 @@ class ClinicInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     VmHandler vmHandler = Get.put(VmHandler());
-    var value = Get.arguments[0] ??"__";
+    var value = Get.arguments[0] ?? "__";
+    vmHandler.searchFavoriteClinic(vmHandler.getStoredEmail(), value);
     return Scaffold(
       appBar: AppBar(
         title: const Text('검색 결과'),
@@ -25,58 +26,82 @@ class ClinicInfo extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error:${snapshot.error}'));
                 } else {
-                  return Center(
-                    child: Column(
-                      children: [
-                        Text(result[0].name),
-                        Container(
-                          width: (MediaQuery.of(context).size.width),
-                          height: 250,
-                          color: Colors.grey,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  return Obx(
+                    () {
+                    return 
+                     Center(
+                      child: Column(
+                        children: [
+                          Text(result[0].name,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            width: (MediaQuery.of(context).size.width)*0.7,
+                            height: MediaQuery.of(context).size.height*0.35,
+                            child: Card(
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.network(
+                                        'http://127.0.0.1:8000/clinic/view/${result[0].image}',
+                                        height: MediaQuery.of(context).size.height*0.4*0.7,
+                                        ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        // 지도 보는 버튼
+                                        IconButton(
+                                            onPressed: () => Get.to(
+                                                    const ClinicLocation(),
+                                                    arguments: [
+                                                      result[0].id
+                                                    ]
+                                                    ),
+                                            icon: const Icon(
+                                                Icons.pin_drop_outlined)),
+
+                                                // 즐겨찾기 등록 버튼
+                                                vmHandler.favoriteButtonIcon
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              IconButton(
-                                  onPressed: () => Get.to(const ClinicLocation(),
-                                          arguments: [
-                                            result[0].name,
-                                            result[0].latitude,
-                                            result[0].longitude,
-                                            result[0].address
-                                          ]
-                                          ),
-                                  icon: const Icon(Icons.pin_drop_outlined)),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.favorite_border))
+                              const Icon(Icons.watch_later_outlined),
+                              Text("${result[0].startTime}~${result[0].endTime}"),
+                              // ignore: prefer_const_constructors
+                              const Icon(Icons.pin_drop_outlined),
+                                  Text(result[0].address.substring(0, 7))
                             ],
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.watch_later_outlined),
-                            Text("${result[0].startTime}~${result[0].endTime}"),
-                            const Icon(Icons.pin_drop_outlined),
-                            result[0].address=='null' ?  Text('주소 미입력') : Text(result[0].address.substring(0, 8))
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(60),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              //
-                            },
-                            style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(300, 40),
-                                backgroundColor:
-                                    const Color.fromARGB(255, 237, 220, 61)),
-                            child: const Text('예약하기'),
-                          ),
-                        ),
-                      ],
-                    ),
+
+                          /// 예약 버튼
+                          Padding(
+                            padding: const EdgeInsets.all(60),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                //
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(300, 40),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 237, 220, 61)),
+                              child: const Text('예약하기'),
+                            ),
+                          ),                        ],
+                      ),
+                    );
+                    }
                   );
                 }
               });

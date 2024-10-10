@@ -3,13 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:vet_app/firebase_options.dart';
-import 'package:vet_app/view/clinic_search.dart';
-import 'package:vet_app/view/login.dart';
-import 'package:vet_app/view/mypage.dart';
 import 'package:vet_app/view/navigation.dart';
 
-
-void main() async{
+void main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -26,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Mypage(),
+      home: Navigation(),
     );
   }
 }

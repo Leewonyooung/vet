@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_location.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
+import 'package:vet_app/vm/login_handler.dart';
 
 class Favorite extends StatelessWidget {
   const Favorite({super.key});
@@ -11,8 +12,10 @@ class Favorite extends StatelessWidget {
     // FavoriteHandler 인스턴스 생성
     final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
 
-    // 임시 사용자 ID 지정
-    String userId = 'yubee'; // 임시로 지정한 user_id
+    final LoginHandler loginHandler = Get.find<LoginHandler>();
+
+    // 로그인한 사용자의 ID(email)를 사용
+    String userId = loginHandler.getStoredEmail(); // 저장된 이메일 가져오기
 
     // 즐겨찾기 목록 불러오기 호출
     favoriteHandler.getFavoriteClinics(userId);
@@ -41,13 +44,14 @@ class Favorite extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.local_hospital),
                   title: Text(clinic.name),
-                  subtitle: Text(
-                      '${clinic.address}\n전화: ${clinic.phone}'), // null 안전 연산자
+                  subtitle: Text('${clinic.address}\n전화: ${clinic.phone}'),
                   onTap: () {
                     // 병원 ID를 넘겨서 clinic_location.dart 페이지로 이동
                     Get.to(
                       () => const ClinicLocation(),
-                      arguments: clinic.id, // 병원의 ID 넘기기
+                      arguments: [
+                        clinic.id,// 병원의 ID 넘기기
+                      ] 
                     );
                   },
                   trailing: IconButton(
@@ -55,8 +59,8 @@ class Favorite extends StatelessWidget {
                     onPressed: () {
                       // 즐겨찾기에서 병원 삭제
                       favoriteHandler.removeFavoriteClinic(
-                        userId, // 임시로 지정한 user_id 사용
-                        clinic.id!, // String? 타입을 String으로 변환
+                        userId, // 로그인한 사용자 ID 사용
+                        clinic.id, // String? 타입을 String으로 변환
                       );
                     },
                   ),

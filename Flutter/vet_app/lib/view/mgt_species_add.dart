@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PetInfo extends StatelessWidget {
-  const PetInfo({super.key});
+class MgtSpeciesAdd extends StatelessWidget {
+  const MgtSpeciesAdd({super.key});
 
   @override
   Widget build(BuildContext context) {
