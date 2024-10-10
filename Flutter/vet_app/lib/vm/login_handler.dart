@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -12,6 +15,7 @@ class LoginHandler extends GetxController {
   final box = GetStorage();
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
+  var isObscured = true.obs;
   List data = [];
   String userEmail = '';
   String userName = '';
@@ -157,4 +161,32 @@ class LoginHandler extends GetxController {
     List result = dataConvertedJSON['results'];
     return result;
   }
+
+  // toggle password visibility
+  togglePasswordVisibility() {
+    isObscured.value = !isObscured.value;
+  }
+
+  // Clinic Password random Generator
+  randomPasswordNumberClinic() {
+  const String upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const String lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+  const String numbers = '0123456789';
+  const String specialChars = r'!@#$%^&*()?_~';  
+  String includeAllChar = upperCaseLetters + lowerCaseLetters + numbers + specialChars;
+  Random random = Random();
+  String passwordClinic = '';
+
+  passwordClinic += upperCaseLetters[random.nextInt(upperCaseLetters.length)];
+  passwordClinic += lowerCaseLetters[random.nextInt(lowerCaseLetters.length)];
+  passwordClinic += numbers[random.nextInt(numbers.length)];
+  passwordClinic += specialChars[random.nextInt(specialChars.length)];
+  for (int i = 0; i < 4; i++) {
+    passwordClinic += includeAllChar[random.nextInt(includeAllChar.length)];
+  }
+  
+  List<String> passwordClinicShuffle = passwordClinic.split('')..shuffle();
+  return passwordClinicShuffle.join('');
+
+}
 }
