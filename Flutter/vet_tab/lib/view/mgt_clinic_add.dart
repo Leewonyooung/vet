@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:vet_app/vm/image_handler.dart';
-import 'package:vet_app/vm/login_handler.dart';
+import 'package:vet_tab/vm/login_handler.dart';
 
 class MgtClinicAdd extends StatelessWidget {
   MgtClinicAdd({super.key});
@@ -33,7 +32,7 @@ class MgtClinicAdd extends StatelessWidget {
               },
               icon: const Icon(Icons.arrow_back_ios)),
         ),
-        body: GetBuilder<ImageHandler>(
+        body: GetBuilder<LoginHandler>(
           builder: (controller) {
             return SingleChildScrollView(
               child: Center(

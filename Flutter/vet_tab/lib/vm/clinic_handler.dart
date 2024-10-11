@@ -1,13 +1,18 @@
 import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:vet_app/model/clinic.dart';
 import 'package:http/http.dart' as http;
-import 'package:vet_app/vm/treatment_handler.dart';
+import 'package:vet_tab/model/clinic.dart';
+import 'package:vet_tab/vm/login_handler.dart';
 
-class ClinicHandler extends TreatmentHandler{
+class ClinicHandler extends LoginHandler{
   String searchkeyward ="";
   var clinicSearch = <Clinic>[].obs;
   var clinicDetail = <Clinic>[].obs;
+
+    getUserId() async {
+    // api를 통해 userID가져옴
+    await box.write('userId', '1234');
+  }
 
   RxString currentIndex = ''.obs;
 
@@ -72,5 +77,39 @@ class ClinicHandler extends TreatmentHandler{
       returnData.add(Clinic(id: id,name: name, password: password, latitude: latitude, longitude: longitude, startTime: startTime, endTime: endTime, introduction: introduction!, address: address!, phone: phone!, image: image!));
       clinicDetail.value = returnData;
     }
+
+  // insert clinic (안창빈)
+
+  getClinicInsert(
+      String id,
+      String name,
+      String password,
+      double latitude,
+      double longitude,
+      String stime,
+      String etime,
+      String introduction,
+      String address,
+      String phone,
+      String image) async {
+    var url = Uri.parse(
+        "http://127.0.0.1:8000/clinic/insert?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&stime=$stime&etime=$etime&introduction=$introduction&address=$address&phone=$phone&image=$image");
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var results = dataConvertedJSON['results'];
+    return results;
+  }
+
+  // update clinic (안창빈)
+
+  getClinicUpdate() async {
+    var url = Uri.parse("http://127.0.0.1:8000/clinic/update?");
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var results = dataConvertedJSON['results'];
+    return results;
+  }
+
+  // insert clinic (안창빈)
 
 }
