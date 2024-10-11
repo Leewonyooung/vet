@@ -113,7 +113,7 @@ class LoginHandler extends UserHandler {
   // insert the account information to mysql(db) (안창빈)
   userloginInsertData(String userEmail, String userName) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/user/insertuser?id=$userEmail&password=""&image=images/usericon.jpg&name=$userName&phone=""');
+        'http://127.0.0.1:8000/user/insertuser?id=$userEmail&password=""&image=usericon.jpg&name=$userName&phone=""');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];

@@ -30,7 +30,7 @@ class ClinicLogin extends StatelessWidget {
                         onTap: () {
                           loginHandler.mgtLogin();
                         },
-                        child: Text(
+                        child: const Text(
                           'Login',
                           style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
                         ),
