@@ -117,17 +117,6 @@ async def delete_file(file_name : str):
         return {"result" : "Error"}
     
 
-    # 병원 전체 목록
-@router.get('/select_clinic')
-async def all_clinic():
-    conn = connect()
-    curs = conn.cursor()
-    sql = "select * from clinic"
-    curs.execute(sql)
-    rows = curs.fetchall()
-    conn.close()
-    return {'results' : rows} # 결과 값 = list(key값 x)
-
 """
 author: 이원영
 Fixed: 2024/10/7

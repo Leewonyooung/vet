@@ -7,8 +7,8 @@ class ClinicSearch extends StatelessWidget {
   ClinicSearch({super.key});
 
   final TextEditingController searchKeywardController = TextEditingController();
-  final FavoriteHandler vmHandler = Get.find();
-  
+  final FavoriteHandler vmHandler = Get.put(FavoriteHandler());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +45,8 @@ class ClinicSearch extends StatelessWidget {
                               final clinic = vmHandler.clinicSearch;
                               return GestureDetector(
                                 onTap: () {
-                                  vmHandler.updateCurrentIndex(clinic[index].id);
+                                  vmHandler
+                                      .updateCurrentIndex(clinic[index].id);
                                   Get.to(() => ClinicInfo(), arguments: [
                                     clinic[index].id,
                                   ]);
@@ -56,20 +57,29 @@ class ClinicSearch extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Image.network('http://127.0.0.1:8000/clinic/view/${clinic[index].image}',
-                                        width:MediaQuery.of(context).size.width*0.3,
-                                        height: MediaQuery.of(context).size.height*0.1
-                                        ),
+                                        Image.network(
+                                            'http://127.0.0.1:8000/clinic/view/${clinic[index].image}',
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.3,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.1),
                                         Expanded(
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              Text(clinic[index].name,
-                                              overflow: TextOverflow.ellipsis,
+                                              Text(
+                                                clinic[index].name,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                          Text(clinic[index].address,
-                                          overflow: TextOverflow.ellipsis,
-                                          )
+                                              Text(
+                                                clinic[index].address,
+                                                overflow: TextOverflow.ellipsis,
+                                              )
                                             ],
                                           ),
                                         ),

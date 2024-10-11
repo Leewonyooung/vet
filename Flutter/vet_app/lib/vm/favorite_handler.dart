@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
@@ -7,14 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:vet_app/vm/login_handler.dart';
 class FavoriteHandler extends ClinicHandler {
   var favoriteClinics = <Clinic>[].obs; // 즐겨찾기 병원 목록
-  IconButton favoriteButtonIcon = IconButton(onPressed: () {},icon: const Icon(Icons.favorite_outline));
-  final LoginHandler loginHandler = Get.find();
-
-  @override
-  void onInit() async {
-    super.onInit();
-    await getFavoriteClinics(loginHandler.getStoredEmail());
-  }
+  var favoriteIconValue = false.obs; // 즐겨찾기 버튼 관리
 
   // 즐겨찾기 목록 불러오기
   Future<void> getFavoriteClinics(String userId) async {
@@ -107,18 +99,35 @@ class FavoriteHandler extends ClinicHandler {
     }
   }
 
+// 유저별 병원 즐겨찾기 여부 검색 
+// 즐겨찾기 아이콘 변경에 필요
   searchFavoriteClinic(String userId, String clinicId)async{
     var url = Uri.parse(
-      'http://127.0.0.1:8000/favorite/search_favorite_clinic?user_id=$userId&clinic_id=$clinicId'
-    );
+        'http://127.0.0.1:8000/favorite/search_favorite_clinic?user_id=$userId&clinic_id=$clinicId');
     var response = await http.get(url);
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       int result = dataConvertedJSON['results'];
       if(result == 1){
-        favoriteButtonIcon =  IconButton(onPressed: ()=>removeFavoriteClinic(userId, clinicId),icon: const Icon(Icons.favorite, color: Colors.red),);
+        favoriteIconValue.value = true;
       }else{
-        favoriteButtonIcon = IconButton(onPressed: () => addFavoriteClinic(userId, clinicId), icon: const Icon(Icons.favorite_outline,)) ;
+        favoriteIconValue.value =false;
       }
   }
+
+// 즐겨찾기 버튼 icon 모양 관리 함수
+  favoriteIconValueMgt(String userId, String clinicId)async{
+    if(favoriteIconValue.value == true){
+      removeFavoriteClinic(userId, clinicId);
+    }else{
+      addFavoriteClinic(userId, clinicId);
+    }
+    favoriteIconValue.value= !favoriteIconValue.value;
+  }
+
+  // 즐겨찾기 여부에 따른 함수 변경하기
+  favoriteFuncChange()async{
+  }
+
+
 
 }

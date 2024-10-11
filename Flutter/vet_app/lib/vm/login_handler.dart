@@ -8,7 +8,6 @@ import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/user_handler.dart';
 
 class LoginHandler extends UserHandler {
-
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
   var isObscured = true.obs;
@@ -76,7 +75,6 @@ class LoginHandler extends UserHandler {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    
 
     // Sign in to Firebase with the Google credentials (안창빈)
     final UserCredential userCredential =
@@ -113,13 +111,12 @@ class LoginHandler extends UserHandler {
   // insert the account information to mysql(db) (안창빈)
   userloginInsertData(String userEmail, String userName) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/user/insertuser?id=$userEmail&password=""&image=images/usericon.jpg&name=$userName&phone=""');
+        'http://127.0.0.1:8000/user/insertuser?id=$userEmail&password=""&image=usericon.jpg&name=$userName&phone=""');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];
 
     if (result == 'OK') {
-    } else {
-    }
+    } else {}
   }
 }
