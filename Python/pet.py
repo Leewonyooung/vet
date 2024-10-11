@@ -1,13 +1,14 @@
 """
-author: 
-Description: 
-Fixed: 
+author: Aeong
+Description: pet
+Fixed: 2024.10.11
 Usage: 
 """
 
 from fastapi import APIRouter, HTTPException, File, UploadFile, Form
-import pymysql
+from fastapi.responses import FileResponse
 import os
+import pymysql
 import shutil
 
 router = APIRouter()
@@ -72,12 +73,15 @@ async def add_pet(
     gender: str = Form(...),
     image: UploadFile = File(...)
 ):
-    # 이미지 저장 경로 설정
-    image_filename = f"{UPLOAD_DIRECTORY}{image.filename}"
-    with open(image_filename, "wb") as buffer:
+    # 이미지 파일 이름만 추출
+    image_filename = image.filename
+    image_path = os.path.join(UPLOAD_DIRECTORY, image_filename)  # 전체 경로
+
+    # 이미지 저장
+    with open(image_path, "wb") as buffer:
         shutil.copyfileobj(image.file, buffer)
 
-    # 데이터베이스에 반려동물 정보 저장
+    # 데이터베이스에는 파일 이름만 저장
     conn = connection()
     try:
         with conn.cursor() as cursor:
@@ -87,12 +91,20 @@ async def add_pet(
             """
             cursor.execute(sql, (
                 id, user_id, species_type, species_category, name, 
-                birthday, features, gender, image_filename
+                birthday, features, gender, image_filename  # 경로 대신 파일 이름만 저장
             ))
             conn.commit()  # 데이터베이스에 변경사항 저장
             return {"message": "Pet added successfully!"}
     finally:
         conn.close()
+
+# 이미지 제공 API
+@router.get("/uploads/{file_name}")
+async def get_file(file_name: str):
+    file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
+    if os.path.exists(file_path):
+        return FileResponse(path=file_path, filename=file_name)
+    return {"error": "File not found"}
 
 # 반려동물 삭제 API (DELETE)
 @router.delete("/pets/{pet_id}")

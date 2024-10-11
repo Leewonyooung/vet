@@ -14,7 +14,7 @@ class PetHandler extends GetxController {
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
-        var data = json.decode(response.body);
+        var data = json.decode(utf8.decode(response.bodyBytes));
         pets.value = (data as List).map((petJson) {
           return Pet(
             id: petJson['id'],
