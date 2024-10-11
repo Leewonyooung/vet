@@ -24,7 +24,6 @@ var isObscured = true.obs;
   
   mgtLogin(){
     tapCount ++;
-    print(tapCount);
     if (tapCount == 7){
       showMGTloginDialog();
     }
@@ -33,10 +32,10 @@ var isObscured = true.obs;
   showMGTloginDialog(){
     Get.defaultDialog(
       title: 'Alert',
-      content: SizedBox( 
+      content: const SizedBox( 
         height: 75,
         width: 250,
-        child: const Text('Are you going proceed to Management page?',style: TextStyle(fontSize: 20),)),
+        child:  Text('Are you going proceed to Management page?',style: TextStyle(fontSize: 20),)),
       barrierDismissible: false,
       textConfirm: 'proceed',
       onConfirm: () {

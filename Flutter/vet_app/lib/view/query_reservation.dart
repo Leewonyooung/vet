@@ -21,7 +21,6 @@ class QueryReservation extends StatelessWidget {
         itemCount: vmHnadler.pets.length,
         itemBuilder: (context, index) {
           final pet = vmHnadler.pets[index];
-          print(pet.name);
           return Card(
             child: Row(
               children: [
@@ -30,7 +29,7 @@ class QueryReservation extends StatelessWidget {
                   children: [
                     Text('이름 : ${pet.name}'),
                     Row(
-                      children: [Icon(Icons.female), Text(pet.speciesCategory)],
+                      children: [const Icon(Icons.female), Text(pet.speciesCategory)],
                     ),
                   ],
                 ),

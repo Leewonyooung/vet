@@ -25,12 +25,12 @@ class ClinicLogin extends StatelessWidget {
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, 300, 0, 50),
+                      padding: const EdgeInsets.fromLTRB(0, 300, 0, 50),
                       child: GestureDetector(
                         onTap: () {
                           loginHandler.mgtLogin();
                         },
-                        child: Text(
+                        child: const Text(
                           'Login',
                           style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
                         ),
@@ -119,7 +119,7 @@ class ClinicLogin extends StatelessWidget {
         idController.clear();
         passwordController.clear();
         Get.back();
-        Get.to(() => ClinicReservation());
+        Get.to(() => const ClinicReservation());
       },
     );
   }

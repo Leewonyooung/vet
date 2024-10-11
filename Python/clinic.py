@@ -149,6 +149,28 @@ async def all_clinic(name:str):
         print("Error :",e)
         return {"result" : "Error"}
 
+"""
+author: 이원영
+Fixed: 2024/10/7
+Usage: 채팅창 보여줄때 id > name
+"""
+@router.get('/getusername')
+async def get_user_name(id:str):
+    # name= ['adfki125', 'adkljzci9786']
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select name from user where id = %s"
+        curs.execute(sql,(id))
+        rows = curs.fetchall()
+        conn.close()
+        return {'results' : rows[0]}
+    except Exception as e:
+        conn.close()
+        print("Error :",e)
+        return {"result" : "Error"}
+
+
 # 병원 검색 활용
 @router.get('/select_search')
 async def search_clinic(name:str=None):

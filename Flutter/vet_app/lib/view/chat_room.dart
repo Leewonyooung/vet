@@ -14,9 +14,23 @@ class ChatRoom extends StatelessWidget {
         appBar: AppBar(
           title: const Text('상담방'),
         ),
-        body: Obx(
-          () => chatRoomList(context),
-        ));
+        body: FutureBuilder(
+        future: vmHandler.getAllData(),
+        builder: (context, snapshot) {
+           if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('오류 발생: ${snapshot.error}'),
+              );
+            } else {
+              return vmHandler.rooms.isEmpty?
+              const Center(child: CircularProgressIndicator(),):
+              Obx(() => chatRoomList(context),);
+          }
+        },
+      )
+      );
   }
 
   chatRoomList(context) {

@@ -24,6 +24,9 @@ class ChatsHandler extends LoginHandler {
   @override
   void onInit() async {
     super.onInit();
+    await getAllData();
+  }
+  getAllData() async{
     await makeChatRoom();
     await queryLastChat();
     await getlastName();
@@ -31,7 +34,7 @@ class ChatsHandler extends LoginHandler {
 
   queryChat() {
     _rooms
-        .doc("${currentClinicId.value}_${box.read('userId')}")
+        .doc("${currentClinicId.value}_${box.read('userEmail')}")
         .collection('chats')
         .orderBy('timestamp', descending: false)
         .snapshots()
@@ -59,7 +62,7 @@ class ChatsHandler extends LoginHandler {
     }
     for (int i = 0; i < result.length; i++) {
       _rooms
-          .doc("${result[i].clinic}_${box.read('userId')}")
+          .doc("${result[i].clinic}_${box.read('userEmail')}")
           .collection('chats')
           .orderBy('timestamp', descending: false)
           .limit(1)
@@ -121,7 +124,7 @@ class ChatsHandler extends LoginHandler {
     bool istoday = await isToday();
     if(!istoday){
       await _rooms
-        .doc("${currentClinicId.value}_${box.read('userId')}")
+        .doc("${currentClinicId.value}_${box.read('userEmail')}")
         .collection('chats')
         .add({
       'reciever': chat.reciever,
@@ -132,7 +135,7 @@ class ChatsHandler extends LoginHandler {
     }
 
     _rooms
-        .doc("${currentClinicId.value}_${box.read('userId')}")
+        .doc("${currentClinicId.value}_${box.read('userEmail')}")
         .collection('chats')
         .add({
       'reciever': chat.reciever,

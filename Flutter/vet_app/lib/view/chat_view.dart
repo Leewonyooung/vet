@@ -53,7 +53,7 @@ class ChatView extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(chat.text.substring(3,13), style: const TextStyle(fontSize: 18,),),
                   ):
-                  vmHandler.box.read('userId') == chat.sender? 
+                  vmHandler.box.read('userEmail') == chat.sender? 
                   Padding(
                     padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/10,0,0,0),
                     child: Row(
@@ -194,7 +194,7 @@ class ChatView extends StatelessWidget {
   inputChat() async {
     Chats inputchat = Chats(
       reciever: vmHandler.currentClinicId.value,
-      sender: vmHandler.box.read('userId'),
+      sender: vmHandler.box.read('userEmail'),
       text: chatController.text.trim(),
       timestamp: DateTime.now().toString(),
     );

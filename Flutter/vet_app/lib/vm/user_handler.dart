@@ -16,7 +16,7 @@ class UserHandler extends LocationHandler {
 
   getUserId() async {
     // api를 통해 userID가져옴
-    await box.write('userId', '1234');
+    await box.read('userEmail');
   }
 
   selectMyinfo(String userid) async {
