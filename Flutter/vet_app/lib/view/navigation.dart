@@ -69,7 +69,7 @@ class Navigation extends StatelessWidget {
                 if (loginHandler.isLoggedIn()) {
                   Get.to(const Favorite());
                 } else {
-                  Get.to(const Login());
+                  Get.to( Login());
                 }
               },
             ),
@@ -79,7 +79,7 @@ class Navigation extends StatelessWidget {
                 if (loginHandler.isLoggedIn()) {
                   Get.to(const Mypage());
                 } else {
-                  Get.to(const Login());
+                  Get.to( Login());
                 }
               },
             ),
@@ -135,7 +135,7 @@ class Navigation extends StatelessWidget {
                           if (loginHandler.isLoggedIn()) {
                             Get.to(Reservation());
                           } else {
-                            Get.to(const Login());
+                            Get.to( Login());
                           }
                         },
                       ),
@@ -145,9 +145,9 @@ class Navigation extends StatelessWidget {
                         color: Colors.amber.shade400,
                         onTap: () {
                           if (loginHandler.isLoggedIn()) {
-                            Get.to(const QueryReservation());
+                            Get.to(QueryReservation());
                           } else {
-                            Get.to(const Login());
+                            Get.to( Login());
                           }
                         },
                       ),
@@ -172,7 +172,7 @@ class Navigation extends StatelessWidget {
         }),
       ),
       ClinicSearch(),
-      const QueryReservation(),
+      QueryReservation(),
       ChatRoom(),
       const Mypage(),
     ];
@@ -184,7 +184,7 @@ class Navigation extends StatelessWidget {
         if (loginHandler.isLoggedIn()) {
           Get.to(const PetRegister());
         } else {
-          Get.to(const Login());
+          Get.to( Login());
         }
       },
       child: Container(
