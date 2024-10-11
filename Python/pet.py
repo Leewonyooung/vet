@@ -5,10 +5,18 @@ Fixed:
 Usage: 
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, File, UploadFile, Form
 import pymysql
+import os
+import shutil
 
 router = APIRouter()
+
+UPLOAD_DIRECTORY = "uploads/"  # 이미지 저장 경로
+
+# 이미지 저장 디렉터리 확인 및 생성
+if not os.path.exists(UPLOAD_DIRECTORY):
+    os.makedirs(UPLOAD_DIRECTORY)
 
 def connection():
     conn = pymysql.connect(
@@ -53,7 +61,23 @@ async def get_pets(user_id: str):
 
 # 반려동물 등록 API (POST)
 @router.post("/insert")
-async def add_pet(id:str, user_id: str, species_type: str, species_category: str, name: str, birthday: str, features: str, gender: str, image: str = None):
+async def add_pet(
+    id: str = Form(...),
+    user_id: str = Form(...),
+    species_type: str = Form(...),
+    species_category: str = Form(...),
+    name: str = Form(...),
+    birthday: str = Form(...),
+    features: str = Form(...),
+    gender: str = Form(...),
+    image: UploadFile = File(...)
+):
+    # 이미지 저장 경로 설정
+    image_filename = f"{UPLOAD_DIRECTORY}{image.filename}"
+    with open(image_filename, "wb") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+
+    # 데이터베이스에 반려동물 정보 저장
     conn = connection()
     try:
         with conn.cursor() as cursor:
@@ -63,9 +87,9 @@ async def add_pet(id:str, user_id: str, species_type: str, species_category: str
             """
             cursor.execute(sql, (
                 id, user_id, species_type, species_category, name, 
-                birthday, features, gender, image
+                birthday, features, gender, image_filename
             ))
-            conn.commit()
+            conn.commit()  # 데이터베이스에 변경사항 저장
             return {"message": "Pet added successfully!"}
     finally:
         conn.close()

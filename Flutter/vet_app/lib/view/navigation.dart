@@ -161,7 +161,7 @@ class Navigation extends StatelessWidget {
                 onTap: () {
                   if (loginHandler.isLoggedIn()) {
                     // 로그인되어 있으면 페이지 이동
-                    Get.to(PetRegister());
+                    Get.to(const PetRegister());
                   } else {
                     // 로그인 페이지로 이동
                     Get.to(const Login());

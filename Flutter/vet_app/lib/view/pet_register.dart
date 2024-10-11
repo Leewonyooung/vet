@@ -3,10 +3,17 @@ import 'package:get/get.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/model/pet.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class PetRegister extends StatelessWidget {
-  PetRegister({super.key});
+class PetRegister extends StatefulWidget {
+  const PetRegister({super.key});
 
+  @override
+  _PetRegisterState createState() => _PetRegisterState();
+}
+
+class _PetRegisterState extends State<PetRegister> {
   final PetHandler petHandler = Get.put(PetHandler());
   final LoginHandler loginHandler = Get.find<LoginHandler>();
 
@@ -18,7 +25,18 @@ class PetRegister extends StatelessWidget {
   final TextEditingController birthdayController = TextEditingController();
   final TextEditingController featuresController = TextEditingController();
   final TextEditingController genderController = TextEditingController();
-  final TextEditingController imageController = TextEditingController();
+
+  File? imageFile;
+  final ImagePicker picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,21 +76,28 @@ class PetRegister extends StatelessWidget {
               controller: genderController,
               decoration: const InputDecoration(labelText: '성별'),
             ),
-            TextField(
-              controller: imageController,
-              decoration: const InputDecoration(labelText: '이미지 URL (선택)'),
+            const SizedBox(height: 20),
+            // 이미지 선택 버튼
+            ElevatedButton(
+              onPressed: _pickImage,
+              child: const Text("이미지 선택"),
             ),
             const SizedBox(height: 20),
+            // 이미지 미리보기
+            imageFile != null
+                ? Image.file(imageFile!, height: 200, width: 200)
+                : const Text("선택된 이미지 없음"),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // 로그인한 사용자의 ID(email)를 사용
-                String userId = loginHandler.getStoredEmail(); // 저장된 이메일 가져오기
+              onPressed: () async {
+                String userId =
+                    loginHandler.getStoredEmail(); // 로그인된 사용자의 이메일 가져오기
+
                 if (userId.isEmpty) {
-                  Get.snackbar('오류', '로그인이 필요합니다.'); // 로그인되지 않은 경우 처리
+                  Get.snackbar('오류', '로그인이 필요합니다.');
                   return;
                 }
 
-                // 입력 필드 값 가져오기
                 String id = idController.text;
                 String speciesType = speciesTypeController.text;
                 String speciesCategory = speciesCategoryController.text;
@@ -80,30 +105,26 @@ class PetRegister extends StatelessWidget {
                 String birthday = birthdayController.text;
                 String features = featuresController.text;
                 String gender = genderController.text;
-                String image = imageController.text;
 
-                // Pet 모델 생성
                 Pet newPet = Pet(
                   id: id,
-                  userId: userId, // 로그인된 사용자의 ID 사용
+                  userId: userId,
                   speciesType: speciesType,
                   speciesCategory: speciesCategory,
                   name: name,
                   birthday: birthday,
                   features: features,
                   gender: gender,
-                  image: image,
+                  image: imageFile?.path, // 이미지 파일 경로 전달
                 );
 
-                // Pet 등록 핸들러 호출
-                petHandler.addPet(newPet).then((success) {
-                  if (success) {
-                    Get.snackbar('등록 완료', '반려동물이 성공적으로 등록되었습니다.');
-                    Get.back();
-                  } else {
-                    Get.snackbar('등록 실패', '반려동물 등록에 실패했습니다.');
-                  }
-                });
+                bool success = await petHandler.addPet(newPet, imageFile);
+                if (success) {
+                  Get.back();
+                  Get.snackbar('등록 완료', '반려동물이 성공적으로 등록되었습니다.');
+                } else {
+                  Get.snackbar('등록 실패', '반려동물 등록에 실패했습니다.');
+                }
               },
               child: const Text('등록하기'),
             ),
