@@ -7,8 +7,8 @@ class ClinicSearch extends StatelessWidget {
   ClinicSearch({super.key});
 
   final TextEditingController searchKeywardController = TextEditingController();
-  final FavoriteHandler vmHandler = Get.find();
-  
+  final FavoriteHandler vmHandler = Get.put(FavoriteHandler());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
