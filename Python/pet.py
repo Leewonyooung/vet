@@ -1,14 +1,23 @@
 """
-author: 
-Description: 
-Fixed: 
+author: Aeong
+Description: pet
+Fixed: 2024.10.11
 Usage: 
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, File, UploadFile, Form
+from fastapi.responses import FileResponse
+import os
 import pymysql
+import shutil
 
 router = APIRouter()
+
+UPLOAD_DIRECTORY = "uploads/"  # 이미지 저장 경로
+
+# 이미지 저장 디렉터리 확인 및 생성
+if not os.path.exists(UPLOAD_DIRECTORY):
+    os.makedirs(UPLOAD_DIRECTORY)
 
 def connection():
     conn = pymysql.connect(
@@ -53,7 +62,26 @@ async def get_pets(user_id: str):
 
 # 반려동물 등록 API (POST)
 @router.post("/insert")
-async def add_pet(id:str, user_id: str, species_type: str, species_category: str, name: str, birthday: str, features: str, gender: str, image: str = None):
+async def add_pet(
+    id: str = Form(...),
+    user_id: str = Form(...),
+    species_type: str = Form(...),
+    species_category: str = Form(...),
+    name: str = Form(...),
+    birthday: str = Form(...),
+    features: str = Form(...),
+    gender: str = Form(...),
+    image: UploadFile = File(...)
+):
+    # 이미지 파일 이름만 추출
+    image_filename = image.filename
+    image_path = os.path.join(UPLOAD_DIRECTORY, image_filename)  # 전체 경로
+
+    # 이미지 저장
+    with open(image_path, "wb") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+
+    # 데이터베이스에는 파일 이름만 저장
     conn = connection()
     try:
         with conn.cursor() as cursor:
@@ -63,12 +91,20 @@ async def add_pet(id:str, user_id: str, species_type: str, species_category: str
             """
             cursor.execute(sql, (
                 id, user_id, species_type, species_category, name, 
-                birthday, features, gender, image
+                birthday, features, gender, image_filename  # 경로 대신 파일 이름만 저장
             ))
-            conn.commit()
+            conn.commit()  # 데이터베이스에 변경사항 저장
             return {"message": "Pet added successfully!"}
     finally:
         conn.close()
+
+# 이미지 제공 API
+@router.get("/uploads/{file_name}")
+async def get_file(file_name: str):
+    file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
+    if os.path.exists(file_path):
+        return FileResponse(path=file_path, filename=file_name)
+    return {"error": "File not found"}
 
 # 반려동물 삭제 API (DELETE)
 @router.delete("/pets/{pet_id}")

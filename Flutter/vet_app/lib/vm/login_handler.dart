@@ -10,7 +10,6 @@ import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/user_handler.dart';
 
 class LoginHandler extends UserHandler {
-
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
   var isObscured = true.obs;
@@ -78,7 +77,6 @@ class LoginHandler extends UserHandler {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    
 
     // Sign in to Firebase with the Google credentials (안창빈)
     final UserCredential userCredential =
@@ -120,8 +118,7 @@ class LoginHandler extends UserHandler {
     var result = dataConvertedJSON['results'];
 
     if (result == 'OK') {
-    } else {
-    }
+    } else {}
   }
 
   //////////////////////////// Clinic /////////////////////////////
@@ -163,24 +160,24 @@ class LoginHandler extends UserHandler {
 
   // Clinic Password random Generator
   randomPasswordNumberClinic() {
-  const String upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const String lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
-  const String numbers = '0123456789';
-  const String specialChars = r'!@#$%^&*()?_~';  
-  String includeAllChar = upperCaseLetters + lowerCaseLetters + numbers + specialChars;
-  Random random = Random();
-  String passwordClinic = '';
+    const String upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const String lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+    const String numbers = '0123456789';
+    const String specialChars = r'!@#$%^&*()?_~';
+    String includeAllChar =
+        upperCaseLetters + lowerCaseLetters + numbers + specialChars;
+    Random random = Random();
+    String passwordClinic = '';
 
-  passwordClinic += upperCaseLetters[random.nextInt(upperCaseLetters.length)];
-  passwordClinic += lowerCaseLetters[random.nextInt(lowerCaseLetters.length)];
-  passwordClinic += numbers[random.nextInt(numbers.length)];
-  passwordClinic += specialChars[random.nextInt(specialChars.length)];
-  for (int i = 0; i < 4; i++) {
-    passwordClinic += includeAllChar[random.nextInt(includeAllChar.length)];
+    passwordClinic += upperCaseLetters[random.nextInt(upperCaseLetters.length)];
+    passwordClinic += lowerCaseLetters[random.nextInt(lowerCaseLetters.length)];
+    passwordClinic += numbers[random.nextInt(numbers.length)];
+    passwordClinic += specialChars[random.nextInt(specialChars.length)];
+    for (int i = 0; i < 4; i++) {
+      passwordClinic += includeAllChar[random.nextInt(includeAllChar.length)];
+    }
+
+    List<String> passwordClinicShuffle = passwordClinic.split('')..shuffle();
+    return passwordClinicShuffle.join('');
   }
-  
-  List<String> passwordClinicShuffle = passwordClinic.split('')..shuffle();
-  return passwordClinicShuffle.join('');
-
-}
 }

@@ -21,21 +21,21 @@ class UserHandler extends LocationHandler {
 
   selectMyinfo(String userid) async {
     await getUserId();
-    var url = Uri.parse(
-        'http://127.0.0.1:8000/mypage/select_mypage?id=$userid');
+    var url =
+        Uri.parse('http://127.0.0.1:8000/mypage/select_mypage?id=$userid');
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       var result = dataConvertedJSON['result'][0];
       mypageUserInfo.clear();
-    String? id = result[0];
-    String password = result[1];
-    String image = result[2];
-    String name = result[3];
-    mypageUserInfo
-        .add(UserData(password: password, image: image, name: name, id: id));
-    update();
-  }
+      String? id = result[0];
+      String password = result[1];
+      String image = result[2];
+      String name = result[3];
+      mypageUserInfo
+          .add(UserData(password: password, image: image, name: name, id: id));
+      update();
+    }
   }
 
   getImageFromDevice(imageSource) async {
@@ -48,16 +48,16 @@ class UserHandler extends LocationHandler {
     }
   }
 
-    // user name update
-  updateUserName(String name, String id)async{
-  var url = Uri.parse('http://127.0.0.1:8000/mypage/name_update?name=$name&id=$id');
-  await http.get(url);
-  update();
-}
+  // user name update
+  updateUserName(String name, String id) async {
+    var url =
+        Uri.parse('http://127.0.0.1:8000/mypage/name_update?name=$name&id=$id');
+    await http.get(url);
+    update();
+  }
 
   updateJSONDataAll() async {
-    var url = Uri.parse(
-        'http://127.0.0.1:8000/mypage/all_update?=');
+    var url = Uri.parse('http://127.0.0.1:8000/mypage/all_update?=');
     await http.get(url);
     update();
   }

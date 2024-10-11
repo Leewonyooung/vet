@@ -7,14 +7,14 @@ import 'package:vet_app/vm/clinic_handler.dart';
 
 class ClinicLocation extends StatelessWidget {
   ClinicLocation({super.key});
-  // final LocationHandler vmHandler = Get.put(LocationHandler()); 
+  // final LocationHandler vmHandler = Get.put(LocationHandler());
   final ClinicHandler vmHandler = Get.find();
 
   @override
   Widget build(BuildContext context) {
     final Completer<GoogleMapController> mapController =
         Completer<GoogleMapController>();
-    final value = Get.arguments ?? "__"; 
+    final value = Get.arguments ?? "__";
     vmHandler.checkLocationPermission();
     vmHandler.getClinicDetail(value[0]);
     final result = vmHandler.clinicDetail[0];
@@ -59,7 +59,8 @@ class ClinicLocation extends StatelessWidget {
                                   title: result.name,
                                   snippet: result.name), //병원 이름 표시
                               markerId: MarkerId(result.name),
-                              position: LatLng(result.latitude, result.longitude)),
+                              position:
+                                  LatLng(result.latitude, result.longitude)),
                           Marker(
                             markerId: const MarkerId('병원'),
                             position: LatLng(
@@ -87,19 +88,21 @@ class ClinicLocation extends StatelessWidget {
                                         'http://127.0.0.1:8000/clinic/view/${result.image}',
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.8*0.35,
-                                                height:  MediaQuery.of(context).size.height *
-                                                0.1
-                                                ),
+                                                0.8 *
+                                                0.35,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.1),
                                     Expanded(
                                       child: Column(
                                         children: [
-                                          Text(result.name,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          ), 
+                                          Text(
+                                            result.name,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
                                           //병원 끝나는시간
-                                          Text("${result.endTime} 영업종료"), 
+                                          Text("${result.endTime} 영업종료"),
                                           Text(vmHandler.durationText)
                                         ],
                                       ),
@@ -110,14 +113,14 @@ class ClinicLocation extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: SizedBox(
-                                  width:  MediaQuery.of(context).size.width * 0.8,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
                                   child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.yellowAccent
-                                    ),
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.yellowAccent),
                                       onPressed: () {
                                         //예약하기
-                                      }, 
+                                      },
                                       child: const Text('예약하기')),
                                 ),
                               )
