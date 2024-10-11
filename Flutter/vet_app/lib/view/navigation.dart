@@ -67,9 +67,9 @@ class Navigation extends StatelessWidget {
               icon: const Icon(Icons.favorite),
               onPressed: () {
                 if (loginHandler.isLoggedIn()) {
-                  Get.to(const Favorite());
+                  Get.to(Favorite());
                 } else {
-                  Get.to( Login());
+                  Get.to(Login());
                 }
               },
             ),
@@ -79,7 +79,7 @@ class Navigation extends StatelessWidget {
                 if (loginHandler.isLoggedIn()) {
                   Get.to(const Mypage());
                 } else {
-                  Get.to( Login());
+                  Get.to(Login());
                 }
               },
             ),
@@ -135,7 +135,7 @@ class Navigation extends StatelessWidget {
                           if (loginHandler.isLoggedIn()) {
                             Get.to(Reservation());
                           } else {
-                            Get.to( Login());
+                            Get.to(Login());
                           }
                         },
                       ),
@@ -147,7 +147,7 @@ class Navigation extends StatelessWidget {
                           if (loginHandler.isLoggedIn()) {
                             Get.to(QueryReservation());
                           } else {
-                            Get.to( Login());
+                            Get.to(Login());
                           }
                         },
                       ),
@@ -184,7 +184,7 @@ class Navigation extends StatelessWidget {
         if (loginHandler.isLoggedIn()) {
           Get.to(const PetRegister());
         } else {
-          Get.to( Login());
+          Get.to(Login());
         }
       },
       child: Container(

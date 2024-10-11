@@ -62,9 +62,9 @@ class ClinicHandler extends TreatmentHandler {
   }
 
 //  // 병원 상세 정보
-  getClinicDetail(String clinicid) async {
-    var url =
-        Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$clinicid');
+  getClinicDetail(String clinicid)async{
+    // clinicDetail.clear();
+    var url = Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$clinicid');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'][0];
@@ -96,37 +96,4 @@ class ClinicHandler extends TreatmentHandler {
     clinicDetail.value = returnData;
   }
 
-  // insert clinic (안창빈)
-
-  getClinicInsert(
-      String id,
-      String name,
-      String password,
-      double latitude,
-      double longitude,
-      String stime,
-      String etime,
-      String introduction,
-      String address,
-      String phone,
-      String image) async {
-    var url = Uri.parse(
-        "http://127.0.0.1:8000/clinic/insert?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&stime=$stime&etime=$etime&introduction=$introduction&address=$address&phone=$phone&image=$image");
-    var response = await http.get(url);
-    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    var results = dataConvertedJSON['results'];
-    return results;
-  }
-
-  // update clinic (안창빈)
-
-  getClinicUpdate() async {
-    var url = Uri.parse("http://127.0.0.1:8000/clinic/update?");
-    var response = await http.get(url);
-    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    var results = dataConvertedJSON['results'];
-    return results;
-  }
-
-  // insert clinic (안창빈)
 }

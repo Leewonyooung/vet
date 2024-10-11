@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vet_app/view/mgt_clinic_add.dart';
+import 'package:vet_tab/view/mgt_clinic_add.dart';
 
 class MgtHome extends StatelessWidget {
   const MgtHome({super.key});

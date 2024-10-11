@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vet_app/view/mgt_home.dart';
 import 'package:vet_app/vm/login_handler.dart';
 
 class ClinicLogin extends StatelessWidget {
@@ -55,7 +54,7 @@ class ClinicLogin extends StatelessWidget {
                               border: const OutlineInputBorder(),
                               suffixIcon: IconButton(
                                 onPressed: () {
-                                  vmHandler.togglePasswordVisibility();
+                                  // vmHandler.togglePasswordVisibility();
                                 },
                                 icon: Icon(vmHandler.isObscured.value
                                     ? Icons.visibility_off
@@ -86,12 +85,12 @@ class ClinicLogin extends StatelessWidget {
     String id = idController.text.trim();
     String password = passwordController.text.trim();
 
-    List results = await vmHandler.clinicloginJsonCheck(id, password);
-    if (results.isEmpty) {
-      errorDialog();
-    } else {
-      loginDialog();
-    }
+    // List results = await vmHandler.clinicloginJsonCheck(id, password);
+    // if (results.isEmpty) {
+    //   errorDialog();
+    // } else {
+    //   loginDialog();
+    // }
   }
 
   errorDialog() {
@@ -114,7 +113,7 @@ class ClinicLogin extends StatelessWidget {
         idController.clear();
         passwordController.clear();
         Get.back();
-        Get.to(() => const MgtHome());
+        // Get.to(() => const MgtHome());
       },
     );
   }

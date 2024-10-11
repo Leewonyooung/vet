@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1049745979759-5r0485pohe4tk9u1gli3v5cmlc3490nd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1049745979759-5r0485pohe4tk9u1gli3v5cmlc3490nd</string>
+	<key>API_KEY</key>
+	<string>AIzaSyADcgj1twJ2Uind6_NujbXTXgRfPJ4q7gI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1049745979759</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.vetTab</string>
+	<key>PROJECT_ID</key>
+	<string>veterinarian-32471</string>
+	<key>STORAGE_BUCKET</key>
+	<string>veterinarian-32471.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1049745979759:ios:48189e7bfc80cfad1f909a</string>
+</dict>
+</plist>

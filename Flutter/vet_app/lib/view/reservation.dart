@@ -27,7 +27,8 @@ class Reservation extends StatelessWidget {
                   return const Center(
                     child: Text('예약가능한 병원이 없습니다.'),
                   );
-                } else {
+                }
+                else {
                   return Obx(() {
                     return ListView.builder(
                         itemCount: vmHnadler.availableclinic.length,

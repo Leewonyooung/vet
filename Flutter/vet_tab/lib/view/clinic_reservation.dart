@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MgtGooglemap extends StatelessWidget {
-  const MgtGooglemap({super.key});
+class ClinicReservation extends StatelessWidget {
+  const ClinicReservation({super.key});
 
   @override
   Widget build(BuildContext context) {

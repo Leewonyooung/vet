@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_info.dart';
-import 'package:vet_app/vm/clinic_handler.dart';
+import 'package:vet_app/vm/favorite_handler.dart';
 
 class ClinicSearch extends StatelessWidget {
   ClinicSearch({super.key});
 
   final TextEditingController searchKeywardController = TextEditingController();
-  final ClinicHandler vmHandler = Get.put(ClinicHandler());
+  final FavoriteHandler vmHandler = Get.put(FavoriteHandler());
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class ClinicSearch extends StatelessWidget {
         appBar: AppBar(
           title: const Text('검색'),
         ),
-        body: GetBuilder<ClinicHandler>(
+        body: GetBuilder<FavoriteHandler>(
           builder: (_) {
             return FutureBuilder(
                 future: vmHandler.getAllClinic(),

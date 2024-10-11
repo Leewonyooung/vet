@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_location.dart';
-import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
 
 class ClinicInfo extends StatelessWidget {
   ClinicInfo({super.key});
-  final ClinicHandler vmHandler = Get.find();
+  final FavoriteHandler vmHandler = Get.find();
   @override
   Widget build(BuildContext context) {
     FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
-    var value = Get.arguments[0] ?? "__";
+    var value = Get.arguments[0] ?? "__"; // clinicid = value
     favoriteHandler.searchFavoriteClinic(vmHandler.getStoredEmail(), value);
     return Scaffold(
       appBar: AppBar(
         title: const Text('검색 결과'),
       ),
-      body: GetBuilder<ClinicHandler>(
+      body: GetBuilder<FavoriteHandler>(
         builder: (_) {
           return FutureBuilder(
               future: vmHandler.getClinicDetail(value),
@@ -67,7 +66,12 @@ class ClinicInfo extends StatelessWidget {
                                                 Icons.pin_drop_outlined)),
 
                                         // 즐겨찾기 등록 버튼
-                                        favoriteHandler.favoriteButtonIcon
+                                      IconButton(
+                                        onPressed: () {
+                                        favoriteHandler.favoriteIconValueMgt(favoriteHandler.getStoredEmail(), value);
+                                      }, 
+                                      icon: favoriteHandler.favoriteIconValue.value ? const Icon(Icons.favorite, color: Colors.red,) : const Icon(Icons.favorite_border_outlined), 
+                                      )
                                       ],
                                     ),
                                   ],
@@ -81,18 +85,23 @@ class ClinicInfo extends StatelessWidget {
                               const Icon(Icons.watch_later_outlined),
                               Text(
                                   "${result[0].startTime}~${result[0].endTime}"),
-                              // ignore: prefer_const_constructors
                               const Icon(Icons.pin_drop_outlined),
                               Text(result[0].address.substring(0, 7))
                             ],
                           ),
-
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Text(result[0].introduction,
+                            style: const TextStyle(
+                              fontSize: 15
+                            ),
+                            ),
+                          ),
                           /// 예약 버튼
                           Padding(
-                            padding: const EdgeInsets.all(60),
+                            padding: const EdgeInsets.all(20.0),
                             child: ElevatedButton(
                               onPressed: () {
-                                //
                               },
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(300, 40),
