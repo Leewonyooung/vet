@@ -168,7 +168,7 @@ class ChatView extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   
                 ),
                 width: MediaQuery.of(context).size.width / 1.3,
