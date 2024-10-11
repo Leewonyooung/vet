@@ -20,7 +20,7 @@ class ChatsHandler extends LoginHandler {
 
   final CollectionReference _rooms =
       FirebaseFirestore.instance.collection('chat');
-      
+
   @override
   void onInit() async {
     super.onInit();
@@ -106,29 +106,31 @@ class ChatsHandler extends LoginHandler {
     }
   }
 
-  isToday() async{
+  isToday() async {
     bool istoday = true;
     chats[chats.length-1].timestamp.toString().substring(0,10) == DateTime.now().toString().substring(0,10)?
     istoday : istoday = false;
     return istoday;
   }
 
-  checkToday(Chats chat){
-    return chat.text.length==17 && chat.text.substring(0,3) == "set" &&chat.text.substring(13,17) =="time";
+  checkToday(Chats chat) {
+    return chat.text.length == 17 &&
+        chat.text.substring(0, 3) == "set" &&
+        chat.text.substring(13, 17) == "time";
   }
 
-  addChat(Chats chat) async{
+  addChat(Chats chat) async {
     bool istoday = await isToday();
-    if(!istoday){
+    if (!istoday) {
       await _rooms
-        .doc("${currentClinicId.value}_${box.read('userId')}")
-        .collection('chats')
-        .add({
-      'reciever': chat.reciever,
-      'sender': chat.sender,
-      'text': "set${DateTime.now().toString().substring(0,10)}time",
-      'timestamp': DateTime.now().toString(),
-    });
+          .doc("${currentClinicId.value}_${box.read('userId')}")
+          .collection('chats')
+          .add({
+        'reciever': chat.reciever,
+        'sender': chat.sender,
+        'text': "set${DateTime.now().toString().substring(0, 10)}time",
+        'timestamp': DateTime.now().toString(),
+      });
     }
 
     _rooms

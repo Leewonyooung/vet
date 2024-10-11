@@ -43,14 +43,11 @@ class Favorite extends StatelessWidget {
                   leading: const Icon(Icons.local_hospital),
                   title: Text(clinic.name),
                   subtitle: Text('${clinic.address}\n전화: ${clinic.phone}'),
-                  onTap: () async{
+                  onTap: () async {
                     await favoriteHandler.updateCurrentIndex(clinic.id);
-                    Get.to(
-                      () => ClinicInfo(),
-                      arguments: [
-                        clinic.id,// 병원의 ID 넘기기
-                      ] 
-                    );
+                    Get.to(() => ClinicInfo(), arguments: [
+                      clinic.id, // 병원의 ID 넘기기
+                    ]);
                   },
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),

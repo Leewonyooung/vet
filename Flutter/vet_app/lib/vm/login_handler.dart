@@ -8,7 +8,6 @@ import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/user_handler.dart';
 
 class LoginHandler extends UserHandler {
-
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
   var isObscured = true.obs;
@@ -76,7 +75,6 @@ class LoginHandler extends UserHandler {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    
 
     // Sign in to Firebase with the Google credentials (안창빈)
     final UserCredential userCredential =
@@ -119,7 +117,6 @@ class LoginHandler extends UserHandler {
     var result = dataConvertedJSON['results'];
 
     if (result == 'OK') {
-    } else {
-    }
+    } else {}
   }
 }

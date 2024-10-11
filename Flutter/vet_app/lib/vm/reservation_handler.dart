@@ -47,9 +47,8 @@ class ReservationHandler extends ClinicHandler {
           longitude: longitude,
           address: address,
           image: image,
-          time: time)
-          );
-          availableclinic.value = returnData;
+          time: time));
+      availableclinic.value = returnData;
     }
   }
 

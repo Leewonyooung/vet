@@ -9,9 +9,9 @@ class QueryReservation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController symptomsController = TextEditingController();
-    vmHnadler.fetchPets(vmHnadler.getStoredEmail());
+    // vmHnadler.fetchPets(vmHnadler.getStoredEmail());
     final pet = vmHnadler.pets;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('긴급 예약'),
@@ -30,7 +30,10 @@ class QueryReservation extends StatelessWidget {
                   children: [
                     Text('이름 : ${pet.name}'),
                     Row(
-                      children: [Icon(Icons.female), Text(pet.speciesCategory)],
+                      children: [
+                        const Icon(Icons.female),
+                        Text(pet.speciesCategory)
+                      ],
                     ),
                   ],
                 ),

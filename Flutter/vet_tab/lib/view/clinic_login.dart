@@ -10,7 +10,6 @@ class ClinicLogin extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final loginHandler = Get.put(LoginHandler());
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,22 +65,21 @@ class ClinicLogin extends StatelessWidget {
                               icon: Icon(loginHandler.isObscured.value ? Icons.visibility_off : Icons.visibility),
                               ),
                             ),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: ElevatedButton(
-                        onPressed: () => clinicloginJsonCheck(),
-                        child: const Text('login'),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ElevatedButton(
+                          onPressed: () => clinicloginJsonCheck(),
+                          child: const Text('login'),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-            }
-            );
+              );
+            });
           },
         ));
   }

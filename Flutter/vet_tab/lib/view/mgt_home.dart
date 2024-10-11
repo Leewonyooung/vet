@@ -19,7 +19,7 @@ class MgtHome extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                   onPressed: () {
-                    Get.to(()=> MgtClinicAdd());
+                    Get.to(() => MgtClinicAdd());
                   },
                   child: const Text('Create Clinic account')),
             ),

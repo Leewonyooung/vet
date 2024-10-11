@@ -8,7 +8,6 @@ class Reservation extends StatelessWidget {
   final vmHnadler = Get.put(ReservationHandler());
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: const Row(
@@ -27,7 +26,8 @@ class Reservation extends StatelessWidget {
                   return Center(
                     child: Text('Error : ${snapshot.error}'),
                   );
-                } else {
+                }
+                else {
                   return Obx(() {
                     return ListView.builder(
                         itemCount: vmHnadler.availableclinic.length,
@@ -36,10 +36,11 @@ class Reservation extends StatelessWidget {
                           return Card(
                             child: Row(
                               children: [
-                                Image.network (
+                                Image.network(
                                   'http://127.0.1:8000/available/view/${clinic.image}',
                                   width: 100,
-                                  height: 80,),
+                                  height: 80,
+                                ),
                                 Text('  ${clinic.name}'),
                                 // Text('  ${clinic.address}'),
                                 ElevatedButton(

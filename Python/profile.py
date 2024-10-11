@@ -1,6 +1,6 @@
 """
-author: 
-Description: 
+author: 정섭
+Description:  mypage에서 사용되는 user eidt, query 
 Fixed: 
 Usage: 
 """
@@ -62,15 +62,17 @@ def update_mypage (name:str=None,id:str=None,):
         print("error:",e)
         return {'result' : 'error'}
     
+
+
 # 유저 이미지, 이름 모두 수정
 @mypage_router.get('/all_update')
-async def updateAll(seq = str,name:str=None, filename:str=None):
+async def updateAll(name:str=None, image:str=None, id:str=None):
     conn = connect()
     curs = conn.cursor()
     
     try:
-        sql = "update user set name=%s,filename =%s where id=%s"
-        curs.execute(sql,(name,filename,id))
+        sql = "update user set name=%s,image =%s where id=%s"
+        curs.execute(sql,(name,image,id))
         conn.commit()
         conn.close()
         return {'result': "ok"}
@@ -78,23 +80,10 @@ async def updateAll(seq = str,name:str=None, filename:str=None):
         conn.close()
         print("error:",e)
         return {'result' : 'error'}
+    
 
-
-# 유저 프로필 사진 파일 지우기
-@mypage_router.delete('/delete_userimage/{file_name}')
-async def delete_userimage(file_name:str):
-    try:
-        file_path = os.path.join(UPLOAD_FOLDER, file_name)
-        if os.path.exists(file_path):
-            os.remove(file_path)
-        return {'result': 'ok'}
-    except Exception as e:
-        print("Error:",e)
-        return {'result':'error'}
-
-
-# user profile 보기
-@mypage_router.get('/userimage/{file_name}')
+# user 이미지 보기
+@mypage_router.get('/view/{file_name}')
 async def get_userimage(file_name : str):
     file_path = os.path.join(UPLOAD_FOLDER, file_name)
     if os.path.exists(file_path):
@@ -102,4 +91,30 @@ async def get_userimage(file_name : str):
     return {'result' : 'error'}
 
 
+
+# 유저 이미지 업로드
+@mypage_router.post("/upload_userimage")
+async def upload_file(file : UploadFile = File(...)):
+    try:
+        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        return{'result' : 'ok'}
+
+    except Exception as e:
+        print("Error:", e)
+        return({"reslut" : "error"})
+
+
+# 유저 이미지 삭제
+@mypage_router.delete("/deleteFile/{file_name}")
+async def delete_file(file_name : str):
+    try:
+        file_path = os.path.join(UPLOAD_FOLDER, file_name)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        return {"result" : "ok"}
+    except Exception as e:
+        print("Error:", e)
+        return {"result" : "error"}
 

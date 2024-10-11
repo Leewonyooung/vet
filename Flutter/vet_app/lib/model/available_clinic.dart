@@ -6,12 +6,11 @@ class AvailableClinic {
   String image;
   String time;
 
-  AvailableClinic({
-    required this.name,
-    required this.latitude,
-    required this.longitude,
-    required this.address,
-    required this.image,
-    required this.time
-  });
+  AvailableClinic(
+      {required this.name,
+      required this.latitude,
+      required this.longitude,
+      required this.address,
+      required this.image,
+      required this.time});
 }
