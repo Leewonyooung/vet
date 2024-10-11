@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vet_app/view/mgt_home.dart';
-import 'package:vet_app/vm/login_handler.dart';
+import 'package:vet_tab/view/clinic_reservation.dart';
+import 'package:vet_tab/vm/login_handler.dart';
 
 class ClinicLogin extends StatelessWidget {
   ClinicLogin({super.key});
 
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final vmHandler = Get.put(LoginHandler());
+  final loginHandler = Get.put(LoginHandler());
 
 
   @override
@@ -24,9 +24,17 @@ class ClinicLogin extends StatelessWidget {
               child: Center(
                 child: Column(
                   children: [
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.fromLTRB(0, 300, 0, 50),
-                      child: Text('Login',style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),),
+                      child: GestureDetector(
+                        onTap: () {
+                          loginHandler.mgtLogin();
+                        },
+                        child: Text(
+                          'Login',
+                          style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -47,15 +55,15 @@ class ClinicLogin extends StatelessWidget {
                         width: 500,
                         child: TextField(
                           controller: passwordController,
-                          obscureText: vmHandler.isObscured.value,
+                          obscureText: loginHandler.isObscured.value,
                           decoration: InputDecoration(
                             labelText: '비밀번호를 입력하세요',
                             border: const OutlineInputBorder(),
                             suffixIcon: IconButton(
                               onPressed: () {
-                                vmHandler.togglePasswordVisibility();
+                                loginHandler.togglePasswordVisibility();
                               }, 
-                              icon: Icon(vmHandler.isObscured.value ? Icons.visibility_off : Icons.visibility),
+                              icon: Icon(loginHandler.isObscured.value ? Icons.visibility_off : Icons.visibility),
                               ),
                             ),
                         ),
@@ -83,7 +91,7 @@ class ClinicLogin extends StatelessWidget {
     String id = idController.text.trim();
     String password = passwordController.text.trim();
 
-    List results = await vmHandler.clinicloginJsonCheck(id, password);
+    List results = await loginHandler.clinicloginJsonCheck(id, password);
     if (results.isEmpty) {
       errorDialog();
     } else {
@@ -111,7 +119,7 @@ class ClinicLogin extends StatelessWidget {
         idController.clear();
         passwordController.clear();
         Get.back();
-        Get.to(() => const MgtHome());
+        Get.to(() => ClinicReservation());
       },
     );
   }
