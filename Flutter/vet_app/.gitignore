@@ -8,6 +8,19 @@
 .dart_tool/
 .packages
 build/
+android/
+
+macos/
+
+linux/
+
+test/
+
+web/
+
+windows/
+
+.firebase.json
 # If you're building an application, you may want to check-in your pubspec.lock
 pubspec.lock
 

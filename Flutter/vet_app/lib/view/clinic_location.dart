@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:vet_app/vm/clinic_handler.dart';
+import 'package:vet_app/vm/favorite_handler.dart';
 
 class ClinicLocation extends StatelessWidget {
   ClinicLocation({super.key});
-  // final LocationHandler vmHandler = Get.put(LocationHandler());
-  final ClinicHandler vmHandler = Get.find();
+  final FavoriteHandler vmHandler = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class ClinicLocation extends StatelessWidget {
                 child: Text('오류 발생: ${snapshot.error}'),
               );
             } else {
-              return GetBuilder<ClinicHandler>(builder: (_) {
+              return GetBuilder<FavoriteHandler>(builder: (_) {
                 if (vmHandler.lines.isEmpty) {
                   return const Center(child: CircularProgressIndicator());
                 } else {

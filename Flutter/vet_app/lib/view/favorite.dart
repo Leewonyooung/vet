@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vet_app/view/clinic_location.dart';
-import 'package:vet_app/vm/clinic_handler.dart';
+import 'package:vet_app/view/clinic_info.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 
 class Favorite extends StatelessWidget {
-  const Favorite({super.key});
+  Favorite({super.key});
+  final FavoriteHandler favoriteHandler = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    // FavoriteHandler 인스턴스 생성
-    final ClinicHandler clinicHandler = Get.put(ClinicHandler());
-    final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
     final LoginHandler loginHandler = Get.find();
 
     // 로그인한 사용자의 ID(email)를 사용
@@ -46,12 +43,14 @@ class Favorite extends StatelessWidget {
                   leading: const Icon(Icons.local_hospital),
                   title: Text(clinic.name),
                   subtitle: Text('${clinic.address}\n전화: ${clinic.phone}'),
-                  onTap: () {
-                    clinicHandler.updateCurrentIndex(clinic.id);
-                    // 병원 ID를 넘겨서 clinic_location.dart 페이지로 이동
-                    Get.to(() => ClinicLocation(), arguments: [
-                      clinic.id, // 병원의 ID 넘기기
-                    ]);
+                  onTap: () async{
+                    await favoriteHandler.updateCurrentIndex(clinic.id);
+                    Get.to(
+                      () => ClinicInfo(),
+                      arguments: [
+                        clinic.id,// 병원의 ID 넘기기
+                      ] 
+                    );
                   },
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),

@@ -13,18 +13,6 @@ class Reservation extends StatelessWidget {
           title: const Row(
             children: [Icon(Icons.local_hospital), Text('긴급예약')],
           ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  // 즐겨찾기
-                },
-                icon: const Icon(Icons.favorite_border_outlined)),
-            IconButton(
-                onPressed: () {
-                  // 내정보
-                },
-                icon: const Icon(Icons.account_circle_outlined)),
-          ],
         ),
         body: GetBuilder<ReservationHandler>(builder: (_) {
           return FutureBuilder(
@@ -56,14 +44,13 @@ class Reservation extends StatelessWidget {
                                 // Text('  ${clinic.address}'),
                                 ElevatedButton(
                                   onPressed: () {
-                                    Get.to(() => const QueryReservation(),
-                                        arguments: [
-                                          clinic.name,
-                                          clinic.latitude,
-                                          clinic.longitude,
-                                          clinic.image,
-                                          clinic.time
-                                        ]);
+                                    Get.to(() =>  QueryReservation(), arguments: [
+                                      clinic.name,
+                                      clinic.latitude,
+                                      clinic.longitude,
+                                      clinic.image,
+                                      clinic.time
+                                    ]);
                                   },
                                   child: const Icon(
                                       Icons.arrow_circle_right_outlined),

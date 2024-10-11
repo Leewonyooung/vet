@@ -9,6 +9,7 @@ import 'package:vet_app/view/mypage.dart';
 import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/view/reservation.dart';
+import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 
@@ -18,6 +19,7 @@ class Navigation extends StatelessWidget {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
   final LoginHandler loginHandler = Get.put(LoginHandler());
+  final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
   final PetHandler petHandler = Get.put(PetHandler());
 
   @override
@@ -38,7 +40,7 @@ class Navigation extends StatelessWidget {
         isVisible: true,
         onItemSelected: (index) {
           if (index != 1 && !loginHandler.isLoggedIn()) {
-            Get.to(() => const Login());
+            Get.to(() => Login());
           }
         },
         animationSettings: const NavBarAnimationSettings(
@@ -67,9 +69,11 @@ class Navigation extends StatelessWidget {
               icon: const Icon(Icons.favorite),
               onPressed: () {
                 if (loginHandler.isLoggedIn()) {
-                  Get.to(const Favorite());
+                  // 로그인되어 있으면 페이지 이동
+                  Get.to(()=> Favorite());
                 } else {
-                  Get.to(const Login());
+                  // 로그인 페이지로 이동
+                  Get.to( ()=>Login());
                 }
               },
             ),
@@ -77,9 +81,11 @@ class Navigation extends StatelessWidget {
               icon: const Icon(Icons.person),
               onPressed: () {
                 if (loginHandler.isLoggedIn()) {
-                  Get.to(const Mypage());
+                  // 로그인되어 있으면 페이지 이동
+                  Get.to(()=>const Mypage());
                 } else {
-                  Get.to(const Login());
+                  // 로그인 페이지로 이동
+                  Get.to(()=> Login());
                 }
               },
             ),
@@ -121,35 +127,68 @@ class Navigation extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildButton(
-                        icon: Icons.local_hospital,
-                        text: '긴급 예약',
-                        color: Colors.red.shade400,
-                        onTap: () {
-                          if (loginHandler.isLoggedIn()) {
-                            Get.to(Reservation());
-                          } else {
-                            Get.to(const Login());
-                          }
-                        },
-                      ),
-                      _buildButton(
-                        icon: Icons.assignment,
-                        text: '예약 내역',
-                        color: Colors.amber.shade400,
-                        onTap: () {
-                          if (loginHandler.isLoggedIn()) {
-                            Get.to(const QueryReservation());
-                          } else {
-                            Get.to(const Login());
-                          }
-                        },
+              ),
+              const SizedBox(height: 20),
+              // 긴급 예약 및 예약 내역 버튼
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildButton(
+                      icon: Icons.local_hospital,
+                      text: '긴급 예약',
+                      color: Colors.red.shade400,
+                      onTap: () {
+                        if (loginHandler.isLoggedIn()) {
+                          // 로그인되어 있으면 페이지 이동
+                          Get.to(()=>Reservation());
+                        } else {
+                          // 로그인 페이지로 이동
+                          Get.to(()=> Login());
+                        }
+                      },
+                    ),
+                    _buildButton(
+                      icon: Icons.assignment,
+                      text: '예약 내역',
+                      color: Colors.amber.shade400,
+                      onTap: () {
+                        if (loginHandler.isLoggedIn()) {
+                          // 로그인되어 있으면 페이지 이동
+                          Get.to(()=> QueryReservation());
+                        } else {
+                          // 로그인 페이지로 이동
+                          Get.to(()=> Login());
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              // 반려동물 등록
+              GestureDetector(
+                onTap: () {
+                  if (loginHandler.isLoggedIn()) {
+                    // 로그인되어 있으면 페이지 이동
+                    Get.to(()=>PetRegister());
+                  } else {
+                    // 로그인 페이지로 이동
+                    Get.to(()=> Login());
+                  }
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade300,
+                        blurRadius: 10,
+                        spreadRadius: 2,
                       ),
                     ],
                   ),
@@ -316,7 +355,11 @@ class Navigation extends StatelessWidget {
           );
         },
       ),
-    );
+      ClinicSearch(),
+       QueryReservation(),
+      ChatRoom(),
+      const Mypage(),
+    ];
   }
 
   List<PersistentBottomNavBarItem> _items() {
