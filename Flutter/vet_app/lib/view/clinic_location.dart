@@ -10,6 +10,9 @@ class ClinicLocation extends StatelessWidget {
   // final LocationHandler vmHandler = Get.put(LocationHandler()); 
   final ClinicHandler vmHandler = Get.find();
 
+
+
+
   @override
   Widget build(BuildContext context) {
     final Completer<GoogleMapController> mapController =
@@ -44,7 +47,7 @@ class ClinicLocation extends StatelessWidget {
                     children: [
                       GoogleMap(
                         mapType: MapType.hybrid,
-                        initialCameraPosition: CameraPosition(
+                        initialCameraPosition: CameraPosition( //
                           zoom: 15,
                           target: LatLng(
                               vmHandler.currentlat, vmHandler.currentlng),
@@ -59,7 +62,8 @@ class ClinicLocation extends StatelessWidget {
                                   title: result.name,
                                   snippet: result.name), //병원 이름 표시
                               markerId: MarkerId(result.name),
-                              position: LatLng(result.latitude, result.longitude)),
+                              position: LatLng(result.latitude, result.longitude)
+                            ),
                           Marker(
                             markerId: const MarkerId('병원'),
                             position: LatLng(

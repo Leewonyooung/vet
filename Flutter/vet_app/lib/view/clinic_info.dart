@@ -71,7 +71,7 @@ class ClinicInfo extends StatelessWidget {
                                         onPressed: () {
                                         favoriteHandler.favoriteIconValueMgt(favoriteHandler.getStoredEmail(), value);
                                       }, 
-                                      icon: favoriteHandler.favoriteIconValue.value ? Icon(Icons.favorite, color: Colors.red,) : Icon(Icons.favorite_border_outlined), 
+                                      icon: favoriteHandler.favoriteIconValue.value ? const Icon(Icons.favorite, color: Colors.red,) : const Icon(Icons.favorite_border_outlined), 
                                       )
                                       ],
                                     ),
@@ -90,10 +90,17 @@ class ClinicInfo extends StatelessWidget {
                               Text(result[0].address.substring(0, 7))
                             ],
                           ),
-
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Text(result[0].introduction,
+                            style: const TextStyle(
+                              fontSize: 15
+                            ),
+                            ),
+                          ),
                           /// 예약 버튼
                           Padding(
-                            padding: const EdgeInsets.all(60),
+                            padding: const EdgeInsets.all(20.0),
                             child: ElevatedButton(
                               onPressed: () {
                               },

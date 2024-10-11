@@ -92,7 +92,7 @@ class LocationHandler extends ImageHandler {
 
      maploading(double clinicLat, double clinicLong)async{
       await getCurrentPlaceID();
-      await getClinicPlaceId(clinicLat, clinicLong);
+      await getClinicPlaceId(clinicLat, clinicLong); //병원에 들어갈 place id
       await createRoute();
       update();
     }
