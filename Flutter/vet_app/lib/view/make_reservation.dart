@@ -11,7 +11,7 @@ class MakeReservation extends StatelessWidget {
   MakeReservation({super.key});
   final LoginHandler loginHandler = Get.put(LoginHandler());
   final PetHandler petHandler = Get.put(PetHandler());
-  var value = Get.arguments;
+  final value = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class MakeReservation extends StatelessWidget {
               },
               child: const Text('아니오')),
           ElevatedButton(onPressed: () {
-            Get.to(QueryReservation());
+            Get.to(()=> const QueryReservation());
           }, child: const Text('확정')),
         ]);
   }

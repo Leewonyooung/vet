@@ -3,7 +3,6 @@ import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
 import 'package:http/http.dart' as http;
-import 'package:vet_app/vm/login_handler.dart';
 class FavoriteHandler extends ClinicHandler {
   var favoriteClinics = <Clinic>[].obs; // 즐겨찾기 병원 목록
   var favoriteIconValue = false.obs; // 즐겨찾기 버튼 관리

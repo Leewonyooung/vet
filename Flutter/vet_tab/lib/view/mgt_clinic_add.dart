@@ -210,7 +210,7 @@ class MgtClinicAdd extends StatelessWidget {
                                         labelText: '주소를 입력해주세요',
                                         suffixIcon: IconButton(
                                             onPressed: () {
-                                              Get.to(()=> MgtClinicMap(), arguments: addressController.text);
+                                              Get.to(()=> const MgtClinicMap(), arguments: addressController.text);
                                             }, 
                                             icon: const Icon(Icons.search)
                                             ),

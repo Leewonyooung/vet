@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vet_tab/vm/clinic_handler.dart';
-import 'package:vet_tab/vm/location_handler.dart';
 
 class MgtClinicMap extends StatelessWidget {
-  MgtClinicMap({super.key});
+  const MgtClinicMap({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +29,7 @@ class MgtClinicMap extends StatelessWidget {
             } else {
         return GetBuilder<ClinicHandler>(
           builder: (controller) {
-            print(value);
             clinicHandler.clinicAddressSearch(value);
-            print(clinicHandler.lat);
-            print(clinicHandler.long);
             return GoogleMap(
               mapType: MapType.hybrid,
               initialCameraPosition: CameraPosition(

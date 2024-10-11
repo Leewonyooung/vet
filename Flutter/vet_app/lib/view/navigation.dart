@@ -90,13 +90,6 @@ class Navigation extends StatelessWidget {
           titleTextStyle: const TextStyle(color: Colors.black, fontSize: 18),
         ),
         body: Obx(() {
-          String userId = loginHandler.getStoredEmail();
-          if (loginHandler.isLoggedIn()) {
-            if (petHandler.pets.isEmpty) {
-              petHandler.fetchPets(userId); // 사용자 반려동물 정보 로드
-            }
-          }
-
           return Container(
             color: Colors.white,
             child: Column(
@@ -145,7 +138,7 @@ class Navigation extends StatelessWidget {
                         color: Colors.amber.shade400,
                         onTap: () {
                           if (loginHandler.isLoggedIn()) {
-                            Get.to(QueryReservation());
+                            Get.to(()=> const QueryReservation());
                           } else {
                             Get.to(Login());
                           }
@@ -155,24 +148,15 @@ class Navigation extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Obx(() {
-                  if (!loginHandler.isLoggedIn()) {
-                    return _buildRegisterBanner();
-                  }
-
-                  if (!petHandler.hasPets()) {
-                    return _buildRegisterBanner();
-                  }
-
-                  return _buildPetInfoList();
-                }),
+                petHandler.pets.isEmpty?_buildRegisterBanner():
+                _buildPetInfoList()
               ],
             ),
           );
         }),
       ),
       ClinicSearch(),
-      QueryReservation(),
+      const QueryReservation(),
       ChatRoom(),
       const Mypage(),
     ];
@@ -266,8 +250,6 @@ class Navigation extends StatelessWidget {
 
           // 기존 반려동물 정보 표시
           final pet = petHandler.pets[index];
-          String baseUrl = 'http://127.0.0.1:8000'; // 서버 주소
-          String imageUrl = '$baseUrl/pet/uploads/${pet.image}'; // 이미지 경로 조합
 
           return Card(
             elevation: 4,
@@ -279,8 +261,9 @@ class Navigation extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 이미지 불러오기 (왼쪽)
+                  
                   Image.network(
-                    imageUrl,
+                    'http://127.0.0.1:8000/pet/uploads/${pet.image}',
                     height: 150,
                     width: 150,
                     fit: BoxFit.cover,

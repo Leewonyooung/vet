@@ -47,7 +47,7 @@ class ImageHandler extends GetxController {
     var url = Uri.parse('http://127.0.0.1:8000/mypage/deleteFile/$userimage');
     var response = await http.delete(url);
     if(response.statusCode == 200){
-      print('ok');
+      return 'ok';
     }else{
       // print('error');
     }

@@ -5,7 +5,7 @@ import 'package:vet_app/view/query_reservation.dart';
 
 class ReservationComplete extends StatelessWidget {
   ReservationComplete({super.key});
-  var value = Get.arguments;
+  final value = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class ReservationComplete extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Text('예약 확정',
+            const Text('예약 확정',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold
@@ -38,7 +38,7 @@ class ReservationComplete extends StatelessWidget {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () => Get.to(QueryReservation()), 
+                  onPressed: () => Get.to(()=> const QueryReservation()), 
                   child: const Text('예약내역'),
                 ),
                 ElevatedButton(
