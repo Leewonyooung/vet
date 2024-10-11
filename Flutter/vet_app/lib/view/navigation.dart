@@ -138,7 +138,7 @@ class Navigation extends StatelessWidget {
                         color: Colors.amber.shade400,
                         onTap: () {
                           if (loginHandler.isLoggedIn()) {
-                            Get.to(()=> const QueryReservation());
+                            Get.to(() => const QueryReservation());
                           } else {
                             Get.to(Login());
                           }
@@ -148,8 +148,9 @@ class Navigation extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                petHandler.pets.isEmpty?_buildRegisterBanner():
-                _buildPetInfoList()
+                petHandler.pets.isEmpty
+                    ? _buildRegisterBanner()
+                    : _buildPetInfoList()
               ],
             ),
           );
@@ -256,12 +257,12 @@ class Navigation extends StatelessWidget {
             margin: const EdgeInsets.all(8),
             child: Container(
               padding: const EdgeInsets.all(10),
-              width: 300,
+              width: 360,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 이미지 불러오기 (왼쪽)
-                  
+
                   Image.network(
                     'http://127.0.0.1:8000/pet/uploads/${pet.image}',
                     height: 150,
@@ -288,8 +289,9 @@ class Navigation extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        Text('종류: ${pet.speciesType}'),
-                        Text('성별: ${pet.gender}'),
+                        Text('종류 : ${pet.speciesType}'),
+                        Text('세부종류 : ${pet.speciesCategory}'),
+                        Text('성별 : ${pet.gender}'),
                       ],
                     ),
                   ),
