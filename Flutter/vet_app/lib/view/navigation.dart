@@ -38,7 +38,7 @@ class Navigation extends StatelessWidget {
         backgroundColor: Colors.grey.shade900,
         isVisible: true,
         onItemSelected: (index) {
-          if (index != 1 && !loginHandler.isLoggedIn()) {
+          if (index != 0 && index != 1 && !loginHandler.isLoggedIn()) {
             Get.to(() => Login());
           }
         },
