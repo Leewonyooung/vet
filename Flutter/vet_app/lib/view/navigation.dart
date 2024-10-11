@@ -10,6 +10,7 @@ import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/view/reservation.dart';
 import 'package:vet_app/vm/login_handler.dart';
+import 'package:vet_app/vm/pet_handler.dart';
 
 class Navigation extends StatelessWidget {
   Navigation({super.key});
@@ -17,7 +18,7 @@ class Navigation extends StatelessWidget {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
   final LoginHandler loginHandler = Get.put(LoginHandler());
-
+  final PetHandler petHandler = Get.put(PetHandler());
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,6 @@ class Navigation extends StatelessWidget {
         backgroundColor: Colors.grey.shade900,
         isVisible: true,
         onItemSelected: (index) {
-          // 검색 탭(1번)을 제외하고 로그인 체크
           if (index != 1 && !loginHandler.isLoggedIn()) {
             Get.to(() => Login());
           }
@@ -67,11 +67,9 @@ class Navigation extends StatelessWidget {
               icon: const Icon(Icons.favorite),
               onPressed: () {
                 if (loginHandler.isLoggedIn()) {
-                  // 로그인되어 있으면 페이지 이동
-                  Get.to(const Favorite());
+                  Get.to(Favorite());
                 } else {
-                  // 로그인 페이지로 이동
-                  Get.to( Login());
+                  Get.to(Login());
                 }
               },
             ),
@@ -79,11 +77,9 @@ class Navigation extends StatelessWidget {
               icon: const Icon(Icons.person),
               onPressed: () {
                 if (loginHandler.isLoggedIn()) {
-                  // 로그인되어 있으면 페이지 이동
                   Get.to(const Mypage());
                 } else {
-                  // 로그인 페이지로 이동
-                  Get.to( Login());
+                  Get.to(Login());
                 }
               },
             ),
@@ -93,101 +89,169 @@ class Navigation extends StatelessWidget {
           iconTheme: const IconThemeData(color: Colors.black),
           titleTextStyle: const TextStyle(color: Colors.black, fontSize: 18),
         ),
-        body: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              // 상단 배너
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                height: 150,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.blue.shade100,
-                ),
-                child: const Center(
-                  child: Text(
-                    '전문가 상담\n우리집 강아지 고민\n지금 무료 상담 받으세요!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+        body: Obx(() {
+          String userId = loginHandler.getStoredEmail();
+          if (loginHandler.isLoggedIn()) {
+            if (petHandler.pets.isEmpty) {
+              petHandler.fetchPets(userId); // 사용자 반려동물 정보 로드
+            }
+          }
+
+          return Container(
+            color: Colors.white,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.blue.shade100,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      '전문가 상담\n우리집 강아지 고민\n지금 무료 상담 받으세요!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              // 긴급 예약 및 예약 내역 버튼
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildButton(
-                      icon: Icons.local_hospital,
-                      text: '긴급 예약',
-                      color: Colors.red.shade400,
-                      onTap: () {
-                        if (loginHandler.isLoggedIn()) {
-                          // 로그인되어 있으면 페이지 이동
-                          Get.to(Reservation());
-                        } else {
-                          // 로그인 페이지로 이동
-                          Get.to( Login());
-                        }
-                      },
-                    ),
-                    _buildButton(
-                      icon: Icons.assignment,
-                      text: '예약 내역',
-                      color: Colors.amber.shade400,
-                      onTap: () {
-                        if (loginHandler.isLoggedIn()) {
-                          // 로그인되어 있으면 페이지 이동
-                          Get.to(const QueryReservation());
-                        } else {
-                          // 로그인 페이지로 이동
-                          Get.to( Login());
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              // 반려동물 등록
-              GestureDetector(
-                onTap: () {
-                  if (loginHandler.isLoggedIn()) {
-                    // 로그인되어 있으면 페이지 이동
-                    Get.to(PetRegister());
-                  } else {
-                    // 로그인 페이지로 이동
-                    Get.to( Login());
-                  }
-                },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade300,
-                        blurRadius: 10,
-                        spreadRadius: 2,
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildButton(
+                        icon: Icons.local_hospital,
+                        text: '긴급 예약',
+                        color: Colors.red.shade400,
+                        onTap: () {
+                          if (loginHandler.isLoggedIn()) {
+                            Get.to(Reservation());
+                          } else {
+                            Get.to(Login());
+                          }
+                        },
+                      ),
+                      _buildButton(
+                        icon: Icons.assignment,
+                        text: '예약 내역',
+                        color: Colors.amber.shade400,
+                        onTap: () {
+                          if (loginHandler.isLoggedIn()) {
+                            Get.to(QueryReservation());
+                          } else {
+                            Get.to(Login());
+                          }
+                        },
                       ),
                     ],
                   ),
-                  child: const Row(
+                ),
+                const SizedBox(height: 20),
+                Obx(() {
+                  if (!loginHandler.isLoggedIn()) {
+                    return _buildRegisterBanner();
+                  }
+
+                  if (!petHandler.hasPets()) {
+                    return _buildRegisterBanner();
+                  }
+
+                  return _buildPetInfoList();
+                }),
+              ],
+            ),
+          );
+        }),
+      ),
+      ClinicSearch(),
+      QueryReservation(),
+      ChatRoom(),
+      const Mypage(),
+    ];
+  }
+
+  Widget _buildRegisterBanner() {
+    return GestureDetector(
+      onTap: () {
+        if (loginHandler.isLoggedIn()) {
+          Get.to(const PetRegister());
+        } else {
+          Get.to(Login());
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade300,
+              blurRadius: 10,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.pets, size: 40),
+            SizedBox(width: 10),
+            Text(
+              '내가 키우는 반려동물을 등록해 보세요',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPetInfoList() {
+    return Container(
+      height: 180,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: petHandler.pets.length + 1, // 반려동물 수에 추가 버튼 포함
+        itemBuilder: (context, index) {
+          if (index == petHandler.pets.length) {
+            // 반려동물 등록 버튼 추가
+            return GestureDetector(
+              onTap: () async {
+                // PetRegister 페이지에서 돌아올 때 결과 확인
+                var result = await Get.to(() => const PetRegister());
+
+                // 등록 후 화면 갱신
+                if (result == true) {
+                  // 반려동물 정보 다시 로드
+                  String userId = loginHandler.getStoredEmail();
+                  petHandler.fetchPets(userId);
+                }
+              },
+              child: const Card(
+                elevation: 4,
+                margin: EdgeInsets.all(8),
+                child: SizedBox(
+                  width: 180,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.pets, size: 40),
-                      SizedBox(width: 10),
+                      Icon(Icons.add, size: 40),
+                      SizedBox(height: 10),
                       Text(
-                        '내가 키우는 반려동물을 등록해 보세요',
+                        '반려동물 등록',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -197,15 +261,62 @@ class Navigation extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
+            );
+          }
+
+          // 기존 반려동물 정보 표시
+          final pet = petHandler.pets[index];
+          String baseUrl = 'http://127.0.0.1:8000'; // 서버 주소
+          String imageUrl = '$baseUrl/pet/uploads/${pet.image}'; // 이미지 경로 조합
+
+          return Card(
+            elevation: 4,
+            margin: const EdgeInsets.all(8),
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              width: 300,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 이미지 불러오기 (왼쪽)
+                  Image.network(
+                    imageUrl,
+                    height: 150,
+                    width: 150,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        Icons.error,
+                        size: 150,
+                      ); // 이미지 로드 실패 시
+                    },
+                  ),
+                  const SizedBox(width: 10), // 이미지와 텍스트 사이 간격
+                  // 텍스트 정보 (오른쪽)
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          pet.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text('종류: ${pet.speciesType}'),
+                        Text('성별: ${pet.gender}'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
-      ClinicSearch(),
-      const QueryReservation(),
-      ChatRoom(),
-      const Mypage(),
-    ];
+    );
   }
 
   List<PersistentBottomNavBarItem> _items() {

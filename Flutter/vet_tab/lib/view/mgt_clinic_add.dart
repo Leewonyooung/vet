@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:vet_app/vm/image_handler.dart';
-import 'package:vet_app/vm/login_handler.dart';
+import 'package:vet_tab/vm/login_handler.dart';
 
 class MgtClinicAdd extends StatelessWidget {
   MgtClinicAdd({super.key});
@@ -25,7 +24,10 @@ class MgtClinicAdd extends StatelessWidget {
       padding: const EdgeInsets.all(30.0),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('병원 추가',style: TextStyle(fontSize: 30),),
+          title: const Text(
+            '병원 추가',
+            style: TextStyle(fontSize: 30),
+          ),
           leading: IconButton(
               onPressed: () {
                 loginHandler.imageFile = null;
@@ -33,7 +35,7 @@ class MgtClinicAdd extends StatelessWidget {
               },
               icon: const Icon(Icons.arrow_back_ios)),
         ),
-        body: GetBuilder<ImageHandler>(
+        body: GetBuilder<LoginHandler>(
           builder: (controller) {
             return SingleChildScrollView(
               child: Center(
@@ -62,8 +64,8 @@ class MgtClinicAdd extends StatelessWidget {
                               padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
                               child: ElevatedButton(
                                   onPressed: () {
-                                    loginHandler
-                                        .getImageFromGallery(ImageSource.gallery);
+                                    loginHandler.getImageFromGallery(
+                                        ImageSource.gallery);
                                   },
                                   child: const Text('이미지 가져오기')),
                             ),
@@ -77,7 +79,14 @@ class MgtClinicAdd extends StatelessWidget {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(100, 50, 0, 20),
-                                  child: SizedBox(width: 100, child: Text('아이디 : ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
+                                  child: SizedBox(
+                                      width: 100,
+                                      child: Text(
+                                        '아이디 : ',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      )),
                                 ),
                                 Padding(
                                   padding:
@@ -97,26 +106,32 @@ class MgtClinicAdd extends StatelessWidget {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(100, 0, 0, 20),
-                                  child:
-                                      SizedBox(width: 100, child: Text('비밀번호 : ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+                                  child: SizedBox(
+                                      width: 100,
+                                      child: Text('비밀번호 : ',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold))),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 0, 20),
                                   child: SizedBox(
                                     width: 400,
                                     child: TextField(
                                       readOnly: true,
                                       controller: passwordController,
                                       decoration: InputDecoration(
-                                          labelText: '비밀번호를 입력해주세요',
-                                            suffixIcon: IconButton(
+                                        labelText: '비밀번호를 입력해주세요',
+                                        suffixIcon: IconButton(
                                             onPressed: () {
                                               passwordController.clear();
-                                              passwordController.text = loginHandler.randomPasswordNumberClinic();
-                                            }, 
-                                            icon: const Icon(Icons.add_outlined)
-                                            ),
-                                          ),
+                                              passwordController.text = loginHandler
+                                                  .randomPasswordNumberClinic();
+                                            },
+                                            icon:
+                                                const Icon(Icons.add_outlined)),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -126,11 +141,16 @@ class MgtClinicAdd extends StatelessWidget {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(100, 0, 0, 20),
-                                  child:
-                                      SizedBox(width: 100, child: Text('병원이름 : ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+                                  child: SizedBox(
+                                      width: 100,
+                                      child: Text('병원이름 : ',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold))),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 0, 20),
                                   child: SizedBox(
                                     width: 400,
                                     child: TextField(
@@ -146,11 +166,16 @@ class MgtClinicAdd extends StatelessWidget {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(100, 0, 0, 20),
-                                  child:
-                                      SizedBox(width: 100, child: Text('전화번호 : ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+                                  child: SizedBox(
+                                      width: 100,
+                                      child: Text('전화번호 : ',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold))),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 0, 20),
                                   child: SizedBox(
                                     width: 400,
                                     child: TextField(
@@ -166,23 +191,28 @@ class MgtClinicAdd extends StatelessWidget {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(100, 0, 0, 20),
-                                  child: SizedBox(width: 100, child: Text('주소 : ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+                                  child: SizedBox(
+                                      width: 100,
+                                      child: Text('주소 : ',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold))),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                   child: SizedBox(
                                     width: 400,
                                     child: TextField(
                                       controller: addressController,
                                       decoration: InputDecoration(
-                                          labelText: '주소를 입력해주세요',
-                                          suffixIcon: IconButton(
+                                        labelText: '주소를 입력해주세요',
+                                        suffixIcon: IconButton(
                                             onPressed: () {
                                               ///
-                                            }, 
-                                            icon: const Icon(Icons.search)
-                                            ),
-                                          ),
+                                            },
+                                            icon: const Icon(Icons.search)),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -196,7 +226,8 @@ class MgtClinicAdd extends StatelessWidget {
                                   child: Text('위도 : '),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(80, 0, 0, 0),
                                   child: SizedBox(
                                     width: 70,
                                     child: TextField(
@@ -228,13 +259,13 @@ class MgtClinicAdd extends StatelessWidget {
                                     decoration: const InputDecoration(
                                       enabledBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 255, 255, 255)),
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255)),
                                       ),
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 255, 255, 255)),
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255)),
                                       ),
                                     ),
                                   ),
@@ -246,10 +277,16 @@ class MgtClinicAdd extends StatelessWidget {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
-                                  child: SizedBox(width: 100, child: Text('설명 : ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+                                  child: SizedBox(
+                                      width: 100,
+                                      child: Text('설명 : ',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold))),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                   child: SizedBox(
                                     width: 400,
                                     child: SizedBox(
@@ -262,7 +299,8 @@ class MgtClinicAdd extends StatelessWidget {
                                         maxLines: null,
                                         keyboardType: TextInputType.multiline,
                                         controller: introController,
-                                        textAlignVertical: TextAlignVertical.top,
+                                        textAlignVertical:
+                                            TextAlignVertical.top,
                                         decoration: const InputDecoration(
                                           hintText: '설명을 입력하세요',
                                           border: OutlineInputBorder(),
@@ -279,22 +317,26 @@ class MgtClinicAdd extends StatelessWidget {
                         ),
                       ],
                     ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                              child: SizedBox(
-                                width: 170,
-                                height: 70,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                  onPressed: () {
-                                    //
-                                  }, 
-                                  child: const Text('추가하기',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
-                                ),
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                      child: SizedBox(
+                        width: 170,
+                        height: 70,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: BeveledRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
                             ),
+                            onPressed: () {
+                              //
+                            },
+                            child: const Text(
+                              '추가하기',
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
+                            )),
+                      ),
+                    ),
                   ],
                 ),
               ),

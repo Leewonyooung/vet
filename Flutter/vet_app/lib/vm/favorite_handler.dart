@@ -3,6 +3,7 @@ import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
 import 'package:http/http.dart' as http;
+import 'package:vet_app/vm/login_handler.dart';
 class FavoriteHandler extends ClinicHandler {
   var favoriteClinics = <Clinic>[].obs; // 즐겨찾기 병원 목록
   var favoriteIconValue = false.obs; // 즐겨찾기 버튼 관리
@@ -52,8 +53,8 @@ class FavoriteHandler extends ClinicHandler {
           }
 
           // 즐겨찾기 병원 목록 업데이트 (assignAll 사용)
-          favoriteClinics.assignAll(returnData);
-          update(); // 상태 업데이트
+          favoriteClinics.value = returnData;
+          // update(); // 상태 업데이트
         } else {
           // results가 없는 경우 처리
           throw Exception('results 필드가 응답에 존재하지 않습니다.');
@@ -102,8 +103,7 @@ class FavoriteHandler extends ClinicHandler {
 // 즐겨찾기 아이콘 변경에 필요
   searchFavoriteClinic(String userId, String clinicId)async{
     var url = Uri.parse(
-      'http://127.0.0.1:8000/favorite/search_favorite_clinic?user_id=$userId&clinic_id=$clinicId'
-    );
+        'http://127.0.0.1:8000/favorite/search_favorite_clinic?user_id=$userId&clinic_id=$clinicId');
     var response = await http.get(url);
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       int result = dataConvertedJSON['results'];

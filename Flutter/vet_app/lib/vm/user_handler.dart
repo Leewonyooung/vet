@@ -19,8 +19,8 @@ class UserHandler extends LocationHandler {
 // 유저 정보 가져오는 쿼리 - mypage
   selectMyinfo(String userid) async {
     await getUserId();
-    var url = Uri.parse(
-        'http://127.0.0.1:8000/mypage/select_mypage?id=$userid');
+    var url =
+        Uri.parse('http://127.0.0.1:8000/mypage/select_mypage?id=$userid');
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));

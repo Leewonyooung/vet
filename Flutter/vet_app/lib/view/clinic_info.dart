@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_location.dart';
-import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
 
 class ClinicInfo extends StatelessWidget {
   ClinicInfo({super.key});
-  final ClinicHandler vmHandler = Get.find();
+  final FavoriteHandler vmHandler = Get.find();
   @override
   Widget build(BuildContext context) {
     FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
@@ -16,7 +15,7 @@ class ClinicInfo extends StatelessWidget {
       appBar: AppBar(
         title: const Text('검색 결과'),
       ),
-      body: GetBuilder<ClinicHandler>(
+      body: GetBuilder<FavoriteHandler>(
         builder: (_) {
           return FutureBuilder(
               future: vmHandler.getClinicDetail(value),
@@ -60,8 +59,8 @@ class ClinicInfo extends StatelessWidget {
                                       children: [
                                         // 지도 보는 버튼
                                         IconButton(
-                                            onPressed: () => Get.to(() =>
-                                                ClinicLocation(),
+                                            onPressed: () => Get.to(
+                                                () => ClinicLocation(),
                                                 arguments: [result[0].id]),
                                             icon: const Icon(
                                                 Icons.pin_drop_outlined)),

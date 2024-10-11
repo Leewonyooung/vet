@@ -2,10 +2,9 @@ import 'package:vet_app/model/pet.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:vet_app/vm/species_handler.dart';
-
-class PetHandler extends SpeciesHandler {
+class PetHandler extends GetxController {
   var pets = <Pet>[].obs;
 
   // 유저 ID를 기반으로 반려동물 정보 가져오기
@@ -15,7 +14,7 @@ class PetHandler extends SpeciesHandler {
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
-        var data = json.decode(response.body);
+        var data = json.decode(utf8.decode(response.bodyBytes));
         pets.value = (data as List).map((petJson) {
           return Pet(
             id: petJson['id'],
@@ -43,31 +42,32 @@ class PetHandler extends SpeciesHandler {
     return pets.isNotEmpty;
   }
 
-  // 반려동물 등록
-  Future<bool> addPet(Pet pet) async {
-    var url = Uri.parse(
-        'http://127.0.0.1:8000/pet/insert?id=${pet.id}&user_id=${pet.userId}&species_type=${pet.speciesType}&species_category=${pet.speciesCategory}&name=${pet.name}&birthday=${pet.birthday}&features=${pet.features}&gender=${pet.gender}&image=${pet.image}');
-    var response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'id': pet.id,
-        'user_id': pet.userId,
-        'species_type': pet.speciesType,
-        'species_category': pet.speciesCategory,
-        'name': pet.name,
-        'birthday': pet.birthday,
-        'features': pet.features,
-        'gender': pet.gender,
-        'image': pet.image,
-      }),
-    );
+  // 반려동물 등록 (이미지 파일을 포함)
+  Future<bool> addPet(Pet pet, File? imageFile) async {
+    var url = Uri.parse('http://127.0.0.1:8000/pet/insert');
+
+    var request = http.MultipartRequest('POST', url)
+      ..fields['id'] = pet.id!
+      ..fields['user_id'] = pet.userId
+      ..fields['species_type'] = pet.speciesType
+      ..fields['species_category'] = pet.speciesCategory
+      ..fields['name'] = pet.name
+      ..fields['birthday'] = pet.birthday
+      ..fields['features'] = pet.features
+      ..fields['gender'] = pet.gender;
+
+    // 이미지 파일이 있는 경우 추가
+    if (imageFile != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('image', imageFile.path),
+      );
+    }
+
+    var response = await request.send();
 
     if (response.statusCode == 200) {
-      // 반려동물이 성공적으로 등록된 경우 true 반환
       return true;
     } else {
-      // 등록 실패 시 false 반환
       return false;
     }
   }

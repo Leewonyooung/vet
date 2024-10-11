@@ -8,24 +8,11 @@ class Reservation extends StatelessWidget {
   final vmHnadler = Get.put(ReservationHandler());
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: const Row(
             children: [Icon(Icons.local_hospital), Text('긴급예약')],
           ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  // 즐겨찾기
-                },
-                icon: const Icon(Icons.favorite_border_outlined)),
-            IconButton(
-                onPressed: () {
-                  // 내정보
-                },
-                icon: const Icon(Icons.account_circle_outlined)),
-          ],
         ),
         body: GetBuilder<ReservationHandler>(builder: (_) {
           return FutureBuilder(
@@ -49,15 +36,16 @@ class Reservation extends StatelessWidget {
                           return Card(
                             child: Row(
                               children: [
-                                Image.network (
+                                Image.network(
                                   'http://127.0.1:8000/available/view/${clinic.image}',
                                   width: 100,
-                                  height: 80,),
+                                  height: 80,
+                                ),
                                 Text('  ${clinic.name}'),
                                 // Text('  ${clinic.address}'),
                                 ElevatedButton(
                                   onPressed: () {
-                                    Get.to(() => const QueryReservation(), arguments: [
+                                    Get.to(() =>  QueryReservation(), arguments: [
                                       clinic.name,
                                       clinic.latitude,
                                       clinic.longitude,

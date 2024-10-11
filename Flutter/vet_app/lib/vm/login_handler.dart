@@ -1,16 +1,13 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:vet_app/model/clinic_login.dart';
 import 'package:vet_app/model/userdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/user_handler.dart';
 
 class LoginHandler extends UserHandler {
-
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
   var isObscured = true.obs;
@@ -78,7 +75,6 @@ class LoginHandler extends UserHandler {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    
 
     // Sign in to Firebase with the Google credentials (안창빈)
     final UserCredential userCredential =
@@ -102,6 +98,7 @@ class LoginHandler extends UserHandler {
     }
   }
 
+// query inserted google email from db to differentiate whether email is registered or not  
   userloginCheckJSONData(email) async {
     var url = Uri.parse('http://127.0.0.1:8000/user/selectuser?id=$email');
     var response = await http.get(url);
@@ -120,67 +117,6 @@ class LoginHandler extends UserHandler {
     var result = dataConvertedJSON['results'];
 
     if (result == 'OK') {
-    } else {
-    }
+    } else {}
   }
-
-  //////////////////////////// Clinic /////////////////////////////
-
-  ///Login Clinic (안창빈)
-
-  var cliniclogindata = <ClinicLogin>[].obs;
-
-  clincgetJSONData() async {
-    cliniclogindata.clear();
-    var url = Uri.parse('http://127.0.0.1:8000/user/selectclinic');
-    var response = await http.get(url);
-    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    List results = dataConvertedJSON['results'];
-
-    List<ClinicLogin> returnResult = [];
-    String id = results[0]['id'];
-    String password = results[0]['password'];
-
-    returnResult.add(ClinicLogin(id: id, password: password));
-
-    cliniclogindata.value = returnResult;
-  }
-  // check whether account trying to login is registerd in our db (안창빈)
-
-  clinicloginJsonCheck(String id, String password) async {
-    var url = Uri.parse(
-        'http://127.0.0.1:8000/user/selectclinic?id=$id&password=$password');
-    var response = await http.get(url);
-    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    List result = dataConvertedJSON['results'];
-    return result;
-  }
-
-  // toggle password visibility
-  togglePasswordVisibility() {
-    isObscured.value = !isObscured.value;
-  }
-
-  // Clinic Password random Generator
-  randomPasswordNumberClinic() {
-  const String upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const String lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
-  const String numbers = '0123456789';
-  const String specialChars = r'!@#$%^&*()?_~';  
-  String includeAllChar = upperCaseLetters + lowerCaseLetters + numbers + specialChars;
-  Random random = Random();
-  String passwordClinic = '';
-
-  passwordClinic += upperCaseLetters[random.nextInt(upperCaseLetters.length)];
-  passwordClinic += lowerCaseLetters[random.nextInt(lowerCaseLetters.length)];
-  passwordClinic += numbers[random.nextInt(numbers.length)];
-  passwordClinic += specialChars[random.nextInt(specialChars.length)];
-  for (int i = 0; i < 4; i++) {
-    passwordClinic += includeAllChar[random.nextInt(includeAllChar.length)];
-  }
-  
-  List<String> passwordClinicShuffle = passwordClinic.split('')..shuffle();
-  return passwordClinicShuffle.join('');
-
-}
 }
