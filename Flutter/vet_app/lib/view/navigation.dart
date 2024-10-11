@@ -146,7 +146,7 @@ class Navigation extends StatelessWidget {
                       onTap: () {
                         if (loginHandler.isLoggedIn()) {
                           // 로그인되어 있으면 페이지 이동
-                          Get.to(const QueryReservation());
+                          Get.to( QueryReservation());
                         } else {
                           // 로그인 페이지로 이동
                           Get.to( Login());
@@ -202,7 +202,7 @@ class Navigation extends StatelessWidget {
         ),
       ),
       ClinicSearch(),
-      const QueryReservation(),
+       QueryReservation(),
       ChatRoom(),
       const Mypage(),
     ];

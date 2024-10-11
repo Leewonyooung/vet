@@ -1,37 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 
 class QueryReservation extends StatelessWidget {
-  const QueryReservation({super.key});
+  QueryReservation({super.key});
+  final vmHnadler = Get.put(PetHandler());
 
   @override
   Widget build(BuildContext context) {
-    final vmHandler = PetHandler();
     TextEditingController symptomsController = TextEditingController();
-
+    vmHnadler.fetchPets(vmHnadler.getStoredEmail());
+    final pet = vmHnadler.pets;
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('긴급 예약'),
       ),
-      // body: GetBuilder<VmHandler>(
-      //   builder: (controller) {
-      //     return FutureBuilder(
-      //       future: controller., 
-      //       builder: (context, snapshot) {
-      //         if (snapshot.connectionState == ConnectionState.waiting) {
-      //             return const Center(
-      //               child: CircularProgressIndicator(),
-      //             );
-      //         } else if (snapshot.hasError) {
-      //             return Center(
-      //               child: Text('Error : ${snapshot.error}'),
-      //             );
-      //           } else{
-      //           }
-      //       },
-      //     );
-      //   },
-      // ),
+      body: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: vmHnadler.pets.length,
+        itemBuilder: (context, index) {
+          final pet = vmHnadler.pets[index];
+          print(pet.name);
+          return Card(
+            child: Row(
+              children: [
+                Image.network('http://127.0.0.1:8000/pet/pets/${pet.image}'),
+                Column(
+                  children: [
+                    Text('이름 : ${pet.name}'),
+                    Row(
+                      children: [Icon(Icons.female), Text(pet.speciesCategory)],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
