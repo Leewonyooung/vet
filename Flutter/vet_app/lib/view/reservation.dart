@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:vet_app/view/make_reservation.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 import 'package:get/get.dart';
-
+// 긴급 예약 페이지
 class Reservation extends StatelessWidget {
   Reservation({super.key});
   final vmHnadler = Get.put(ReservationHandler());
@@ -23,8 +24,8 @@ class Reservation extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error : ${snapshot.error}'),
+                  return const Center(
+                    child: Text('예약가능한 병원이 없습니다.'),
                   );
                 }
                 else {
@@ -45,12 +46,13 @@ class Reservation extends StatelessWidget {
                                 // Text('  ${clinic.address}'),
                                 ElevatedButton(
                                   onPressed: () {
-                                    Get.to(() =>  QueryReservation(), arguments: [
+                                    Get.to(() =>  MakeReservation(), arguments: [
                                       clinic.name,
                                       clinic.latitude,
                                       clinic.longitude,
                                       clinic.image,
-                                      clinic.time
+                                      clinic.time,
+                                      clinic.address
                                     ]);
                                   },
                                   child: const Icon(

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vet_tab/view/mgt_clinic_map.dart';
 import 'package:vet_tab/vm/login_handler.dart';
 
 class MgtClinicAdd extends StatelessWidget {
@@ -209,10 +210,11 @@ class MgtClinicAdd extends StatelessWidget {
                                         labelText: '주소를 입력해주세요',
                                         suffixIcon: IconButton(
                                             onPressed: () {
-                                              ///
-                                            },
-                                            icon: const Icon(Icons.search)),
-                                      ),
+                                              Get.to(()=> MgtClinicMap(), arguments: addressController.text);
+                                            }, 
+                                            icon: const Icon(Icons.search)
+                                            ),
+                                          ),
                                     ),
                                   ),
                                 ),
