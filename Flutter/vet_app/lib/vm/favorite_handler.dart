@@ -4,9 +4,17 @@ import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
 import 'package:http/http.dart' as http;
+import 'package:vet_app/vm/login_handler.dart';
 class FavoriteHandler extends ClinicHandler {
   var favoriteClinics = <Clinic>[].obs; // 즐겨찾기 병원 목록
   IconButton favoriteButtonIcon = IconButton(onPressed: () {},icon: const Icon(Icons.favorite_outline));
+  final LoginHandler loginHandler = Get.find();
+
+  @override
+  void onInit() async {
+    super.onInit();
+    await getFavoriteClinics(loginHandler.getStoredEmail());
+  }
 
   // 즐겨찾기 목록 불러오기
   Future<void> getFavoriteClinics(String userId) async {
@@ -53,8 +61,8 @@ class FavoriteHandler extends ClinicHandler {
           }
 
           // 즐겨찾기 병원 목록 업데이트 (assignAll 사용)
-          favoriteClinics.assignAll(returnData);
-          update(); // 상태 업데이트
+          favoriteClinics.value = returnData;
+          // update(); // 상태 업데이트
         } else {
           // results가 없는 경우 처리
           throw Exception('results 필드가 응답에 존재하지 않습니다.');

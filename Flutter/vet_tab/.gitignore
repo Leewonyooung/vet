@@ -30,7 +30,13 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-
+/android/
+/macos/
+/linux/
+/test/
+/web/
+/windows/
+/firebase.json/
 # Symbolication related
 app.*.symbols
 

@@ -51,6 +51,7 @@ class ClinicHandler extends TreatmentHandler{
 
 //  // 병원 상세 정보
   getClinicDetail(String clinicid)async{
+    // clinicDetail.clear();
     var url = Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$clinicid');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));

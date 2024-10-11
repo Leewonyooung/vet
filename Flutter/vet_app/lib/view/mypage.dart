@@ -9,7 +9,7 @@ class Mypage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LoginHandler loginHandler = Get.put(LoginHandler());
+    final LoginHandler loginHandler = Get.find();
     String userid = loginHandler.getStoredEmail();
     loginHandler.selectMyinfo(userid);
 

@@ -9,6 +9,7 @@ import 'package:vet_app/view/mypage.dart';
 import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/view/reservation.dart';
+import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 
 class Navigation extends StatelessWidget {
@@ -17,7 +18,7 @@ class Navigation extends StatelessWidget {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
   final LoginHandler loginHandler = Get.put(LoginHandler());
-
+  final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +69,10 @@ class Navigation extends StatelessWidget {
               onPressed: () {
                 if (loginHandler.isLoggedIn()) {
                   // 로그인되어 있으면 페이지 이동
-                  Get.to(const Favorite());
+                  Get.to(()=> Favorite());
                 } else {
                   // 로그인 페이지로 이동
-                  Get.to( Login());
+                  Get.to( ()=>Login());
                 }
               },
             ),
@@ -80,10 +81,10 @@ class Navigation extends StatelessWidget {
               onPressed: () {
                 if (loginHandler.isLoggedIn()) {
                   // 로그인되어 있으면 페이지 이동
-                  Get.to(const Mypage());
+                  Get.to(()=>const Mypage());
                 } else {
                   // 로그인 페이지로 이동
-                  Get.to( Login());
+                  Get.to(()=> Login());
                 }
               },
             ),
@@ -132,10 +133,10 @@ class Navigation extends StatelessWidget {
                       onTap: () {
                         if (loginHandler.isLoggedIn()) {
                           // 로그인되어 있으면 페이지 이동
-                          Get.to(Reservation());
+                          Get.to(()=>Reservation());
                         } else {
                           // 로그인 페이지로 이동
-                          Get.to( Login());
+                          Get.to(()=> Login());
                         }
                       },
                     ),
@@ -146,10 +147,10 @@ class Navigation extends StatelessWidget {
                       onTap: () {
                         if (loginHandler.isLoggedIn()) {
                           // 로그인되어 있으면 페이지 이동
-                          Get.to( QueryReservation());
+                          Get.to(()=> QueryReservation());
                         } else {
                           // 로그인 페이지로 이동
-                          Get.to( Login());
+                          Get.to(()=> Login());
                         }
                       },
                     ),
@@ -162,10 +163,10 @@ class Navigation extends StatelessWidget {
                 onTap: () {
                   if (loginHandler.isLoggedIn()) {
                     // 로그인되어 있으면 페이지 이동
-                    Get.to(PetRegister());
+                    Get.to(()=>PetRegister());
                   } else {
                     // 로그인 페이지로 이동
-                    Get.to( Login());
+                    Get.to(()=> Login());
                   }
                 },
                 child: Container(
