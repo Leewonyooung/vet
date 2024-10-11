@@ -108,7 +108,7 @@ class ChatsHandler extends LoginHandler {
 
   isToday() async{
     bool istoday = true;
-    chats[chats.length-1].timestamp.toString().substring(0,16) == DateTime.now().toString().substring(0,16)?
+    chats[chats.length-1].timestamp.toString().substring(0,10) == DateTime.now().toString().substring(0,10)?
     istoday : istoday = false;
     return istoday;
   }

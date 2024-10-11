@@ -117,7 +117,7 @@ class ChatView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(value[1],style: const TextStyle(fontSize: 20),),
-                                    chat.text.length == vmHandler.isToday()?
+                                    chat.text.length == vmHandler.checkToday(chat)?
                                     Text(chat.text.substring(3,chat.text.length-4)):
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -167,13 +167,16 @@ class ChatView extends StatelessWidget {
           width: MediaQuery.of(context).size.width / 1.1,
           child: Row(
             children: [
-              SizedBox(
+              Container(
+                decoration: BoxDecoration(
+                  
+                ),
                 width: MediaQuery.of(context).size.width / 1.3,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
                     controller: chatController,
-                    decoration:const InputDecoration(border: OutlineInputBorder()),
+                    decoration:const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(25))), ),
                   ),
                 ),
               ),
