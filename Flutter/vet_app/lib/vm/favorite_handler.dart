@@ -53,7 +53,7 @@ class FavoriteHandler extends ClinicHandler {
 
           // 즐겨찾기 병원 목록 업데이트 (assignAll 사용)
           favoriteClinics.value = returnData;
-          // update(); // 상태 업데이트
+          update(); // 상태 업데이트
         } else {
           // results가 없는 경우 처리
           throw Exception('results 필드가 응답에 존재하지 않습니다.');

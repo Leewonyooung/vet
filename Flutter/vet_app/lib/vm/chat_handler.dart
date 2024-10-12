@@ -11,6 +11,7 @@ import 'package:vet_app/vm/login_handler.dart';
 import 'package:http/http.dart' as http;
 
 class ChatsHandler extends LoginHandler {
+  final show = false.obs;
   final chats = <Chats>[].obs;
   final rooms = <Chatroom>[].obs;
   final currentClinicId = "".obs;
@@ -28,6 +29,10 @@ class ChatsHandler extends LoginHandler {
   void onInit() async {
     super.onInit();
     await getAllData();
+  }
+  showScreen() async{
+    show.value = true;
+    update();
   }
   getAllData() async{
     await makeChatRoom();
@@ -65,7 +70,7 @@ class ChatsHandler extends LoginHandler {
     List<Chats> returnResult=[];
     result.clear();
     QuerySnapshot<Map<String, dynamic>> snapshot =
-        await FirebaseFirestore.instance.collection("chat").get();
+        await FirebaseFirestore.instance.collection("chat").where('user',isEqualTo: box.read('userEmail')).get();
     var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
     for (int i = 0; i < tempresult.length; i++) {
       Chatroom chatroom = Chatroom(
@@ -118,7 +123,8 @@ class ChatsHandler extends LoginHandler {
   }
 
   makeChatRoom() async {
-    _rooms.snapshots().listen((event) {
+    _rooms.where('user',isEqualTo: box.read('userEmail')).snapshots().listen((event) {
+      print(event.docs.length);
       rooms.value = event.docs
           .map(
             (doc) => Chatroom(

@@ -22,8 +22,7 @@ class ChatRoomView extends StatelessWidget {
                 child: Text('오류 발생: ${snapshot.error}'),
               );
             } else {
-              return chatsHandler.rooms.isEmpty?
-              const Center(child: CircularProgressIndicator(),):
+              return 
               Obx(() => chatRoomList(context),);
           }
         },
@@ -83,10 +82,10 @@ return Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      chatsHandler.roomName[index],
-                                      style: const TextStyle(fontSize: 30),
-                                    ),
+                                    // Text(
+                                    //   chatsHandler.roomName[index],
+                                    //   style: const TextStyle(fontSize: 30),
+                                    // ),
                                     Row(
                                       children: [
                                         index <= chatsHandler.lastChats.length-1 ?

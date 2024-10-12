@@ -14,21 +14,12 @@ class ChatView extends StatelessWidget {
   ChatView({super.key,});
   final ChatsHandler vmHandler = Get.find();
   final TextEditingController chatController = TextEditingController();
-  // final value = Get.arguments??"__";
   @override
   Widget build(BuildContext context) {
     final temp = Get.arguments??"__";
     return Scaffold(
       appBar: AppBar(
         title: Text(temp[1]),
-        actions: [
-          IconButton(
-            onPressed: () {
-              //
-            },
-            icon: const Icon(Icons.search_outlined),
-          )
-        ],
       ),
       body: Obx(() {
         return chatList(context, temp);
@@ -49,6 +40,7 @@ class ChatView extends StatelessWidget {
             controller: vmHandler.listViewContoller,
             itemCount: vmHandler.chats.length,
             itemBuilder: (context, index) {
+             
               Chats chat = vmHandler.chats[index];
               return Padding(
                 padding: const EdgeInsets.all(8.0),

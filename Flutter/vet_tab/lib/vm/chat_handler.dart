@@ -87,16 +87,15 @@ class ChatsHandler extends ClinicHandler {
     if(result.isNotEmpty){
       result.clear();
     }
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: 'adfki125').get();
-    var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
-    for (int i = 0; i < tempresult.length; i++) {
-      Chatroom chatroom = Chatroom(
-          clinic: tempresult[i]['clinic'],
-          user: tempresult[i]['user'],
-          image: tempresult[i]['image']);
-      result.add(chatroom);
-    }
+    await FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: 'adfki125').snapshots().listen((event) => returnResult = event.docs.map((e) => Chats(reciever: e.get('reciever'),sender: e.get('sender'),text: e.get('text'), timestamp: e.get('timestamp')),).toList());
+    // var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
+    // for (int i = 0; i < tempresult.length; i++) {
+    //   Chatroom chatroom = Chatroom(
+    //       clinic: tempresult[i]['clinic'],
+    //       user: tempresult[i]['user'],
+    //       image: tempresult[i]['image']);
+    //   result.add(chatroom);
+    // }
     for (int i = 0; i < result.length; i++) {
       _rooms
           .doc("adfki125_${result[i].user}")
@@ -106,6 +105,7 @@ class ChatsHandler extends ClinicHandler {
           .snapshots()
           .listen(
         (event) {
+          print(event.docs.length);
            for (int i = 0; i < event.docs.length; i++) {
             var chat = event.docs[i].data();
             returnResult.add(Chats(
@@ -114,6 +114,7 @@ class ChatsHandler extends ClinicHandler {
                 text: chat['text'],
                 timestamp: chat['timestamp']));
           }
+          print(returnResult);
           lastChats.value = returnResult;
         },
       );
