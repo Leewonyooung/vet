@@ -1,8 +1,8 @@
 """
 author: Aeong
 Description: pet
-Fixed: 2024.10.11
-Usage: 
+Fixed: 2024.10.12
+Usage: Manage Pet
 """
 
 from fastapi import APIRouter, HTTPException, File, UploadFile, Form
@@ -105,6 +105,60 @@ async def get_file(file_name: str):
     if os.path.exists(file_path):
         return FileResponse(path=file_path, filename=file_name)
     return {"error": "File not found"}
+
+# 반려동물 수정 API
+@router.post("/update")
+async def update_pet(
+    id: str = Form(...),
+    user_id: str = Form(...),
+    species_type: str = Form(...),
+    species_category: str = Form(...),
+    name: str = Form(...),
+    birthday: str = Form(...),
+    features: str = Form(...),
+    gender: str = Form(...),
+    image: UploadFile = File(None)
+):
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            if image:
+                # 이미지가 제공된 경우, 새 이미지를 저장하고 파일 이름을 업데이트합니다.
+                image_filename = image.filename
+                image_path = os.path.join(UPLOAD_DIRECTORY, image_filename)
+                with open(image_path, "wb") as buffer:
+                    shutil.copyfileobj(image.file, buffer)
+                
+                sql = """
+                    UPDATE pet 
+                    SET species_type = %s, species_category = %s, name = %s, 
+                        birthday = %s, features = %s, gender = %s, image = %s
+                    WHERE id = %s AND user_id = %s
+                """
+                cursor.execute(sql, (
+                    species_type, species_category, name, birthday, 
+                    features, gender, image_filename, id, user_id
+                ))
+            else:
+                # 이미지가 제공되지 않은 경우, 이미지를 제외한 다른 정보만 업데이트합니다.
+                sql = """
+                    UPDATE pet 
+                    SET species_type = %s, species_category = %s, name = %s, 
+                        birthday = %s, features = %s, gender = %s
+                    WHERE id = %s AND user_id = %s
+                """
+                cursor.execute(sql, (
+                    species_type, species_category, name, birthday, 
+                    features, gender, id, user_id
+                ))
+            
+            conn.commit()
+            return {"message": "Pet updated successfully!"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
 
 # 반려동물 삭제 API (DELETE)
 @router.delete("/pets/{pet_id}")

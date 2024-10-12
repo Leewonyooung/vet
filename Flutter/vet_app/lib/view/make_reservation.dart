@@ -31,12 +31,10 @@ class MakeReservation extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('내 반려동물',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold
-                ),)
-                ,
+                const Text(
+                  '내 반려동물',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 20),
                 Obx(() {
                   if (!loginHandler.isLoggedIn()) {
@@ -49,11 +47,10 @@ class MakeReservation extends StatelessWidget {
 
                   return _buildPetInfoList();
                 }),
-                const Text('증상',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold
-                ),),
+                const Text(
+                  '증상',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 TextField(
                   maxLines: 4,
                   controller: symptomsController,
@@ -98,9 +95,11 @@ class MakeReservation extends StatelessWidget {
                 Get.back();
               },
               child: const Text('아니오')),
-          ElevatedButton(onPressed: () {
-            Get.to(()=> const QueryReservation());
-          }, child: const Text('확정')),
+          ElevatedButton(
+              onPressed: () {
+                Get.to(() => const QueryReservation());
+              },
+              child: const Text('확정')),
         ]);
   }
 
@@ -108,9 +107,9 @@ class MakeReservation extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (loginHandler.isLoggedIn()) {
-          Get.to(const PetRegister());
+          Get.to(PetRegister());
         } else {
-          Get.to( Login());
+          Get.to(Login());
         }
       },
       child: Container(
@@ -157,7 +156,7 @@ class MakeReservation extends StatelessWidget {
             return GestureDetector(
               onTap: () async {
                 // PetRegister 페이지에서 돌아올 때 결과 확인
-                var result = await Get.to(() => const PetRegister());
+                var result = await Get.to(() => PetRegister());
 
                 // 등록 후 화면 갱신
                 if (result == true) {

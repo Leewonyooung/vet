@@ -166,11 +166,11 @@ class Navigation extends StatelessWidget {
     ];
   }
 
-  Widget _buildRegisterBanner() {
+  _buildRegisterBanner() {
     return GestureDetector(
       onTap: () {
         if (loginHandler.isLoggedIn()) {
-          Get.to(const PetRegister());
+          Get.to(PetRegister());
         } else {
           Get.to(Login());
         }
@@ -206,7 +206,7 @@ class Navigation extends StatelessWidget {
     );
   }
 
-  Widget _buildPetInfoList() {
+  _buildPetInfoList() {
     return Container(
       height: 180,
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -219,7 +219,7 @@ class Navigation extends StatelessWidget {
             return GestureDetector(
               onTap: () async {
                 // PetRegister 페이지에서 돌아올 때 결과 확인
-                var result = await Get.to(() => const PetRegister());
+                var result = await Get.to(() => PetRegister());
 
                 // 등록 후 화면 갱신
                 if (result == true) {
@@ -359,7 +359,7 @@ class Navigation extends StatelessWidget {
     );
   }
 
-  Widget _buildButton({
+  _buildButton({
     required IconData icon,
     required String text,
     required Color color,
