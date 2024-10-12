@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vet_app/view/chat_view.dart';
 import 'package:vet_app/view/clinic_location.dart';
+import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
 
 class ClinicInfo extends StatelessWidget {
   ClinicInfo({super.key});
   final FavoriteHandler vmHandler = Get.find();
+  final ChatsHandler chatsHandler = Get.find();
   @override
   Widget build(BuildContext context) {
     FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
@@ -98,6 +101,22 @@ class ClinicInfo extends StatelessWidget {
                             ),
                           ),
                           /// 예약 버튼
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: ElevatedButton(
+                              onPressed: () async{
+                                await chatsHandler.firstChatRoom(result[0].id ,result[0].image);
+                                Get.to(()=> ChatView(),
+                                  arguments: [favoriteHandler.clinicDetail[0].image, favoriteHandler.clinicDetail[0].name,]
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(300, 40),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 237, 220, 61)),
+                              child: const Text('상담하기'),
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: ElevatedButton(

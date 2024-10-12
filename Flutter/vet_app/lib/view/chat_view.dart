@@ -1,3 +1,9 @@
+/*
+author: 이원영
+Description: 병원과 유저간 채팅 페이지
+Fixed: 10/11
+Usage: 채팅 목록
+*/
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -8,12 +14,13 @@ class ChatView extends StatelessWidget {
   ChatView({super.key,});
   final ChatsHandler vmHandler = Get.find();
   final TextEditingController chatController = TextEditingController();
-  final value = Get.arguments??"__";
+  // final value = Get.arguments??"__";
   @override
   Widget build(BuildContext context) {
+    final temp = Get.arguments??"__";
     return Scaffold(
       appBar: AppBar(
-        title: Text(value[1]),
+        title: Text(temp[1]),
         actions: [
           IconButton(
             onPressed: () {
@@ -24,12 +31,12 @@ class ChatView extends StatelessWidget {
         ],
       ),
       body: Obx(() {
-        return chatList(context);
+        return chatList(context, temp);
       }),
     );
   }
 
-  chatList(context) {
+  chatList(context, temp) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       vmHandler.listViewContoller
           .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent);
@@ -101,7 +108,7 @@ class ChatView extends StatelessWidget {
                               width: 60,
                               height: 60,
                               child: Image.network(
-                                value[0],
+                                temp[0],
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -116,7 +123,7 @@ class ChatView extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(value[1],style: const TextStyle(fontSize: 20),),
+                                    Text(temp[1],style: const TextStyle(fontSize: 20),),
                                     chat.text.length == vmHandler.checkToday(chat)?
                                     Text(chat.text.substring(3,chat.text.length-4)):
                                     Row(
@@ -181,7 +188,7 @@ class ChatView extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () => inputChat(),
+                onPressed: () => inputChat(temp),
                 icon: const Icon(Icons.arrow_circle_up_outlined),
               ),
             ],
@@ -191,7 +198,10 @@ class ChatView extends StatelessWidget {
     );
   }
 
-  inputChat() async {
+  inputChat(var temp) async {
+    if(vmHandler.currentClinicId.isEmpty) {
+      await vmHandler.getClinicName(temp[1]);
+    }
     Chats inputchat = Chats(
       reciever: vmHandler.currentClinicId.value,
       sender: vmHandler.box.read('userEmail'),

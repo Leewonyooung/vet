@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vet_app/model/chatroom.dart';
 import 'package:vet_app/model/chats.dart';
 import 'package:get/get.dart';
@@ -32,6 +35,15 @@ class ChatsHandler extends LoginHandler {
     await getlastName();
   }
 
+  getClinicName(String name) async{
+     var url = Uri.parse(
+          'http://127.0.0.1:8000/clinic/getclinicname?name=$name');
+      var response = await http.get(url);
+      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    currentClinicId.value = dataConvertedJSON['results'][0];
+    update();
+  }
+
   queryChat() {
     _rooms
         .doc("${currentClinicId.value}_${box.read('userEmail')}")
@@ -50,6 +62,8 @@ class ChatsHandler extends LoginHandler {
   }
 
   queryLastChat() async {
+    List<Chats> returnResult=[];
+    result.clear();
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await FirebaseFirestore.instance.collection("chat").get();
     var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
@@ -64,22 +78,43 @@ class ChatsHandler extends LoginHandler {
       _rooms
           .doc("${result[i].clinic}_${box.read('userEmail')}")
           .collection('chats')
-          .orderBy('timestamp', descending: false)
+          .orderBy('timestamp', descending: true)
           .limit(1)
           .snapshots()
           .listen(
         (event) {
           for (int i = 0; i < event.docs.length; i++) {
             var chat = event.docs[i].data();
-            lastChats.obs.value.add(Chats(
+            returnResult.add(Chats(
                 reciever: chat['reciever'],
                 sender: chat['sender'],
                 text: chat['text'],
                 timestamp: chat['timestamp']));
           }
+          lastChats.value = returnResult;
         },
       );
     }
+  }
+
+  firstChatRoom(id, image) async{
+    final response = await http.get(Uri.parse('http://127.0.0.1:8000/clinic/view/$image'));
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/temp_image.jpg';
+    final file = File(filePath);
+    await file.writeAsBytes(response.bodyBytes);
+    final firebaseStorage = FirebaseStorage.instance.ref().child("$image");
+    await firebaseStorage.putFile(file);
+    String downloadURL = await firebaseStorage.getDownloadURL();
+
+   _rooms
+        .doc("${id}_${box.read('userEmail')}")
+        // .collection('chats')
+        .set({
+      'clinic': id,
+      'image': downloadURL,
+      'user': box.read('userEmail'),
+    });
   }
 
   makeChatRoom() async {
@@ -110,6 +145,9 @@ class ChatsHandler extends LoginHandler {
   }
 
   isToday() async {
+    if(chats.isEmpty){
+      return false;
+    }
     bool istoday = true;
     chats[chats.length-1].timestamp.toString().substring(0,10) == DateTime.now().toString().substring(0,10)?
     istoday : istoday = false;
@@ -125,6 +163,7 @@ class ChatsHandler extends LoginHandler {
   addChat(Chats chat) async {
     bool istoday = await isToday();
     if (!istoday) {
+
       await _rooms
         .doc("${currentClinicId.value}_${box.read('userEmail')}")
         .collection('chats')
