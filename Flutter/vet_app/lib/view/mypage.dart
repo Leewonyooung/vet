@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/myinfo_update.dart';
-import 'package:vet_app/view/pet_info.dart';
 import 'package:vet_app/vm/login_handler.dart';
 
 class Mypage extends StatelessWidget {
@@ -51,13 +50,12 @@ class Mypage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ElevatedButton(
-                                    onPressed: () {
-                                      // Get.to(const PetInfo());
+                                    onPressed: (){
                                     },
                                     child: const Column(
                                       children: [
                                         Icon(Icons.pets),
-                                        Text('반려동물')
+                                        Text('로그아웃')
                                       ],
                                     )),
                                 ElevatedButton(

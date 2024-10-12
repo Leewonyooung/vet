@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:vet_app/view/make_reservation.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
+import 'package:vet_app/vm/reservation_handler.dart';
 
 class ClinicLocation extends StatelessWidget {
   ClinicLocation({super.key});
   final FavoriteHandler vmHandler = Get.find();
+  final ReservationHandler reservationHandler = Get.find();
 
 
 
@@ -112,18 +115,30 @@ class ClinicLocation extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.yellowAccent),
-                                      onPressed: () {
-                                        //예약하기
-                                      },
-                                      child: const Text('예약하기')),
+                              Visibility(
+                                visible: reservationHandler.resButtonValue.value,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.yellowAccent),
+                                        onPressed: () {
+                                          Get.to(()=> MakeReservation(),
+                                          arguments: [
+                                      value[0],
+                                      reservationHandler.canReservationClinic[0].name,
+                                      reservationHandler.canReservationClinic[0].latitude,
+                                      reservationHandler.canReservationClinic[0].longitude,
+                                      reservationHandler.canReservationClinic[0].time,
+                                      reservationHandler.canReservationClinic[0].address,
+                                          ]
+                                          );
+                                        },
+                                        child: const Text('예약하기')),
+                                  ),
                                 ),
                               )
                             ],

@@ -62,3 +62,32 @@ async def get_file(file_name: str):
         return FileResponse(path=file_path, filename=file_name)
     return {'result' : 'Error'}
 
+# 신정섭
+# clinic_info, location에서 예약 버튼 활성화 관리
+@router.get("/can_reservation")
+async def can_reservation(time:str=None, clinic_id:str=None):
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = '''
+            select 
+                c.name, c.latitude, c.longitude, c.address, c.image, ava.time
+            from 
+                clinic c left outer join
+            (select  a.clinic_id ,a.time 
+            from available_time a left outer join reservation r on (a.time = r.time  and a.clinic_id = r.clinic_id) 
+            where r.time is null and a.time = %s) as ava 
+            on 
+                (c.id = ava.clinic_id)
+            where 
+                ava.time is not null and c.id = %s
+            '''
+        curs.execute(sql,(time,clinic_id))
+        rows = curs.fetchone()
+        conn.close()
+        print(rows)
+        return {'result' : rows}
+    except Exception as e:
+        conn.close()
+        print(e)
+        return {'result' : e}
