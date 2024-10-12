@@ -1,3 +1,12 @@
+/*
+author: 이원영
+Description: 네비게이션 바로 첨 보이는 채팅방 페이지
+Fixed: 10/11
+Usage: Navigation 4th page
+*/
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/chatroom.dart';
@@ -5,18 +14,37 @@ import 'package:vet_app/view/chat_view.dart';
 import 'package:vet_app/vm/chat_handler.dart';
 
 class ChatRoom extends StatelessWidget {
+
   ChatRoom({super.key});
 
-  final ChatsHandler vmHandler = Get.put(ChatsHandler());
+  final ChatsHandler vmHandler = Get.find();
   @override
   Widget build(BuildContext context) {
+    Timer(const Duration(milliseconds: 1500), () {
+      vmHandler.showScreen();
+    });
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('상담방'),
-        ),
-        body: Obx(
-          () => chatRoomList(context),
-        ));
+      appBar: AppBar(
+        centerTitle: false,
+        title: const Text('상담'),
+      ),
+      body: FutureBuilder(
+      future: vmHandler.getAllData(),
+      builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('오류 발생: ${snapshot.error}'),
+            );
+          } else {
+            return vmHandler.rooms.isEmpty?
+            const Center(child: CircularProgressIndicator(),):
+            Obx(() => chatRoomList(context),);
+          }
+        },
+      )
+    );
   }
 
   chatRoomList(context) {
@@ -73,23 +101,25 @@ class ChatRoom extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
-                                      Text(vmHandler.lastChats[index].text),
+                                      index <= vmHandler.lastChats.length-1 ? Text(vmHandler.lastChats[index].text): const Text('채팅이 없습니다.')
+                                      // const Text('채팅이 없습니다.'): Text(vmHandler.lastChats[index].text),
                                     ],
                                   ),
                                   Container(
                                     alignment: Alignment.bottomRight,
                                     width:
                                         MediaQuery.of(context).size.width / 1.5,
-                                    child: DateTime.now().difference(
-                                                DateTime.parse(vmHandler
-                                                    .lastChats[index]
-                                                    .timestamp)) <
-                                            const Duration(hours: 24)
-                                        ? Text(vmHandler
-                                            .lastChats[index].timestamp
-                                            .substring(11, 16))
-                                        : Text(
-                                            "${vmHandler.lastChats[index].timestamp.substring(5, 7)}월 ${vmHandler.lastChats[index].timestamp.substring(8, 10)}일"),
+                                    child: index <= vmHandler.lastChats.length-1 ?    
+                                    DateTime.now().difference(
+                                      DateTime.parse(vmHandler.lastChats[index].timestamp)) < 
+                                      const Duration(hours: 24)? 
+                                      Text(
+                                        vmHandler.lastChats[index].timestamp.substring(11, 16)
+                                      ): 
+                                      Text(
+                                          "${vmHandler.lastChats[index].timestamp.substring(5, 7)}월 ${vmHandler.lastChats[index].timestamp.substring(8, 10)}일"): 
+                                      const Text(''),
+                                 
                                   )
                                 ],
                               ),

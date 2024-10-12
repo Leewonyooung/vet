@@ -1,7 +1,7 @@
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vet_tab/vm/tab_vm.dart';
 
-class ImageHandler extends GetxController {
+class ImageHandler extends TabVm {
 
   XFile? imageFile;
   late int firstDisp = 0;

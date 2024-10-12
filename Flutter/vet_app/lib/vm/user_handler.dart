@@ -12,7 +12,7 @@ class UserHandler extends LocationHandler {
 
   getUserId() async {
     // api를 통해 userID가져옴
-    await box.write('userId', '1234');
+    await box.read('userEmail');
   }
 
 // 신정섭
@@ -22,17 +22,19 @@ class UserHandler extends LocationHandler {
     var url =
         Uri.parse('http://127.0.0.1:8000/mypage/select_mypage?id=$userid');
     var response = await http.get(url);
-    if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      var result = dataConvertedJSON['result'][0];
+      var result = dataConvertedJSON['result'];
+       List<UserData> returnData =[];
+    if(result !=null){
       mypageUserInfo.clear();
     String? id = result[0];
     String password = result[1];
     String image = result[2];
     String name = result[3];
-    mypageUserInfo
+    returnData
         .add(UserData(password: password, image: image, name: name, id: id));
-  }
+    mypageUserInfo.value = returnData;
+    }
   }
 
     // user name update - mypage update
@@ -42,11 +44,10 @@ class UserHandler extends LocationHandler {
   var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
   var result = dataConvertedJSON['result'];
   return result;
-  
-}
+  }
 
 // user name image update - mypage update
-// update 순서  - 업로드된 이미지 파일 삭제 => 신규 이미지 업로드 => 
+// update 순서  - 업로드된 이미지 파일 삭제 => 신규 이미지 업로드 => update
   updateUserAll(String name, String image, String id) async {
     var url = Uri.parse(
         'http://127.0.0.1:8000/mypage/all_update?name=$name&image=$image&id=$id');
@@ -55,4 +56,5 @@ class UserHandler extends LocationHandler {
     var result = dataConvertedJSON['result'];
     return result; 
   }
-}
+
+  }

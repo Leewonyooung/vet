@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vet_app/vm/pet_handler.dart';
 
 class QueryReservation extends StatelessWidget {
-  QueryReservation({super.key});
+  const QueryReservation({super.key});
 
   @override
   Widget build(BuildContext context) {

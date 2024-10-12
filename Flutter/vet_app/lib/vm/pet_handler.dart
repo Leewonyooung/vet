@@ -3,9 +3,19 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
+import 'package:vet_app/vm/species_handler.dart';
 
-class PetHandler extends GetxController {
+class PetHandler extends SpeciesHandler {
   var pets = <Pet>[].obs;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    if (box.read('userEmail') == null) {
+      box.write('userEmail', '');
+    }
+    await fetchPets(box.read('userEmail'));
+  }
 
   // 유저 ID를 기반으로 반려동물 정보 가져오기
   Future<void> fetchPets(String userId) async {

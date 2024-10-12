@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vet_app/view/make_reservation.dart';
-import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 import 'package:get/get.dart';
 // 긴급 예약 페이지
@@ -47,10 +46,10 @@ class Reservation extends StatelessWidget {
                                 ElevatedButton(
                                   onPressed: () {
                                     Get.to(() =>  MakeReservation(), arguments: [
+                                      clinic.id,
                                       clinic.name,
                                       clinic.latitude,
                                       clinic.longitude,
-                                      clinic.image,
                                       clinic.time,
                                       clinic.address
                                     ]);

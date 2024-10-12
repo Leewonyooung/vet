@@ -24,7 +24,7 @@ class ClinicLogin extends StatelessWidget {
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, 300, 0, 50),
+                      padding: const EdgeInsets.fromLTRB(0, 300, 0, 50),
                       child: GestureDetector(
                         onTap: () {
                           loginHandler.mgtLogin();
@@ -117,7 +117,7 @@ class ClinicLogin extends StatelessWidget {
         idController.clear();
         passwordController.clear();
         Get.back();
-        Get.to(() => ClinicReservation());
+        Get.to(() => const ClinicReservation());
       },
     );
   }

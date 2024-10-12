@@ -126,4 +126,11 @@ class LoginHandler extends UserHandler {
     if (result == 'OK') {
     } else {}
   }
+
+//     signOut() async {
+//   await FirebaseAuth.instance.signOut();
+//   await GoogleSignIn().signOut(); 
+//   box.write('userEmail', "");
+//   update();
+// }
 }

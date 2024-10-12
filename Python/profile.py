@@ -39,7 +39,7 @@ def select_mypage(id:str):
     curs = conn.cursor()
     sql = 'select * from user where id=%s'
     curs.execute(sql,(id))
-    rows = curs.fetchall()
+    rows = curs.fetchone()
     conn.close()
     print(rows)
     return {'result' : rows}

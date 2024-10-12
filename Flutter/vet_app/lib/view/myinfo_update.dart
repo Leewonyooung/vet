@@ -96,7 +96,7 @@ class MyinfoUpdate extends StatelessWidget {
   allUpdateAction(UserHandler userHandler, String image, String userid)async{
     await userHandler.deleteUserImage(image);
     await userHandler.uploadUserImage();
-    var updateResult = userHandler.updateUserAll(nameController.text.trim(), userHandler.filename, userid);
+    var updateResult = await userHandler.updateUserAll(nameController.text.trim(), userHandler.filename, userid);
     if(updateResult == 'ok'){
       okShowDialog();
     }else{

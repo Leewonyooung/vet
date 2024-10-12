@@ -5,10 +5,9 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 import 'package:vet_tab/vm/clinic_handler.dart';
-import 'package:vet_tab/vm/location_handler.dart';
 
 class MgtClinicMap extends StatelessWidget {
-  MgtClinicMap({super.key});
+  const MgtClinicMap({super.key});
 
   @override
   Widget build(BuildContext context) {

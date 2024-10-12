@@ -6,9 +6,11 @@ import 'package:vet_app/view/clinic_search.dart';
 import 'package:vet_app/view/favorite.dart';
 import 'package:vet_app/view/login.dart';
 import 'package:vet_app/view/mypage.dart';
+import 'package:vet_app/view/pet_info.dart';
 import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/view/reservation.dart';
+import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 
@@ -19,6 +21,7 @@ class Navigation extends StatelessWidget {
       PersistentTabController(initialIndex: 0);
   final LoginHandler loginHandler = Get.put(LoginHandler());
   final PetHandler petHandler = Get.put(PetHandler());
+  final ChatsHandler chatsHandler = Get.put(ChatsHandler());
 
   @override
   Widget build(BuildContext context) {
@@ -90,13 +93,6 @@ class Navigation extends StatelessWidget {
           titleTextStyle: const TextStyle(color: Colors.black, fontSize: 18),
         ),
         body: Obx(() {
-          String userId = loginHandler.getStoredEmail();
-          if (loginHandler.isLoggedIn()) {
-            if (petHandler.pets.isEmpty) {
-              petHandler.fetchPets(userId); // 사용자 반려동물 정보 로드
-            }
-          }
-
           return Container(
             color: Colors.white,
             child: Column(
@@ -145,7 +141,7 @@ class Navigation extends StatelessWidget {
                         color: Colors.amber.shade400,
                         onTap: () {
                           if (loginHandler.isLoggedIn()) {
-                            Get.to(QueryReservation());
+                            Get.to(() => const QueryReservation());
                           } else {
                             Get.to(Login());
                           }
@@ -155,24 +151,16 @@ class Navigation extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Obx(() {
-                  if (!loginHandler.isLoggedIn()) {
-                    return _buildRegisterBanner();
-                  }
-
-                  if (!petHandler.hasPets()) {
-                    return _buildRegisterBanner();
-                  }
-
-                  return _buildPetInfoList();
-                }),
+                petHandler.pets.isEmpty
+                    ? _buildRegisterBanner()
+                    : _buildPetInfoList()
               ],
             ),
           );
         }),
       ),
       ClinicSearch(),
-      QueryReservation(),
+      const QueryReservation(),
       ChatRoom(),
       const Mypage(),
     ];
@@ -266,51 +254,58 @@ class Navigation extends StatelessWidget {
 
           // 기존 반려동물 정보 표시
           final pet = petHandler.pets[index];
-          String baseUrl = 'http://127.0.0.1:8000'; // 서버 주소
-          String imageUrl = '$baseUrl/pet/uploads/${pet.image}'; // 이미지 경로 조합
 
-          return Card(
-            elevation: 4,
-            margin: const EdgeInsets.all(8),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              width: 300,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 이미지 불러오기 (왼쪽)
-                  Image.network(
-                    imageUrl,
-                    height: 150,
-                    width: 150,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(
-                        Icons.error,
-                        size: 150,
-                      ); // 이미지 로드 실패 시
-                    },
-                  ),
-                  const SizedBox(width: 10), // 이미지와 텍스트 사이 간격
-                  // 텍스트 정보 (오른쪽)
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          pet.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        Text('종류: ${pet.speciesType}'),
-                        Text('성별: ${pet.gender}'),
-                      ],
+          return GestureDetector(
+            onTap: () {
+              Get.to(() => PetInfo(pet: pet));
+            },
+            child: Card(
+              elevation: 4,
+              margin: const EdgeInsets.all(8),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                width: 360,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 이미지 불러오기 (왼쪽)
+
+                    Image.network(
+                      'http://127.0.0.1:8000/pet/uploads/${pet.image}',
+                      height: 150,
+                      width: 150,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Icons.error,
+                          size: 150,
+                        ); // 이미지 로드 실패 시
+                      },
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 10), // 이미지와 텍스트 사이 간격
+                    // 텍스트 정보 (오른쪽)
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            pet.name,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text('종류: ${pet.speciesType}'),
+                          const SizedBox(height: 5),
+                          Text('세부종류: ${pet.speciesCategory}'),
+                          const SizedBox(height: 5),
+                          Text('성별: ${pet.gender}'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

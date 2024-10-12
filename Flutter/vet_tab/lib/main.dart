@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:vet_tab/firebase_options.dart';
-import 'package:vet_tab/view/clinic_login.dart';
+import 'package:vet_tab/view/rail_home.dart';
 
 void main() async {
   await GetStorage.init();
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ClinicLogin(),
+      home: RailHome(),
     );
   }
 }

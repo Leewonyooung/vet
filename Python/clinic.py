@@ -117,17 +117,6 @@ async def delete_file(file_name : str):
         return {"result" : "Error"}
     
 
-    # 병원 전체 목록
-@router.get('/select_clinic')
-async def all_clinic():
-    conn = connect()
-    curs = conn.cursor()
-    sql = "select * from clinic"
-    curs.execute(sql)
-    rows = curs.fetchall()
-    conn.close()
-    return {'results' : rows} # 결과 값 = list(key값 x)
-
 """
 author: 이원영
 Fixed: 2024/10/7
@@ -148,6 +137,28 @@ async def all_clinic(name:str):
         conn.close()
         print("Error :",e)
         return {"result" : "Error"}
+
+"""
+author: 이원영
+Fixed: 2024/10/7
+Usage: 채팅창 보여줄때 id > name
+"""
+@router.get('/getusername')
+async def get_user_name(id:str):
+    # name= ['adfki125', 'adkljzci9786']
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select name from user where id = %s"
+        curs.execute(sql,(id))
+        rows = curs.fetchall()
+        conn.close()
+        return {'results' : rows[0]}
+    except Exception as e:
+        conn.close()
+        print("Error :",e)
+        return {"result" : "Error"}
+
 
 # 병원 검색 활용
 @router.get('/select_search')

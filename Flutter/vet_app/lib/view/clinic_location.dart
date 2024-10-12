@@ -3,11 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:vet_app/view/login.dart';
+import 'package:vet_app/view/make_reservation.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
+import 'package:vet_app/vm/reservation_handler.dart';
 
 class ClinicLocation extends StatelessWidget {
   ClinicLocation({super.key});
   final FavoriteHandler vmHandler = Get.find();
+  final ReservationHandler reservationHandler = Get.find();
 
 
 
@@ -33,8 +37,8 @@ class ClinicLocation extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Center(
-                child: Text('오류 발생: ${snapshot.error}'),
+              return const Center(
+                child: Text('다시 시도하세요'),
               );
             } else {
               return GetBuilder<FavoriteHandler>(builder: (_) {
@@ -112,18 +116,34 @@ class ClinicLocation extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.yellowAccent),
-                                      onPressed: () {
-                                        //예약하기
-                                      },
-                                      child: const Text('예약하기')),
+                              Visibility(
+                                visible: reservationHandler.resButtonValue.value,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.yellowAccent),
+                                        onPressed: () {
+                                          if(vmHandler.isLoggedIn() == false){
+                                            Get.to(()=>Login());
+                                          }else{
+                                          Get.to(()=> MakeReservation(),
+                                          arguments: [
+                                      reservationHandler.canReservationClinic[0].id,
+                                      reservationHandler.canReservationClinic[0].name,
+                                      reservationHandler.canReservationClinic[0].latitude,
+                                      reservationHandler.canReservationClinic[0].longitude,
+                                      reservationHandler.canReservationClinic[0].time,
+                                      reservationHandler.canReservationClinic[0].address,
+                                          ]
+                                          );
+                                          }
+                                        },
+                                        child: const Text('예약하기')),
+                                  ),
                                 ),
                               )
                             ],
