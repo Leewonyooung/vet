@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:vet_app/vm/species_handler.dart';
 
 class PetHandler extends SpeciesHandler {
@@ -12,6 +11,9 @@ class PetHandler extends SpeciesHandler {
   @override
   void onInit() async {
     super.onInit();
+    if (box.read('userEmail') == null) {
+      box.write('userEmail', '');
+    }
     await fetchPets(box.read('userEmail'));
   }
 

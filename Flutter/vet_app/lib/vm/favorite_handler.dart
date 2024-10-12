@@ -123,9 +123,6 @@ class FavoriteHandler extends ClinicHandler {
     favoriteIconValue.value= !favoriteIconValue.value;
   }
 
-  // 즐겨찾기 여부에 따른 함수 변경하기
-  favoriteFuncChange()async{
-  }
 
 
 
