@@ -71,7 +71,7 @@ async def can_reservation(time:str=None, clinic_id:str=None):
         curs = conn.cursor()
         sql = '''
             select 
-                c.name, c.latitude, c.longitude, c.address, c.image, ava.time
+                c.name, c.latitude, c.longitude, c.address, c.image, ava.time, c.id
             from 
                 clinic c left outer join
             (select  a.clinic_id ,a.time 

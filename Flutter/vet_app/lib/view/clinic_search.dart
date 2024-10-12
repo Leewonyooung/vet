@@ -23,7 +23,7 @@ class ClinicSearch extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Center(child: Text('Error:${snapshot.error}'));
+                    return const Center(child: Text('다시 시도하세요'));
                   } else {
                     return Column(
                       children: [

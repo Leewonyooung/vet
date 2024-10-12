@@ -113,13 +113,14 @@ class ReservationHandler extends ClinicHandler {
     List<AvailableClinic> returnData = [];
     if(result != null){
       resButtonValue.value = true;
-            String name = result[0];
+      String id = result[6];
+      String name = result[0];
       double latitude =result[1];
       double longitude = result[2];
       String address = result[3];
       String image = result[4];
       String time = result[5];
-      returnData.add(AvailableClinic(name: name, latitude: latitude, longitude: longitude, address: address, image: image, time: time));
+      returnData.add(AvailableClinic(id:id,name: name, latitude: latitude, longitude: longitude, address: address, image: image, time: time));
     canReservationClinic.value = returnData;
     }else{
       resButtonValue.value = false;

@@ -13,7 +13,8 @@ class Mypage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('마이페이지'),
         ),
-        body: GetBuilder<LoginHandler>(builder: (_) {
+        body: loginHandler.isLoggedIn()?
+        GetBuilder<LoginHandler>(builder: (_) {
           return FutureBuilder(
               future: loginHandler.selectMyinfo(loginHandler.getStoredEmail()),
               builder: (context, snapshot) {
@@ -22,24 +23,24 @@ class Mypage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text("${snapshot.error}"),
+                  return  Center(
+                    child: Text('${snapshot.error}'),
                   );
                 } else {
                   return Obx(
                     () {
-                      final result = loginHandler.mypageUserInfo[0];
+                      final result = loginHandler.mypageUserInfo;
                       return Center(
                         child: Column(
                           children: [
                             Row(
                               children: [
                                 Image.network(
-                                    'http://127.0.0.1:8000/mypage/view/${result.image}'),
-                                Text(result.name),
+                                    'http://127.0.0.1:8000/mypage/view/${result[0].image}'),
+                                Text(result[0].name),
                               ],
                             ),
-                            Text(result.id!),
+                            Text(result[0].id!),
                             const Divider(
                               color: Colors.grey, // 선의 색상
                               thickness: 1, // 선의 두께
@@ -62,7 +63,7 @@ class Mypage extends StatelessWidget {
                                     onPressed: () {
                                       Get.to(
                                         MyinfoUpdate(),
-                                        arguments: result.id,
+                                        arguments: result[0].id,
                                       )!
                                           .then((value) => loginHandler
                                               .selectMyinfo(loginHandler
@@ -83,6 +84,20 @@ class Mypage extends StatelessWidget {
                   );
                 }
               });
-        }));
+        })
+        : Center(child: Text('로그인이 필요합니다.'),)
+        );
   }
+  //ff
+  // showDialog(LoginHandler loginHandler){
+  //   Get.defaultDialog(
+  //     title: "로그아웃",
+  //     middleText: '로그아웃 하시겠습니까?',
+  //     onCancel: () => Get.back(),
+  //     onConfirm: ()async{ 
+  //       await loginHandler.signOut();
+  //       // loginHandler.selectMyinfo(loginHandler.getStoredEmail());
+  //       Get.offAll(()=>Navigation());}
+  //   );
+  // }
 }

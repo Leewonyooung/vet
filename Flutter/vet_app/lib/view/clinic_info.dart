@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_location.dart';
+import 'package:vet_app/view/login.dart';
 import 'package:vet_app/view/make_reservation.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
@@ -111,9 +112,12 @@ class ClinicInfo extends StatelessWidget {
                                 padding: const EdgeInsets.all(20.0),
                                 child: ElevatedButton(
                                   onPressed: () {
+                                    if(vmHandler.isLoggedIn() == false){
+                                      Get.to(()=>Login());
+                                    }else{
                                     Get.to(()=>MakeReservation(),
                                     arguments: [
-                                      result[0].id,
+                                      reservationHandler.canReservationClinic[0].id,
                                       reservationHandler.canReservationClinic[0].name,
                                       reservationHandler.canReservationClinic[0].latitude,
                                       reservationHandler.canReservationClinic[0].longitude,
@@ -121,6 +125,7 @@ class ClinicInfo extends StatelessWidget {
                                       reservationHandler.canReservationClinic[0].address,
                                     ]
                                     );
+                                    }
                                   },
                                   style: ElevatedButton.styleFrom(
                                       minimumSize: const Size(300, 40),
