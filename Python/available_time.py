@@ -35,7 +35,7 @@ async def get_available_clinic(time:str):
 
     sql = """
     select 
-        c.name, c.latitude, c.longitude, c.address, c.image, ava.time
+        c.id, c.name, c.latitude, c.longitude, c.address, c.image, ava.time
     from 
         clinic c left outer join
     (select  a.clinic_id ,a.time 
