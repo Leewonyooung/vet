@@ -42,8 +42,7 @@ class UserHandler extends LocationHandler {
   var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
   var result = dataConvertedJSON['result'];
   return result;
-  
-}
+  }
 
 // user name image update - mypage update
 // update 순서  - 업로드된 이미지 파일 삭제 => 신규 이미지 업로드 => 

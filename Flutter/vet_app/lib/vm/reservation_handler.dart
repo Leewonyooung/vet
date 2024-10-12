@@ -22,6 +22,31 @@ class ReservationHandler extends ClinicHandler {
     List<Reservation> returnData = [];
   }
 
+  // make_reservation에서 사용할 예약 insert
+  makeReservation(String userId, String clinicId, String time,String symptoms) async{
+    var url = Uri.parse('http://127.0.0.1:8000/reservation/insert_reservation?user_id=$userId&clinic_id=$clinicId&time=$time&symptoms=$symptoms');
+    var response = await http.get(url);
+
+    var dataCovertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var results = dataCovertedJSON['results'];
+    List<Reservation> returnData = [];
+
+    for (int i = 0; i < results.length; i++){
+      String userId = results[i][0];
+      String clinicId = results[i][0];
+      String time = results[i][0];
+      String symptoms = results[i][0];
+
+      returnData.add(Reservation(
+        userId: userId, 
+        clinicId: clinicId, 
+        time: time, 
+        symptoms: symptoms));
+        reservations.value = returnData;
+    }
+    return results;
+  }
+
   // 메인화면에서 긴급예약 눌렀을때 보여주는 리스트
   getQuickReservation() async {
     await adjustedTime();
@@ -34,14 +59,16 @@ class ReservationHandler extends ClinicHandler {
     List<AvailableClinic> returnData = [];
 
     for (int i = 0; i < results.length; i++) {
-      String name = results[i][0];
-      double latitude = results[i][1];
-      double longitude = results[i][2];
-      String address = results[i][3];
-      String image = results[i][4];
-      String time = results[i][5];
+      String id = results[i][0];
+      String name = results[i][1];
+      double latitude = results[i][2];
+      double longitude = results[i][3];
+      String address = results[i][4];
+      String image = results[i][5];
+      String time = results[i][6];
 
       returnData.add(AvailableClinic(
+          id: id,
           name: name,
           latitude: latitude,
           longitude: longitude,
