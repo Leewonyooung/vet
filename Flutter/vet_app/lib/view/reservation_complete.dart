@@ -69,7 +69,7 @@ class ReservationComplete extends StatelessWidget {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () => Get.to(() => const QueryReservation()),
+                  onPressed: () => Get.to(() =>  QueryReservation()),
                   child: const Text('예약내역'),
                 ),
                 ElevatedButton(
