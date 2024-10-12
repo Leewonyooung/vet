@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -8,46 +8,101 @@ import 'package:http/http.dart' as http;
 import 'package:vet_tab/vm/image_handler.dart';
 
 class LocationHandler extends ImageHandler {
-  double lat = 0;
-  double long = 0;
-  // String Getlat = "";
-  // String Getlong = "";
+  Completer<GoogleMapController> mapController = Completer();
+  var selectedPosition = LatLng(0.0, 0.0).obs;
+  var lat = 0.0.obs;
+  var long = 0.0.obs;
+  String clinicAddress = "";
   String clinicPlaceID = "";
-  String durationText="";
-  PolylinePoints polylinePoints = PolylinePoints();
-  List<PointLatLng> polyline = [];
-  List<LatLng> route = [];
-  var lines = <Polyline>[].obs;
 
-
-  // address search_clinic add(안창빈)
-
-  clinicAddressSearch(String address){
-    if (address == "__"){
-      getCurrentLocation();
-      return (lat, long);
-    }else{
-      getCurrentPlace(address);
-    }
-    
-  }
-
-  //Get searched location
-  getCurrentPlace(String address)async{
+  //Get searched location (안창빈)
+  getSearchLocation(String address) async {
     var url = Uri.parse(
-        "maps.googleapis.com/maps/api/geocode/json?address=$address&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
+        "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
     var response = await http.get(url);
-    if(response.statusCode == 200){
-    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    lat = await dataConvertedJSON['results']['geometry']['location']['lat'];
-    long = await dataConvertedJSON['results']['geometry']['location']['lat'];
-    update();
-    return (lat, long);
-    }
+    if (response.statusCode == 200) {
+      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+      var status = await dataConvertedJSON['status'];
+      print(address);
 
+      if (status == "OK") {
+        String? locationType =
+            await dataConvertedJSON['results'][0]['geometry']['location_type'];
+        if (locationType == "ROOFTOP") {
+          lat.value = await dataConvertedJSON['results'][0]['geometry']['location']
+              ['lat'];
+          long.value = await dataConvertedJSON['results'][0]['geometry']['location']
+              ['lng'];
+        } else {
+          getCurrentLocation();
+          errorDialogMap();
+        }
+      } else if (status == "ZERO_RESULTS" || status == "INVALID_REQUEST") {
+        getCurrentLocation();
+        errorDialogMap();
+      }
+    }
   }
 
-  // GPS 제공 동의
+  //Get searched location (안창빈)
+  getSearchLocationFromMap(String address) async {
+    var url = Uri.parse(
+        "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+      var status = await dataConvertedJSON['status'];
+      print(address);
+
+      if (status == "OK") {
+        String? locationType =
+            await dataConvertedJSON['results'][0]['geometry']['location_type'];
+        if (locationType == "ROOFTOP") {
+          lat.value = await dataConvertedJSON['results'][0]['geometry']
+              ['location']['lat'];
+          long.value = await dataConvertedJSON['results'][0]['geometry']
+              ['location']['lng'];
+          updateMapCameraPro();
+        } else {
+          errorDialogMap();
+        }
+      } else if (status == "ZERO_RESULTS" || status == "INVALID_REQUEST") {
+        errorDialogMap();
+      }
+    }
+  }
+
+  //Get address, lat, long, by longpress the googlemap (안창빈)
+  longPressGoogleMap(LatLng location) async {
+    selectedPosition.value = location; 
+    lat.value = location.latitude;
+    long.value = location.longitude;
+    await fetchAddressFromLatLng(location.latitude, location.longitude);
+    print(lat.value);
+    print(long.value);
+  }
+
+  // get the longpressed loaction address by using lat and long extracted from longpressGoogleMap function 
+  fetchAddressFromLatLng(double lat, double long) async {
+    var url = Uri.parse(
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$long&language=ko&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    clinicAddress = dataConvertedJSON['results'][0]['formatted_address'];
+    print(clinicAddress);
+  }
+
+  // error dialog when user did not enter appropriate address (안창빈)
+  errorDialogMap() async {
+    await Get.defaultDialog(
+      title: 'error',
+      content: const Text('검색가능한 결과가 없습니다 주소를 정확하게 작성해주세요'),
+      textCancel: 'cancel',
+      barrierDismissible: true,
+    );
+  }
+
+  // GPS permission (안창빈)
   checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -62,69 +117,33 @@ class LocationHandler extends ImageHandler {
     }
   }
 
-  // 현재 위치 가져오기
+  // Get current map location(안창빈)
   getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition();
-    lat = position.latitude;
-    long = position.longitude;
-    update();
+    lat.value = position.latitude;
+    long.value = position.longitude;
   }
 
+  // update map camera programmatically (안창빈)
+  updateMapCameraPro() async {
+    if(mapController.isCompleted){
+  try{
+    final GoogleMapController controller = await mapController.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: LatLng(lat.value, long.value),
+      zoom: 18, 
+    )));
+    } catch (e){
+      print("Error updating camera: $e");
+    }
+    }else{
+      print("Map controller is not ready.");
+    }
+  }
 
-  // //지도 경로
-  // //1. 현위치를 주소 id 로 가져오기
-  // getCurrentPlaceID() async {
-  //   var url = Uri.parse(
-  //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=$currentlat,$currentlng&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
-  //   var response = await http.get(url);
-  //   if(response.statusCode == 200){
-  //   var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-  //   // print(dataConvertedJSON['results'][0]['formatted_address']); // place id
-  //   currentPlaceID = await dataConvertedJSON['results'][0]['formatted_address'];
-  //   }
-  // }
-
-  // // 2.병원 주소id 가져오기
-  // getClinicPlaceId(double cliniclat, double cliniclng) async {
-  //   var url = Uri.parse(
-  //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=$cliniclat,$cliniclng&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
-  //   var response = await http.get(url);
-  //   var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-  //   clinicPlaceID = dataConvertedJSON['results'][0]['formatted_address'];
-  // }
-
-  // // 3. polyline
-  // createRoute() async {
-  //   lines.clear();
-  //   var url = Uri.parse(
-  //       "https://maps.googleapis.com/maps/api/directions/json?origin=$currentPlaceID&destination=$clinicPlaceID&mode=transit&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
-  //   var response = await http.get(url);
-  //   var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-  //   polyline = polylinePoints.decodePolyline(
-  //       dataConvertedJSON['routes'][0]['overview_polyline']['points']);
-  //       // durationText=dataConvertedJSON['routes'][0]['legs'][0]['duration']['text']; // 소요시간
-  //       // print(dataConvertedJSON['routes'][0]['legs'][0]['distance']['text']); // 거리
-
-  //   route = polyline
-  //       .map(
-  //         (point) => LatLng(point.latitude, point.longitude),
-  //       )
-  //       .toList();
-  //   lines.add(
-  //     Polyline(
-  //         polylineId: const PolylineId('route'),
-  //         points: route,
-  //         color: Colors.red)
-  //   );
-  // }
-
-  //   maploading(double clinicLat, double clinicLong)async{
-  //     await getCurrentPlaceID();
-  //     await getClinicPlaceId(clinicLat, clinicLong);
-  //     await createRoute();
-  //     update();
-  //   }
-
-
+  //updateAddress from clinic_map to clinic_add (안창빈)
+  updateAddress(String updateAddress) {
+    clinicAddress = updateAddress;
+    }
 
 }

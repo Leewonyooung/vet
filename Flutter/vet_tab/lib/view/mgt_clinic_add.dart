@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vet_tab/view/mgt_clinic_map.dart';
+import 'package:vet_tab/vm/clinic_handler.dart';
 import 'package:vet_tab/vm/login_handler.dart';
 
 class MgtClinicAdd extends StatelessWidget {
@@ -20,7 +21,7 @@ class MgtClinicAdd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginHandler = Get.put(LoginHandler());
+    final clinicHandler = Get.put(ClinicHandler());
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: Scaffold(
@@ -31,12 +32,12 @@ class MgtClinicAdd extends StatelessWidget {
           ),
           leading: IconButton(
               onPressed: () {
-                loginHandler.imageFile = null;
+                clinicHandler.imageFile = null;
                 Get.back();
               },
               icon: const Icon(Icons.arrow_back_ios)),
         ),
-        body: GetBuilder<LoginHandler>(
+        body: GetBuilder<ClinicHandler>(
           builder: (controller) {
             return SingleChildScrollView(
               child: Center(
@@ -62,13 +63,61 @@ class MgtClinicAdd extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+                              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                               child: ElevatedButton(
                                   onPressed: () {
-                                    loginHandler.getImageFromGallery(
+                                    clinicHandler.getImageFromGallery(
                                         ImageSource.gallery);
                                   },
                                   child: const Text('이미지 가져오기')),
+                            ),
+                            Row(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
+                                  child: SizedBox(
+                                      width: 100,
+                                      child: Text(
+                                        '영업시간 : ',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 50, 0, 20),
+                                  child: SizedBox(
+                                    width: 100,
+                                    child: TextField(
+                                      onTap: () {
+                                        
+                                      },
+                                      readOnly: true,
+                                      controller: idController,
+                                      decoration: const InputDecoration(
+                                          labelText: '영업시작'),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
+                                  child: Text('~',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 50, 0, 20),
+                                  child: SizedBox(
+                                    width: 100,
+                                    child: TextField(
+                                      readOnly: true,
+                                      controller: idController,
+                                      decoration: const InputDecoration(
+                                          labelText: '영업종료'),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -127,7 +176,7 @@ class MgtClinicAdd extends StatelessWidget {
                                         suffixIcon: IconButton(
                                             onPressed: () {
                                               passwordController.clear();
-                                              passwordController.text = loginHandler
+                                              passwordController.text = clinicHandler
                                                   .randomPasswordNumberClinic();
                                             },
                                             icon:
@@ -210,7 +259,15 @@ class MgtClinicAdd extends StatelessWidget {
                                         labelText: '주소를 입력해주세요',
                                         suffixIcon: IconButton(
                                             onPressed: () {
-                                              Get.to(()=> MgtClinicMap(), arguments: addressController.text);
+                                              clinicHandler.updateAddress(addressController.text);
+                                              Get.to(()=> MgtClinicMap(), arguments:
+                                              addressController.text.trim().isNotEmpty
+                                              ? addressController.text
+                                              : " ")?.then((value) {
+                                                if(value != null){
+                                                  updateClinicAddressData(value['address'], value['lat'], value['long']);
+                                                }
+                                              },);
                                             }, 
                                             icon: const Icon(Icons.search)
                                             ),
@@ -229,9 +286,9 @@ class MgtClinicAdd extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(80, 0, 0, 0),
+                                      const EdgeInsets.fromLTRB(0, 0, 50, 0),
                                   child: SizedBox(
-                                    width: 70,
+                                    width: 80,
                                     child: TextField(
                                       style: const TextStyle(fontSize: 15),
                                       readOnly: true,
@@ -253,7 +310,7 @@ class MgtClinicAdd extends StatelessWidget {
                                 ),
                                 const Text('경도 : '),
                                 SizedBox(
-                                  width: 70,
+                                  width: 80,
                                   child: TextField(
                                     style: const TextStyle(fontSize: 15),
                                     readOnly: true,
@@ -348,4 +405,10 @@ class MgtClinicAdd extends StatelessWidget {
       ),
     );
   }
-}
+  //Function
+  updateClinicAddressData(String address,double lat,double long){
+    addressController.text = address.toString();
+    latController.text = lat.toString();
+    longController.text = long.toString();
+  }
+}//END

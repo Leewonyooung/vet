@@ -301,10 +301,10 @@ async def update(
         conn.close
         return {'results': 'OK'} 
     
-
-
     except Exception as e:
         conn.close()
         print("Error :", e)
         return {'result': 'Error'}    
+    
+
 

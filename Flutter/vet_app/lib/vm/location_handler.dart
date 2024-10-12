@@ -86,7 +86,7 @@ class LocationHandler extends ImageHandler {
         color: Colors.red));
   }
 
-     maploading(double clinicLat, double clinicLong)async{
+    maploading(double clinicLat, double clinicLong)async{
       await getCurrentPlaceID();
       await getClinicPlaceId(clinicLat, clinicLong); //병원에 들어갈 place id
       await createRoute();

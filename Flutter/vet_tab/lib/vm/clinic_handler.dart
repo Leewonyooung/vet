@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:vet_tab/model/clinic.dart';
 import 'package:vet_tab/vm/login_handler.dart';
 
@@ -8,6 +10,9 @@ class ClinicHandler extends LoginHandler{
   String searchkeyward ="";
   var clinicSearch = <Clinic>[].obs;
   var clinicDetail = <Clinic>[].obs;
+  String startOpTime = '';
+  String endOpTime = '';
+  DateTime selectedDate = DateTime.now();
 
     getUserId() async {
     // api를 통해 userID가져옴
@@ -111,5 +116,39 @@ class ClinicHandler extends LoginHandler{
   }
 
   // insert clinic (안창빈)
+
+  String formatDate(DateTime date) {
+    final DateFormat formatter = DateFormat('HH:mm');
+    return formatter.format(date);
+  }
+
+  opDateSelection(bool isStartDate) {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: 300,
+            child: CupertinoDatePicker(
+              maximumYear: 2030,
+              minimumYear: 2020,
+              initialDateTime: DateTime.now(),
+              mode: CupertinoDatePickerMode.time,
+              onDateTimeChanged: (DateTime date) {
+                  selectedDate = date;
+                  if (isStartDate) {
+                    startOpTime = formatDate(date);
+                  } else {
+                    endOpTime = formatDate(date);
+                  }
+              },
+            ),
+          ),
+        );
+      },
+      barrierDismissible: true,
+    );
+  }
 
 }

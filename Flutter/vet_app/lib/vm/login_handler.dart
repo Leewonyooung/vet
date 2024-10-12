@@ -98,6 +98,13 @@ class LoginHandler extends UserHandler {
     }
   }
 
+  // sign out (안창빈)
+  signOut() async {
+  await FirebaseAuth.instance.signOut();
+  await GoogleSignIn().signOut(); 
+}
+
+
 // query inserted google email from db to differentiate whether email is registered or not  
   userloginCheckJSONData(email) async {
     var url = Uri.parse('http://127.0.0.1:8000/user/selectuser?id=$email');
