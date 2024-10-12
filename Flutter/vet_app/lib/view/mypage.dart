@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/myinfo_update.dart';
-import 'package:vet_app/view/pet_info.dart';
 import 'package:vet_app/vm/login_handler.dart';
 
 class Mypage extends StatelessWidget {

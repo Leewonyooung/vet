@@ -47,6 +47,8 @@ dependencies:
   #map
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
+  path_provider: ^2.0.11
+
   # slider
   flutter_slidable: ^3.1.1
   # 별점

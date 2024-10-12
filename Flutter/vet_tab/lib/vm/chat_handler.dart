@@ -48,6 +48,7 @@ class ChatsHandler extends ClinicHandler {
     currentUserName.value = id;
     update();
   }
+  
   setcurrentClinicName(String id)async{
      var url = Uri.parse(
           'http://127.0.0.1:8000/clinic/select_clinic_name?name=$id');
@@ -82,11 +83,12 @@ class ChatsHandler extends ClinicHandler {
   }
 
   queryLastChat() async {
+    List<Chats> returnResult=[];
     if(result.isNotEmpty){
       result.clear();
     }
     QuerySnapshot<Map<String, dynamic>> snapshot =
-        await FirebaseFirestore.instance.collection("chat").get();
+        await FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: 'adfki125').get();
     var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
     for (int i = 0; i < tempresult.length; i++) {
       Chatroom chatroom = Chatroom(
@@ -99,26 +101,27 @@ class ChatsHandler extends ClinicHandler {
       _rooms
           .doc("adfki125_${result[i].user}")
           .collection('chats')
-          .orderBy('timestamp', descending: false)
+          .orderBy('timestamp', descending: true)
           .limit(1)
           .snapshots()
           .listen(
         (event) {
-          for (int i = 0; i < event.docs.length; i++) {
+           for (int i = 0; i < event.docs.length; i++) {
             var chat = event.docs[i].data();
-            lastChats.obs.value.add(Chats(
+            returnResult.add(Chats(
                 reciever: chat['reciever'],
                 sender: chat['sender'],
                 text: chat['text'],
                 timestamp: chat['timestamp']));
           }
+          lastChats.value = returnResult;
         },
       );
     }
   }
 
   makeChatRoom() async {
-    _rooms.snapshots().listen((event) {
+    _rooms.where('clinic', isEqualTo: 'adfki125'). snapshots().listen((event) {
       rooms.value = event.docs
           .map(
             (doc) => Chatroom(

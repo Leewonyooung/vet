@@ -89,22 +89,23 @@ return Row(
                                     ),
                                     Row(
                                       children: [
-                                        Text(chatsHandler.lastChats[index].text,style: const TextStyle(fontSize: 22)),
+                                        index <= chatsHandler.lastChats.length-1 ?
+                                        Text(chatsHandler.lastChats[index].text,style: const TextStyle(fontSize: 22)):const Text('채팅이 없습니다.')
                                       ],
                                     ),
                                     Container(
                                       alignment: Alignment.bottomRight,
                                       width: MediaQuery.of(context).size.width /4,
-                                      child: DateTime.now().difference(
-                                                  DateTime.parse(chatsHandler
-                                                      .lastChats[index]
-                                                      .timestamp)) <
-                                              const Duration(hours: 24)
-                                          ? Text(chatsHandler
-                                              .lastChats[index].timestamp
-                                              .substring(11, 16),style: const TextStyle(fontSize: 20),)
-                                          : Text(
-                                              "${chatsHandler.lastChats[index].timestamp.substring(5, 7)}월 ${chatsHandler.lastChats[index].timestamp.substring(8, 10)}일",style: const TextStyle(fontSize: 20)),
+                                      child: index <= chatsHandler.lastChats.length-1 ?    
+                                    DateTime.now().difference(
+                                      DateTime.parse(chatsHandler.lastChats[index].timestamp)) < 
+                                      const Duration(hours: 24)? 
+                                      Text(
+                                        chatsHandler.lastChats[index].timestamp.substring(11, 16)
+                                      ): 
+                                      Text(
+                                          "${chatsHandler.lastChats[index].timestamp.substring(5, 7)}월 ${chatsHandler.lastChats[index].timestamp.substring(8, 10)}일"): 
+                                      const Text(''),
                                     )
                                   ],
                                 ),

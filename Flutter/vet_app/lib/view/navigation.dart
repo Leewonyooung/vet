@@ -10,6 +10,7 @@ import 'package:vet_app/view/pet_info.dart';
 import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/view/reservation.dart';
+import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 
@@ -20,6 +21,7 @@ class Navigation extends StatelessWidget {
       PersistentTabController(initialIndex: 0);
   final LoginHandler loginHandler = Get.put(LoginHandler());
   final PetHandler petHandler = Get.put(PetHandler());
+  final ChatsHandler chatsHandler = Get.put(ChatsHandler());
 
   @override
   Widget build(BuildContext context) {
