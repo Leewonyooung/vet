@@ -12,7 +12,7 @@ class LocationHandler extends ImageHandler {
   double currentlng = 0; // 현재 위치  long
   String currentPlaceID = ""; // 길찾기에 필요한 내위치 주소 Id
   String clinicPlaceID = ""; // 찾기에 필요한 병원 주소 id
-  String durationText = ""; // 소요시간
+  // String durationText = ""; // 소요시간
   PolylinePoints polylinePoints = PolylinePoints();
   List<PointLatLng> polyline = []; // api로 polyline decoding후 변수 저장
   List<LatLng> route = []; // 길 찾기에 필요한 체크포인트 latlong
@@ -72,7 +72,7 @@ class LocationHandler extends ImageHandler {
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     polyline = polylinePoints.decodePolyline(
         dataConvertedJSON['routes'][0]['overview_polyline']['points']);
-    durationText=dataConvertedJSON['routes'][0]['legs'][0]['duration']['text']; // 소요시간
+    // durationText=dataConvertedJSON['routes'][0]['legs'][0]['duration']['text']; // 소요시간
     distanceText=dataConvertedJSON['routes'][0]['legs'][0]['distance']['text']; // 거리
 
     route = polyline

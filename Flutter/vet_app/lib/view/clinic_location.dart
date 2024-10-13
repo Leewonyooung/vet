@@ -49,7 +49,7 @@ class ClinicLocation extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     children: [
                       GoogleMap(
-                        mapType: MapType.hybrid,
+                        mapType: MapType.normal,
                         initialCameraPosition: CameraPosition( //
                           zoom: 15,
                           target: LatLng(
@@ -109,7 +109,7 @@ class ClinicLocation extends StatelessWidget {
                                           ),
                                           //병원 끝나는시간
                                           Text("${result.endTime} 영업종료"),
-                                          Text(vmHandler.durationText),
+                                          // Text(vmHandler.durationText),
                                           Text("거리 : ${vmHandler.distanceText}"),
                                         ],
                                       ),

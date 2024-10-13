@@ -96,11 +96,11 @@ class ClinicHandler extends TreatmentHandler {
   }
 
   // 병원 검색 기능 => 검색어를 name, address 두 컬럼에서 찾음
-  searchbarClinic(String searchkeyward)async{
-    if(searchkeyward.isEmpty){ //검색어 없을때 전부 불러오기
+  searchbarClinic(String searchkeyword)async{
+    if(searchkeyword.isEmpty){ //검색어 없을때 전부 불러오기
       await getAllClinic();
     }
-    var url = Uri.parse('http://127.0.0.1:8000/clinic/select_search?word=$searchkeyward');
+    var url = Uri.parse('http://127.0.0.1:8000/clinic/select_search?word=$searchkeyword');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results']; 
