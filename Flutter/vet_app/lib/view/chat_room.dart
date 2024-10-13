@@ -5,6 +5,8 @@ Fixed: 10/11
 Usage: Navigation 4th page
 */
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/chatroom.dart';
@@ -12,32 +14,37 @@ import 'package:vet_app/view/chat_view.dart';
 import 'package:vet_app/vm/chat_handler.dart';
 
 class ChatRoom extends StatelessWidget {
+
   ChatRoom({super.key});
 
   final ChatsHandler vmHandler = Get.find();
   @override
   Widget build(BuildContext context) {
+    Timer(const Duration(milliseconds: 1500), () {
+      vmHandler.showScreen();
+    });
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('상담방'),
-        ),
-        body: FutureBuilder(
-        future: vmHandler.getAllData(),
-        builder: (context, snapshot) {
-           if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('오류 발생: ${snapshot.error}'),
-              );
-            } else {
-              return vmHandler.rooms.isEmpty?
-              const Center(child: CircularProgressIndicator(),):
-              Obx(() => chatRoomList(context),);
+      appBar: AppBar(
+        centerTitle: false,
+        title: const Text('상담'),
+      ),
+      body: FutureBuilder(
+      future: vmHandler.getAllData(),
+      builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('오류 발생: ${snapshot.error}'),
+            );
+          } else {
+            return vmHandler.rooms.isEmpty?
+            const Center(child: CircularProgressIndicator(),):
+            Obx(() => chatRoomList(context),);
           }
         },
       )
-      );
+    );
   }
 
   chatRoomList(context) {
@@ -52,7 +59,7 @@ class ChatRoom extends StatelessWidget {
               vmHandler.currentClinicId.value = room.clinic;
               await vmHandler.queryChat();
               Get.to(() => ChatView(),
-                  arguments: [room.image, vmHandler.roomName[index]]);
+                  arguments: [room.image, vmHandler.roomName[index]])!.then((value) => vmHandler.queryLastChat(),);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
