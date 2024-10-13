@@ -3,12 +3,13 @@ import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
 import 'package:http/http.dart' as http;
+
 class FavoriteHandler extends ClinicHandler {
   var favoriteClinics = <Clinic>[].obs; // 즐겨찾기 병원 목록
   var favoriteIconValue = false.obs; // 즐겨찾기 버튼 관리
 
   // 즐겨찾기 목록 불러오기
-  Future<void> getFavoriteClinics(String userId) async {
+  getFavoriteClinics(String userId) async {
     try {
       var url = Uri.parse(
           'http://127.0.0.1:8000/favorite/favorite_clinics?user_id=$userId'); // 사용자 ID 기반 즐겨찾기 요청
@@ -53,7 +54,7 @@ class FavoriteHandler extends ClinicHandler {
 
           // 즐겨찾기 병원 목록 업데이트 (assignAll 사용)
           favoriteClinics.value = returnData;
-          // update(); // 상태 업데이트
+          update(); // 상태 업데이트
         } else {
           // results가 없는 경우 처리
           throw Exception('results 필드가 응답에 존재하지 않습니다.');
@@ -79,8 +80,8 @@ class FavoriteHandler extends ClinicHandler {
     }
   }
 
-// 즐겨찾기 병원 삭제
-  Future<void> removeFavoriteClinic(String userId, String clinicId) async {
+  // 즐겨찾기 병원 삭제
+  removeFavoriteClinic(String userId, String clinicId) async {
     var url = Uri.parse(
         'http://127.0.0.1:8000/favorite/delete_favorite?user_id=$userId&clinic_id=$clinicId');
     var response = await http.delete(url);
@@ -98,29 +99,29 @@ class FavoriteHandler extends ClinicHandler {
     }
   }
 
-// 유저별 병원 즐겨찾기 여부 검색 
-// 즐겨찾기 아이콘 변경에 필요
-  searchFavoriteClinic(String userId, String clinicId)async{
+  // 유저별 병원 즐겨찾기 여부 검색
+  // 즐겨찾기 아이콘 변경에 필요
+  searchFavoriteClinic(String userId, String clinicId) async {
     var url = Uri.parse(
         'http://127.0.0.1:8000/favorite/search_favorite_clinic?user_id=$userId&clinic_id=$clinicId');
     var response = await http.get(url);
-      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      int result = dataConvertedJSON['results'];
-      if(result == 1){
-        favoriteIconValue.value = true;
-      }else{
-        favoriteIconValue.value =false;
-      }
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    int result = dataConvertedJSON['results'];
+    if (result == 1) {
+      favoriteIconValue.value = true;
+    } else {
+      favoriteIconValue.value = false;
+    }
   }
 
-// 즐겨찾기 버튼 icon 모양 관리 함수
-  favoriteIconValueMgt(String userId, String clinicId)async{
-    if(favoriteIconValue.value == true){
+  // 즐겨찾기 버튼 icon 모양 관리 함수
+  favoriteIconValueMgt(String userId, String clinicId) async {
+    if (favoriteIconValue.value == true) {
       removeFavoriteClinic(userId, clinicId);
-    }else{
+    } else {
       addFavoriteClinic(userId, clinicId);
     }
-    favoriteIconValue.value= !favoriteIconValue.value;
+    favoriteIconValue.value = !favoriteIconValue.value;
   }
 
 
