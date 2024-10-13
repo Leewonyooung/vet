@@ -22,6 +22,7 @@ class Navigation extends StatelessWidget {
   final LoginHandler loginHandler = Get.put(LoginHandler());
   final PetHandler petHandler = Get.put(PetHandler());
   final ChatsHandler chatsHandler = Get.put(ChatsHandler());
+  final RxBool shouldRefresh = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +94,7 @@ class Navigation extends StatelessWidget {
           titleTextStyle: const TextStyle(color: Colors.black, fontSize: 18),
         ),
         body: Obx(() {
+          shouldRefresh.value;
           return Container(
             color: Colors.white,
             child: Column(
@@ -151,9 +153,7 @@ class Navigation extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                petHandler.pets.isEmpty
-                    ? _buildRegisterBanner()
-                    : _buildPetInfoList()
+                _buildRegisterBanner(),
               ],
             ),
           );
@@ -167,43 +167,53 @@ class Navigation extends StatelessWidget {
   }
 
   _buildRegisterBanner() {
-    return GestureDetector(
-      onTap: () {
-        if (loginHandler.isLoggedIn()) {
-          Get.to(PetRegister());
-        } else {
-          Get.to(Login());
-        }
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade300,
-              blurRadius: 10,
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-        child: const Row(
-          children: [
-            Icon(Icons.pets, size: 40),
-            SizedBox(width: 10),
-            Text(
-              '내가 키우는 반려동물을 등록해 보세요',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+    return Obx(() {
+      if (petHandler.pets.isNotEmpty) {
+        return _buildPetInfoList();
+      }
+      return GestureDetector(
+        onTap: () async {
+          if (loginHandler.isLoggedIn()) {
+            var result = await Get.to(() => PetRegister());
+            if (result == true) {
+              String userId = loginHandler.getStoredEmail();
+              await petHandler.fetchPets(userId);
+              shouldRefresh.toggle();
+            }
+          } else {
+            Get.to(() => Login());
+          }
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade300,
+                blurRadius: 10,
+                spreadRadius: 2,
               ),
-            ),
-          ],
+            ],
+          ),
+          child: const Row(
+            children: [
+              Icon(Icons.pets, size: 40),
+              SizedBox(width: 10),
+              Text(
+                '내가 키우는 반려동물을 등록해 보세요',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   _buildPetInfoList() {
@@ -212,20 +222,16 @@ class Navigation extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: petHandler.pets.length + 1, // 반려동물 수에 추가 버튼 포함
+        itemCount: petHandler.pets.length + 1,
         itemBuilder: (context, index) {
           if (index == petHandler.pets.length) {
-            // 반려동물 등록 버튼 추가
             return GestureDetector(
               onTap: () async {
-                // PetRegister 페이지에서 돌아올 때 결과 확인
                 var result = await Get.to(() => PetRegister());
-
-                // 등록 후 화면 갱신
                 if (result == true) {
-                  // 반려동물 정보 다시 로드
                   String userId = loginHandler.getStoredEmail();
-                  petHandler.fetchPets(userId);
+                  await petHandler.fetchPets(userId);
+                  shouldRefresh.toggle();
                 }
               },
               child: const Card(
@@ -252,7 +258,6 @@ class Navigation extends StatelessWidget {
             );
           }
 
-          // 기존 반려동물 정보 표시
           final pet = petHandler.pets[index];
 
           return GestureDetector(
@@ -268,8 +273,6 @@ class Navigation extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 이미지 불러오기 (왼쪽)
-
                     Image.network(
                       'http://127.0.0.1:8000/pet/uploads/${pet.image}',
                       height: 150,
@@ -279,11 +282,10 @@ class Navigation extends StatelessWidget {
                         return const Icon(
                           Icons.error,
                           size: 150,
-                        ); // 이미지 로드 실패 시
+                        );
                       },
                     ),
-                    const SizedBox(width: 10), // 이미지와 텍스트 사이 간격
-                    // 텍스트 정보 (오른쪽)
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

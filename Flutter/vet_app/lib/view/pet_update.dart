@@ -22,7 +22,7 @@ class PetUpdate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 기존 정보로 컨트롤러 초기화
+    // 기존 정보 가져오기
     nameController.text = pet.name;
     idController.text = pet.id;
     birthdayController.text = pet.birthday;
@@ -73,6 +73,8 @@ class PetUpdate extends StatelessWidget {
                     }
                   },
                   decoration: const InputDecoration(labelText: '종류'),
+                  isExpanded: true,
+                  menuMaxHeight: 300,
                 )),
             const SizedBox(height: 16),
             Obx(() => DropdownButtonFormField<String>(
@@ -88,6 +90,8 @@ class PetUpdate extends StatelessWidget {
                     speciesHandler.setSpeciesCategory(newValue);
                   },
                   decoration: const InputDecoration(labelText: '세부 종류'),
+                  isExpanded: true,
+                  menuMaxHeight: 300,
                 )),
             const SizedBox(height: 16),
             TextField(
@@ -153,10 +157,10 @@ class PetUpdate extends StatelessWidget {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
-                if (nameController.text.isEmpty ||
+                if (nameController.text.trim().isEmpty ||
                     speciesHandler.selectedSpeciesType.value == null ||
                     speciesHandler.selectedSpeciesCategory.value == null ||
-                    birthdayController.text.isEmpty ||
+                    birthdayController.text.trim().isEmpty ||
                     selectedGender.value.isEmpty) {
                   Get.snackbar('오류', '모든 필드를 입력해주세요.');
                   return;
@@ -165,12 +169,12 @@ class PetUpdate extends StatelessWidget {
                 final updatedPet = Pet(
                   id: pet.id,
                   userId: pet.userId,
-                  name: nameController.text,
+                  name: nameController.text.trim(),
                   speciesType: speciesHandler.selectedSpeciesType.value!,
                   speciesCategory:
                       speciesHandler.selectedSpeciesCategory.value!,
-                  birthday: birthdayController.text,
-                  features: featuresController.text,
+                  birthday: birthdayController.text.trim(),
+                  features: featuresController.text.trim(),
                   gender: selectedGender.value,
                   image: pet.image,
                 );

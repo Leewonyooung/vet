@@ -1,7 +1,7 @@
 """
 author: Aeong
 Description: pet
-Fixed: 2024.10.12
+Fixed: 2024.10.14
 Usage: Manage Pet
 """
 
@@ -71,15 +71,17 @@ async def add_pet(
     birthday: str = Form(...),
     features: str = Form(...),
     gender: str = Form(...),
-    image: UploadFile = File(...)
+    image: UploadFile = File(None)
 ):
-    # 이미지 파일 이름만 추출
-    image_filename = image.filename
-    image_path = os.path.join(UPLOAD_DIRECTORY, image_filename)  # 전체 경로
+    image_filename = ''
+    if image:
+        # 이미지 파일 이름만 추출
+        image_filename = image.filename
+        image_path = os.path.join(UPLOAD_DIRECTORY, image_filename)  # 전체 경로
 
-    # 이미지 저장
-    with open(image_path, "wb") as buffer:
-        shutil.copyfileobj(image.file, buffer)
+        # 이미지 저장
+        with open(image_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
 
     # 데이터베이스에는 파일 이름만 저장
     conn = connection()
@@ -95,6 +97,9 @@ async def add_pet(
             ))
             conn.commit()  # 데이터베이스에 변경사항 저장
             return {"message": "Pet added successfully!"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         conn.close()
 
@@ -161,12 +166,12 @@ async def update_pet(
         conn.close()
 
 # 반려동물 삭제 API (DELETE)
-@router.delete("/pets/{pet_id}")
+@router.delete("/delete/{pet_id}")
 async def delete_pet(pet_id: str):
     conn = connection()
     try:
         with conn.cursor() as cursor:
-            sql = "DELETE FROM pets WHERE id = %s"
+            sql = "DELETE FROM pet WHERE id = %s"
             result = cursor.execute(sql, (pet_id,))
             conn.commit()
 

@@ -121,6 +121,7 @@ class PetHandler extends SpeciesHandler {
       if (response.statusCode == 200) {
         // 삭제 성공 시 로컬 목록에서도 제거
         pets.removeWhere((pet) => pet.id == petId);
+        await fetchPets(box.read('userEmail'));
         return true;
       } else {
         // 삭제 실패
@@ -128,6 +129,16 @@ class PetHandler extends SpeciesHandler {
       }
     } catch (e) {
       return false;
+    }
+  }
+
+  // 반려동물 수정 후 UI에 반영
+  Pet? getPet(String id) {
+    try {
+      return pets.firstWhere((pet) => pet.id == id);
+    } catch (e) {
+      // 해당 ID를 가진 반려동물이 없을 경우 null 반환
+      return null;
     }
   }
 }
