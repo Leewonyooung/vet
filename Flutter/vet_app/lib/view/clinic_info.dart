@@ -73,8 +73,13 @@ class ClinicInfo extends StatelessWidget {
 
                                         // 즐겨찾기 등록 버튼
                                       IconButton(
-                                        onPressed: () {
-                                        favoriteHandler.favoriteIconValueMgt(favoriteHandler.getStoredEmail(), value[0]);
+                                        onPressed: () async{
+                                        await  favoriteHandler.favoriteIconValueMgt(favoriteHandler.getStoredEmail(), value[0]);
+                                        if(favoriteHandler.favoriteIconValue.value == true){
+                                          showSnackBar('추가성공','즐겨찾기에 등록되었습니다.',Colors.green);
+                                        } else{
+                                          showSnackBar('삭제', '즐겨찾기가 삭제되었습니다.', Colors.red);
+                                        }
                                       }, 
                                       icon: favoriteHandler.favoriteIconValue.value ? const Icon(Icons.favorite, color: Colors.red,) : const Icon(Icons.favorite_border_outlined), 
                                       )
@@ -145,4 +150,17 @@ class ClinicInfo extends StatelessWidget {
       ),
     );
   }
+
+
+showSnackBar(String title, String message, Color color){
+  Get.snackbar(
+    title,
+    message,
+    backgroundColor: color, 
+    duration: const Duration(seconds: 2),
+    colorText: Colors.black
+    );
+}
+
+
 }

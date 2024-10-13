@@ -8,15 +8,16 @@ import 'package:http/http.dart' as http;
 import 'package:vet_app/vm/image_handler.dart';
 
 class LocationHandler extends ImageHandler {
-  double currentlat = 0;
-  double currentlng = 0;
-  String currentPlaceID = "";
-  String clinicPlaceID = "";
-  String durationText = "";
+  double currentlat = 0; // 현재 위치 lat
+  double currentlng = 0; // 현재 위치  long
+  String currentPlaceID = ""; // 길찾기에 필요한 내위치 주소 Id
+  String clinicPlaceID = ""; // 찾기에 필요한 병원 주소 id
+  String durationText = ""; // 소요시간
   PolylinePoints polylinePoints = PolylinePoints();
-  List<PointLatLng> polyline = [];
-  List<LatLng> route = [];
-  var lines = <Polyline>[].obs;
+  List<PointLatLng> polyline = []; // api로 polyline decoding후 변수 저장
+  List<LatLng> route = []; // 길 찾기에 필요한 체크포인트 latlong
+  var lines = <Polyline>[].obs; // 길 찾기 그림
+  String distanceText = "";
 
   // GPS 제공 동의
   checkLocationPermission() async {
@@ -48,7 +49,6 @@ class LocationHandler extends ImageHandler {
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      // print(dataConvertedJSON['results'][0]['formatted_address']); // place id
       currentPlaceID =
           await dataConvertedJSON['results'][0]['formatted_address'];
     }
@@ -67,13 +67,13 @@ class LocationHandler extends ImageHandler {
   createRoute() async {
     lines.clear();
     var url = Uri.parse(
-        "https://maps.googleapis.com/maps/api/directions/json?origin=$currentPlaceID&destination=$clinicPlaceID&mode=transit&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
+        "https://maps.googleapis.com/maps/api/directions/json?origin=$currentPlaceID&destination=$clinicPlaceID&mode=transit&language=ko&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     polyline = polylinePoints.decodePolyline(
         dataConvertedJSON['routes'][0]['overview_polyline']['points']);
-    // durationText=dataConvertedJSON['routes'][0]['legs'][0]['duration']['text']; // 소요시간
-    // print(dataConvertedJSON['routes'][0]['legs'][0]['distance']['text']); // 거리
+    durationText=dataConvertedJSON['routes'][0]['legs'][0]['duration']['text']; // 소요시간
+    distanceText=dataConvertedJSON['routes'][0]['legs'][0]['distance']['text']; // 거리
 
     route = polyline
         .map(

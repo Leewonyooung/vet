@@ -109,7 +109,8 @@ class ClinicLocation extends StatelessWidget {
                                           ),
                                           //병원 끝나는시간
                                           Text("${result.endTime} 영업종료"),
-                                          Text(vmHandler.durationText)
+                                          Text(vmHandler.durationText),
+                                          Text("거리 : ${vmHandler.distanceText}"),
                                         ],
                                       ),
                                     )
