@@ -46,10 +46,10 @@ class Reservation extends StatelessWidget {
                                 ElevatedButton(
                                   onPressed: () {
                                     Get.to(() =>  MakeReservation(), arguments: [
+                                      clinic.id,
                                       clinic.name,
                                       clinic.latitude,
                                       clinic.longitude,
-                                      clinic.image,
                                       clinic.time,
                                       clinic.address
                                     ]);
