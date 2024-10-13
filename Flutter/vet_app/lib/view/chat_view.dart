@@ -27,11 +27,12 @@ class ChatView extends StatelessWidget {
     );
   }
 
-  chatList(context, temp) {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+  chatList(context, temp){
+    SchedulerBinding.instance.addPostFrameCallback((_) async{
       vmHandler.listViewContoller
-          .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent);
+          .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent+80);
     });
+    
     return Column(
       children: [
         SizedBox(
@@ -40,10 +41,9 @@ class ChatView extends StatelessWidget {
             controller: vmHandler.listViewContoller,
             itemCount: vmHandler.chats.length,
             itemBuilder: (context, index) {
-             
               Chats chat = vmHandler.chats[index];
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(8,8,8,0),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: vmHandler.checkToday(chat)?
@@ -157,33 +157,35 @@ class ChatView extends StatelessWidget {
             },
           ),
         ),
-        Container(
-          decoration: const BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.all(Radius.circular(15))
-          ),
-          height: MediaQuery.of(context).size.height / 14,
-          width: MediaQuery.of(context).size.width / 1.1,
-          child: Row(
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  
-                ),
-                width: MediaQuery.of(context).size.width / 1.3,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: chatController,
-                    decoration:const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(25))), ),
+        Padding(
+          padding: const EdgeInsets.only(top:8.0),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.all(Radius.circular(15))
+            ),
+            height: MediaQuery.of(context).size.height / 13,
+            width: MediaQuery.of(context).size.width / 1.1,
+            child: Row(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                  ),
+                  width: MediaQuery.of(context).size.width / 1.3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: chatController,
+                      decoration:const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(25))), ),
+                    ),
                   ),
                 ),
-              ),
-              IconButton(
-                onPressed: () => inputChat(temp),
-                icon: const Icon(Icons.arrow_circle_up_outlined),
-              ),
-            ],
+                IconButton(
+                  onPressed: () => inputChat(temp),
+                  icon: const Icon(Icons.arrow_circle_up_outlined),
+                ),
+              ],
+            ),
           ),
         )
       ],

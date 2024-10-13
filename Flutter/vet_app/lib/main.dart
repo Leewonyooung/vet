@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:vet_app/firebase_options.dart';
-import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/view/splash.dart';
 
 void main() async {

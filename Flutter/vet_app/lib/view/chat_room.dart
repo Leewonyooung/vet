@@ -59,7 +59,7 @@ class ChatRoom extends StatelessWidget {
               vmHandler.currentClinicId.value = room.clinic;
               await vmHandler.queryChat();
               Get.to(() => ChatView(),
-                  arguments: [room.image, vmHandler.roomName[index]]);
+                  arguments: [room.image, vmHandler.roomName[index]])!.then((value) => vmHandler.queryLastChat(),);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
