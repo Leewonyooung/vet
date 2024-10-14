@@ -141,4 +141,9 @@ class PetHandler extends SpeciesHandler {
       return null;
     }
   }
+
+  clearPet() {
+    pets.clear();
+    update();
+  }
 }

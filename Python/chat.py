@@ -1,6 +1,0 @@
-"""
-author: 
-Description: 
-Fixed: 
-Usage: 
-"""

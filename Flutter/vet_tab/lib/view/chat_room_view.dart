@@ -22,8 +22,7 @@ class ChatRoomView extends StatelessWidget {
                 child: Text('오류 발생: ${snapshot.error}'),
               );
             } else {
-              return chatsHandler.rooms.isEmpty?
-              const Center(child: CircularProgressIndicator(),):
+              return 
               Obx(() => chatRoomList(context),);
           }
         },
@@ -46,7 +45,7 @@ return Row(
           return GestureDetector(
             onTap: () async {
               // print(room.user);
-              await chatsHandler.setCurrentUserName(chatsHandler.roomName[index]);
+              // await chatsHandler.setCurrentUserName(chatsHandler.roomName[index]);
               await chatsHandler.setcurrentUserId(room.user);
               await chatsHandler.setcurrentRoomImage(room.image);
               await chatsHandler.showChat();

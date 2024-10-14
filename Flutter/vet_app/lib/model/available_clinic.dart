@@ -1,4 +1,5 @@
 class AvailableClinic {
+  String id;
   String name;
   double latitude;
   double longitude;
@@ -7,7 +8,8 @@ class AvailableClinic {
   String time;
 
   AvailableClinic(
-      {required this.name,
+      {required this.id,
+      required this.name,
       required this.latitude,
       required this.longitude,
       required this.address,

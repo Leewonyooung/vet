@@ -1,19 +1,18 @@
 """
-author: 
-Description: 
-Fixed: 
-Usage: 
+author: Aeong
+Description: favorite
+Fixed: 24.10.14
+Usage: Manage favorite
 """
 
 from fastapi import APIRouter, HTTPException 
 import pymysql
-
+import hosts
 router = APIRouter()
 
-# MySQL 연결 함수
 def connection():
     conn = pymysql.connect(
-        host='192.168.50.91',
+        host=hosts.vet_academy,
         user='root',
         password='qwer1234',
         charset='utf8',
