@@ -19,7 +19,6 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 
-
 def connect():
     conn = pymysql.connect(
         host=hosts.vet_academy,
@@ -102,7 +101,8 @@ async def get_file(file_name: str):
     file_path = os.path.join(UPLOAD_FOLDER, file_name)
     if os.path.exists(file_path):
         return FileResponse(path=file_path, filename=file_name)
-    return {'result' : 'Error'}
+    else:
+        return FileResponse(path=file_path, filename='usericon.jpg')
 
 
 @router.delete("/deleteFile/{file_name}")
@@ -159,7 +159,27 @@ async def get_user_name(id:str):
         print("Error :",e)
         return {"result" : "Error"}
 
-
+"""
+author: 이원영
+Fixed: 2024/10/7
+Usage: 채팅창 보여줄때 name > id
+"""
+@router.get('/getclinicname')
+async def get_user_name(name:str):
+    # name= ['adfki125', 'adkljzci9786']
+    try:
+        conn = connect()
+        curs = conn.cursor()
+        sql = "select id from clinic where name = %s"
+        curs.execute(sql,(name))
+        rows = curs.fetchall()
+        conn.close()
+        return {'results' : rows[0]}
+    except Exception as e:
+        conn.close()
+        print("Error :",e)
+        return {"result" : "Error"}
+    
 # 병원 검색 활용
 @router.get('/select_search')
 async def select_search(word:str=None):
@@ -212,17 +232,17 @@ async def all_clinic():
 
 
 
-# insert clinic (안창빈)
+# insert new clinic information to DB (안창빈)
 
 @router.get("/insert")
 async def insert(
     id: str=None, 
     name: str=None, 
     password: str=None, 
-    latitude: float=None, 
-    longitude: float=None, 
-    start_time: str=None, 
-    end_time: str=None, 
+    latitude: str=None, 
+    longitude: str=None, 
+    starttime: str=None, 
+    endtime: str=None, 
     introduction: str=None, 
     address: str=None, 
     phone: str=None, 
@@ -232,8 +252,8 @@ async def insert(
     curs = conn.cursor()
 
     try:
-        sql ="insert into clinic(id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image) values (%s,%s,%s,%s,%s)"
-        curs.execute(sql, (id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image))
+        sql ="insert into clinic(id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        curs.execute(sql, (id, name, password, latitude, longitude, starttime, endtime, introduction, address, phone, image))
         conn.commit()
         conn.close()
         return {'results': 'OK'}
@@ -243,17 +263,17 @@ async def insert(
         print("Error :", e)
         return {'result': 'Error'}    
     
-# update clinic (안창빈)
+# edit clinic information to DB (안창빈)
 
 @router.get("/update")
 async def update(
     id: str=None, 
     name: str=None, 
     password: str=None, 
-    latitude: float=None, 
-    longitude: float=None, 
-    start_time: str=None, 
-    end_time: str=None, 
+    latitude: str=None, 
+    longitude: str=None, 
+    starttime: str=None, 
+    endtime: str=None, 
     introduction: str=None, 
     address: str=None, 
     phone: str=None, 
@@ -269,15 +289,15 @@ async def update(
         password = %s,
         latitude = %s,
         longitude = %s,
-        start_time = %s,
-        end_time = %s,
+        starttime = %s,
+        endtime = %s,
         introduction = %s,
         address = %s,
         phone = %s,
         image = %s
         WHERE id = %s
         """
-        curs.execute(sql, (name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image, id))
+        curs.execute(sql, (name, password, latitude, longitude, starttime, endtime, introduction, address, phone, image, id))
         conn.commit()
         conn.close
         return {'results': 'OK'} 

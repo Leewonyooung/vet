@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:get/state_manager.dart';
 import 'package:vet_app/model/available_clinic.dart';
 import 'package:vet_app/model/reservation.dart';
-import 'package:vet_app/model/search_reservations.dart';
+import 'package:vet_app/model/search_reservation.dart';
 import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:http/http.dart' as http;
 

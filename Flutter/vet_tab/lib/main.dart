@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:vet_tab/firebase_options.dart';
 import 'package:vet_tab/view/clinic_login.dart';
-import 'package:vet_tab/view/rail_home.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   await GetStorage.init();
@@ -20,6 +20,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ko', 'KR'),
+        Locale('en', 'US'),
+        Locale('ja', 'JP'),
+      ],
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

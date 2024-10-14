@@ -20,7 +20,7 @@ class _SplashState extends State<Splash> {
 
   goScreen() async {
     await Future.delayed(
-        const Duration(seconds: 2), () => Get.to(Navigation()));
+        const Duration(seconds: 2), () => Get.to(() => Navigation()));
   }
 
   @override

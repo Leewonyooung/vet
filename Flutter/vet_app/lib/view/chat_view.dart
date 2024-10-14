@@ -34,7 +34,6 @@ class ChatView extends StatelessWidget {
       vmHandler.listViewContoller
           .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent + 80);
     });
-
     return Column(
       children: [
         SizedBox(
@@ -236,7 +235,6 @@ class ChatView extends StatelessWidget {
 
   inputChat(var temp) async {
     if (vmHandler.currentClinicId.isEmpty) {
-      print(temp[1]);
       await vmHandler.getClinicName(temp[1]);
     }
     Chats inputchat = Chats(

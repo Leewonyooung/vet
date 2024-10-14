@@ -1,13 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vet_tab/view/mgt_clinic_map.dart';
 import 'package:vet_tab/vm/clinic_handler.dart';
 
-class MgtClinicAdd extends StatelessWidget {
-  MgtClinicAdd({super.key});
+class MgtClinicEdit extends StatelessWidget {
+  MgtClinicEdit({super.key});
 
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -19,9 +18,10 @@ class MgtClinicAdd extends StatelessWidget {
   final TextEditingController introController = TextEditingController();
   final TextEditingController stimeController = TextEditingController();
   final TextEditingController etimeController = TextEditingController();
-  final clinicHandler = Get.put(ClinicHandler());
+
   @override
   Widget build(BuildContext context) {
+    final clinicHandler = Get.put(ClinicHandler());
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: Scaffold(
@@ -38,7 +38,7 @@ class MgtClinicAdd extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_ios)),
         ),
         body: GetBuilder<ClinicHandler>(
-          builder: (_) {
+          builder: (controller) {
             return SingleChildScrollView(
               child: Center(
                 child: Column(
@@ -55,10 +55,10 @@ class MgtClinicAdd extends StatelessWidget {
                                 height: 300,
                                 color: Colors.grey,
                                 child: Center(
-                                  child: clinicHandler.imageFile == null
+                                  child: controller.imageFile == null
                                       ? const Text('이미지가 선택되지 않았습니다')
                                       : Image.file(
-                                          File(clinicHandler.imageFile!.path)),
+                                          File(controller.imageFile!.path)),
                                 ),
                               ),
                             ),
@@ -89,52 +89,38 @@ class MgtClinicAdd extends StatelessWidget {
                                       const EdgeInsets.fromLTRB(20, 50, 0, 20),
                                   child: SizedBox(
                                     width: 100,
-                                    child: Obx(() {
-                                      return TextField(
-                                        onTap: () async {
-                                          await clinicHandler.opDateSelection(
-                                              context, true);
-                                        },
-                                        readOnly: true,
-                                        controller: stimeController
-                                          ..text =
-                                              clinicHandler.startOpTime.value,
-                                        decoration: const InputDecoration(
-                                            labelText: '영업시작'),
-                                      );
-                                    }),
+                                    child: TextField(
+                                      onTap: () {
+                                        clinicHandler.opDateSelection(context, true);
+                                      },
+                                      readOnly: true,
+                                      controller: stimeController,
+                                      decoration: const InputDecoration(
+                                          labelText: '영업시작'),
+                                    ),
                                   ),
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(20, 50, 20, 0),
-                                  child: Text(
-                                    '~',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                                  child: Text('~',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                                 ),
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 50, 0, 20),
-                                  child: SizedBox(
+                                  child: GestureDetector(
+                                    onTap:() {
+                                      clinicHandler.opDateSelection(context, false);
+                                    },
+                                    child: SizedBox(
                                       width: 100,
-                                      child: Obx(() {
-                                        etimeController.text =
-                                            clinicHandler.endOpTime.value;
-                                        return TextField(
-                                          onTap: () async {
-                                            await clinicHandler.opDateSelection(
-                                                context, false);
-                                          },
-                                          readOnly: true,
-                                          controller: etimeController
-                                            ..text =
-                                                clinicHandler.endOpTime.value,
-                                          decoration: const InputDecoration(
-                                              labelText: '영업종료'),
-                                        );
-                                      })),
+                                      child: TextField(
+                                        readOnly: true,
+                                        controller: etimeController,
+                                        decoration: const InputDecoration(
+                                            labelText: '영업종료'),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -195,9 +181,8 @@ class MgtClinicAdd extends StatelessWidget {
                                         suffixIcon: IconButton(
                                             onPressed: () {
                                               passwordController.clear();
-                                              passwordController.text =
-                                                  clinicHandler
-                                                      .randomPasswordNumberClinic();
+                                              passwordController.text = clinicHandler
+                                                  .randomPasswordNumberClinic();
                                             },
                                             icon:
                                                 const Icon(Icons.add_outlined)),
@@ -279,29 +264,19 @@ class MgtClinicAdd extends StatelessWidget {
                                         labelText: '주소를 입력해주세요',
                                         suffixIcon: IconButton(
                                             onPressed: () {
-                                              clinicHandler.updateAddress(
-                                                  addressController.text);
-                                              Get.to(() => const MgtClinicMap(),
-                                                      arguments:
-                                                          addressController.text
-                                                                  .trim()
-                                                                  .isNotEmpty
-                                                              ? addressController
-                                                                  .text
-                                                              : " ")
-                                                  ?.then(
-                                                (value) {
-                                                  if (value != null) {
-                                                    updateClinicAddressData(
-                                                        value['address'],
-                                                        value['lat'],
-                                                        value['long']);
-                                                  }
-                                                },
-                                              );
-                                            },
-                                            icon: const Icon(Icons.search)),
-                                      ),
+                                              clinicHandler.updateAddress(addressController.text);
+                                              Get.to(()=> const MgtClinicMap(), arguments:
+                                              addressController.text.trim().isNotEmpty
+                                              ? addressController.text
+                                              : " ")?.then((value) {
+                                                if(value != null){
+                                                  updateClinicAddressData(value['address'], value['lat'], value['long']);
+                                                }
+                                              },);
+                                            }, 
+                                            icon: const Icon(Icons.search)
+                                            ),
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -417,22 +392,19 @@ class MgtClinicAdd extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10)),
                             ),
                             onPressed: () {
-                              if (idController.text.trim().isEmpty ||
-                                  nameController.text.trim().isEmpty ||
-                                  passwordController.text.trim().isEmpty ||
-                                  latController.text.trim().isEmpty ||
-                                  longController.text.trim().isEmpty ||
-                                  stimeController.text.trim().isEmpty ||
-                                  etimeController.text.trim().isEmpty ||
-                                  introController.text.trim().isEmpty ||
-                                  addressController.text.trim().isEmpty ||
-                                  telController.text.trim().isEmpty ||
-                                  clinicHandler.imageFile == null ) {
-                                errorDialogClinicAdd();
-                              } else {
-                                clincAdd();
-                                Get.back();
-                              }
+                              clinicHandler.getClinicInsert(
+                                idController.text, 
+                                nameController.text, 
+                                passwordController.text, 
+                                double.parse(latController.text), 
+                                double.parse(longController.text), 
+                                stimeController.text, 
+                                etimeController.text, 
+                                introController.text, 
+                                addressController.text, 
+                                telController.text, 
+                                clinicHandler.filename,
+                              );
                             },
                             child: const Text(
                               '추가하기',
@@ -451,39 +423,9 @@ class MgtClinicAdd extends StatelessWidget {
     );
   }
   //Function
-
-  // input the address lat and long data which were inputed from mgt_clinic_map apge (안창빈)
-  updateClinicAddressData(String address, double lat, double long) {
+  updateClinicAddressData(String address,double lat,double long){
     addressController.text = address.toString();
     latController.text = lat.toString();
     longController.text = long.toString();
-  }
-
-  // errorDialog when any of the textfield from the page are empty (안창빈)
-  errorDialogClinicAdd() async {
-    await Get.defaultDialog(
-      title: 'error',
-      content: const Text('빈칸이 있는지 확인해주세요'),
-      textCancel: '확인',
-      barrierDismissible: true,
-    );
-  }
-
-  //add clinic information (안창빈)
-  clincAdd() async {
-    await clinicHandler.uploadImage();
-    clinicHandler.getClinicInsert(
-      idController.text,
-      nameController.text,
-      passwordController.text,
-      double.parse(latController.text),
-      double.parse(longController.text),
-      stimeController.text,
-      etimeController.text,
-      introController.text,
-      addressController.text,
-      telController.text,
-      clinicHandler.filename,
-    );
   }
 }//END

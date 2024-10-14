@@ -1,7 +1,7 @@
 /*
 author: 이원영
 Description: 네비게이션 바로 첨 보이는 채팅방 페이지
-Fixed: 10/11
+Fixed: 10/14
 Usage: Navigation 4th page
 */
 
@@ -23,30 +23,14 @@ class ChatRoom extends StatelessWidget {
       vmHandler.showScreen();
     });
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          title: const Text('상담'),
-        ),
-        body: FutureBuilder(
-          future: vmHandler.getAllData(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('오류 발생: ${snapshot.error}'),
-              );
-            } else {
-              return vmHandler.rooms.isEmpty
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Obx(
-                      () => chatRoomList(context),
-                    );
-            }
-          },
-        ));
+      appBar: AppBar(
+        centerTitle: false,
+        title: const Text('상담'),
+      ),
+      body:vmHandler.rooms.isEmpty?
+            const Center(child: CircularProgressIndicator(),):
+            Obx(() => chatRoomList(context),)
+    );
   }
 
   chatRoomList(context) {
@@ -59,12 +43,10 @@ class ChatRoom extends StatelessWidget {
           return GestureDetector(
             onTap: () async {
               vmHandler.currentClinicId.value = room.clinic;
+              await vmHandler.getStatus();
               await vmHandler.queryChat();
-              Get.to(() => ChatView(),
-                      arguments: [room.image, vmHandler.roomName[index]])!
-                  .then(
-                (value) => vmHandler.queryLastChat(),
-              );
+              Get.to(()=>ChatView(),
+                  arguments: [room.image, vmHandler.roomName[index]]);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -98,39 +80,39 @@ class ChatRoom extends StatelessWidget {
                               padding: const EdgeInsets.only(left: 15),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    vmHandler.roomName[index],
-                                    style: const TextStyle(fontSize: 22),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width / 1.5,
+                                    child: Text(
+                                      overflow: TextOverflow.ellipsis,
+                                      index < vmHandler.roomName.length ? vmHandler.roomName[index]
+                                      :const Text(''),
+                                      style: const TextStyle(fontSize: 24),
+                                    ),
                                   ),
-                                  Row(
-                                    children: [
-                                      index <= vmHandler.lastChats.length - 1
-                                          ? Text(
-                                              vmHandler.lastChats[index].text)
-                                          : const Text('채팅이 없습니다.')
-                                      // const Text('채팅이 없습니다.'): Text(vmHandler.lastChats[index].text),
-                                    ],
-                                  ),
-                                  Container(
-                                    alignment: Alignment.bottomRight,
-                                    width:
-                                        MediaQuery.of(context).size.width / 1.5,
-                                    child: index <=
-                                            vmHandler.lastChats.length - 1
-                                        ? DateTime.now().difference(
-                                                    DateTime.parse(vmHandler
-                                                        .lastChats[index]
-                                                        .timestamp)) <
-                                                const Duration(hours: 24)
-                                            ? Text(vmHandler
-                                                .lastChats[index].timestamp
-                                                .substring(11, 16))
-                                            : Text(
-                                                "${vmHandler.lastChats[index].timestamp.substring(5, 7)}월 ${vmHandler.lastChats[index].timestamp.substring(8, 10)}일")
-                                        : const Text(''),
-                                  )
+                                  // 마지막 채팅 실패
+                                  // Row(
+                                  //   children: [
+                                  //     index <= vmHandler.lastChats.length-1 ? Text(vmHandler.lastChats[index].text): const Text('채팅이 없습니다.')
+                                  //   ],
+                                  // ),
+                                  // Container(
+                                  //   alignment: Alignment.bottomRight,
+                                  //   width:
+                                  //       MediaQuery.of(context).size.width / 1.5,
+                                  //   child: index <= vmHandler.lastChats.length-1 ?    
+                                  //   DateTime.now().difference(
+                                  //     DateTime.parse(vmHandler.lastChats[index].timestamp)) < 
+                                  //     const Duration(hours: 24)? 
+                                  //     Text(
+                                  //       vmHandler.lastChats[index].timestamp.substring(11, 16)
+                                  //     ): 
+                                  //     Text(
+                                  //         "${vmHandler.lastChats[index].timestamp.substring(5, 7)}월 ${vmHandler.lastChats[index].timestamp.substring(8, 10)}일"): 
+                                  //     const Text(''),
+                                 
+                                  // )
                                 ],
                               ),
                             ),

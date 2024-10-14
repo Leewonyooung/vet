@@ -17,8 +17,6 @@ class ClinicInfo extends StatelessWidget {
     FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
     ReservationHandler reservationHandler = Get.put(ReservationHandler());
     var value = Get.arguments ?? "__"; // clinicid = value
-    favoriteHandler.searchFavoriteClinic(vmHandler.getStoredEmail(), value[0]);
-    reservationHandler.reservationButtonMgt(value[0]);
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +25,7 @@ class ClinicInfo extends StatelessWidget {
       body: GetBuilder<FavoriteHandler>(
         builder: (_) {
           return FutureBuilder(
-              future: vmHandler.getClinicDetail(value[0]),
+              future: vmHandler.getClinicDetail(),
               builder: (context, snapshot) {
                 final result = vmHandler.clinicDetail;
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -35,6 +33,11 @@ class ClinicInfo extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error:${snapshot.error}'));
                 } else {
+                  favoriteHandler.searchFavoriteClinic(
+                      vmHandler.getStoredEmail(),
+                      value[0]); // 즐겨찾기 여부 검색 : 즐겨찾기 버튼 관리
+                  reservationHandler
+                      .reservationButtonMgt(value[0]); // 예약 가능여부 검색 : 예약버튼 활성화
                   return Obx(() {
                     return Center(
                       child: Column(
@@ -57,6 +60,7 @@ class ClinicInfo extends StatelessWidget {
                                   children: [
                                     Image.network(
                                       'http://127.0.0.1:8000/clinic/view/${result[0].image}',
+                                      errorBuilder: (context, error, stackTrace) => const Text('Image'),
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.4 *
@@ -68,9 +72,12 @@ class ClinicInfo extends StatelessWidget {
                                       children: [
                                         // 지도 보는 버튼
                                         IconButton(
-                                            onPressed: () => Get.to(
-                                                () => ClinicLocation(),
-                                                arguments: [result[0].id]),
+                                            onPressed: () async{ 
+                                              await favoriteHandler.getClinicDetail();
+                                              await vmHandler.checkLocationPermission();
+                                              await favoriteHandler.maploading(favoriteHandler.clinicDetail[0].latitude, favoriteHandler.clinicDetail[0].longitude);
+                                              Get.to(() => ClinicLocation(),
+                                                arguments: [result[0].id]);},
                                             icon: const Icon(
                                                 Icons.pin_drop_outlined)),
 
@@ -132,13 +139,14 @@ class ClinicInfo extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: ElevatedButton(
-                              onPressed: () async {
-                                await chatsHandler.firstChatRoom(
-                                    result[0].id, result[0].image);
-                                Get.to(() => ChatView(), arguments: [
-                                  favoriteHandler.clinicDetail[0].image,
-                                  favoriteHandler.clinicDetail[0].name,
-                                ]);
+                              onPressed: () async{
+                                chatsHandler.currentClinicId.value = result[0].id;
+                                await chatsHandler.firstChatRoom(result[0].id ,result[0].image);
+                                await chatsHandler.makeChatRoom();
+                                await chatsHandler.queryChat();
+                                Get.to(()=> ChatView(),
+                                  arguments: [favoriteHandler.clinicDetail[0].image, favoriteHandler.clinicDetail[0].name,]
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(300, 40),
