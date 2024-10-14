@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:vet_app/view/reservation_complete.dart';
-import 'package:vet_app/vm/login_handler.dart';
-import 'package:vet_app/vm/reservation_handler.dart';
 
 class QueryReservation extends StatelessWidget {
-  QueryReservation({super.key});
-  final vmHnadler = Get.put(ReservationHandler());
+  const QueryReservation({super.key});
 
   @override
   Widget build(BuildContext context) {

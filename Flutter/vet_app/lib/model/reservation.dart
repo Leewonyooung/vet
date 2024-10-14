@@ -4,7 +4,6 @@ class Reservation {
   String clinicId;
   String time;
   String symptoms;
-  String petId;
 
   Reservation({
     this.seq,
@@ -12,6 +11,5 @@ class Reservation {
     required this.clinicId,
     required this.time,
     required this.symptoms,
-    required this.petId
   });
 }

@@ -17,8 +17,6 @@ class ClinicInfo extends StatelessWidget {
     FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
     ReservationHandler reservationHandler = Get.put(ReservationHandler());
     var value = Get.arguments ?? "__"; // clinicid = value
-    favoriteHandler.searchFavoriteClinic(vmHandler.getStoredEmail(), value[0]);
-    reservationHandler.reservationButtonMgt(value[0]);
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +25,7 @@ class ClinicInfo extends StatelessWidget {
       body: GetBuilder<FavoriteHandler>(
         builder: (_) {
           return FutureBuilder(
-              future: vmHandler.getClinicDetail(value[0]),
+              future: vmHandler.getClinicDetail(),
               builder: (context, snapshot) {
                 final result = vmHandler.clinicDetail;
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -35,6 +33,11 @@ class ClinicInfo extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error:${snapshot.error}'));
                 } else {
+                  favoriteHandler.searchFavoriteClinic(
+                      vmHandler.getStoredEmail(),
+                      value[0]); // 즐겨찾기 여부 검색 : 즐겨찾기 버튼 관리
+                  reservationHandler
+                      .reservationButtonMgt(value[0]); // 예약 가능여부 검색 : 예약버튼 활성화
                   return Obx(() {
                     return Center(
                       child: Column(
@@ -57,6 +60,7 @@ class ClinicInfo extends StatelessWidget {
                                   children: [
                                     Image.network(
                                       'http://127.0.0.1:8000/clinic/view/${result[0].image}',
+                                      errorBuilder: (context, error, stackTrace) => Text('Image'),
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.4 *

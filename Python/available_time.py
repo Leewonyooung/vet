@@ -26,8 +26,8 @@ def connect():
         db='veterinarian'
     )
     return conn
-# 이종남
-# 예약 가능한 병원id, 이름, password, 경도, 위도, 주소, 이미지, 예약 시간 (예약된 리스트 빼고 나타낸다)
+
+# 예약 가능한 병원id, 이름, password, 경도, 위도, 주소, 이미지, 예약 시간 (예약된 리스트 빼고 나타냄)
 @router.get('/available_clinic')
 async def get_available_clinic(time:str):
     conn = connect()

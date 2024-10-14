@@ -2,38 +2,26 @@ import 'dart:convert';
 import 'package:get/state_manager.dart';
 import 'package:vet_app/model/available_clinic.dart';
 import 'package:vet_app/model/reservation.dart';
-import 'package:vet_app/model/search_reservations.dart';
 import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:http/http.dart' as http;
 
 class ReservationHandler extends ClinicHandler {
-  final reservations = <Reservation>[].obs;  // 예약하기 
-  final searchreservation = <SearchReservations>[].obs; // 예약내역 리스트
-  final availableclinic = <AvailableClinic>[].obs; // 예약가능한 빠른병원 찾기 리스트
+  final reservations = <Reservation>[].obs;
+  final availableclinic = <AvailableClinic>[].obs;
   String reservationTime = "";
   final canReservationClinic =
       <AvailableClinic>[].obs; //정섭 = 병원 상세정보에서 예약으로 데이터 넘기기 위한 리스트
   var resButtonValue = false.obs;
-
   // 예약된 리스트
-  getReservation(String userId) async {
-    var url = Uri.parse(
-        'http://127.0.0.1:8000/reservation/select_reservation?user_id=$userId'); //미완성
+  getReservation() async {
+    var url = Uri.parse('http://127.0.0.1:8000/'); //미완성
     var response = await http.get(url);
+    clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    // ignore: unused_local_variable
     List results = dataConvertedJSON['results'];
-    List<SearchReservations> returnData = [];
-    for (int i = 0; i < results.length; i++) {
-
-    returnData.add(SearchReservations(
-      clinicId: results[i][0], 
-      clinicName: results[i][1], 
-      latitude: results[i][2], 
-      longitude: results[i][3], 
-      time: results[i][4], 
-      address: results[i][5]));
-    }
-    searchreservation.value = returnData;
+    // ignore: unused_local_variable
+    List<Reservation> returnData = [];
   }
 
   // make_reservation에서 사용할 예약 insert
@@ -52,12 +40,12 @@ class ReservationHandler extends ClinicHandler {
       String clinicId = results[i][0];
       String time = results[i][0];
       String symptoms = results[i][0];
-      String petId = results[i][0];
 
       returnData.add(Reservation(
-          userId: userId, clinicId: clinicId, time: time, symptoms: symptoms, petId: petId));
+          userId: userId, clinicId: clinicId, time: time, symptoms: symptoms));
       reservations.value = returnData;
     }
+    return results;
   }
 
   // 메인화면에서 긴급예약 눌렀을때 보여주는 리스트

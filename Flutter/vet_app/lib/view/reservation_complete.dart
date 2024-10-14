@@ -8,7 +8,7 @@ import 'package:vet_app/view/query_reservation.dart';
 // 예약완료 페이지
 class ReservationComplete extends StatelessWidget {
   ReservationComplete({super.key});
-  final makervalue = Get.arguments; // 예약할 때 필요한 병원정보 받아옴
+  final value = Get.arguments; // 예약할 때 필요한 병원정보 받아옴
 
   @override
   Widget build(BuildContext context) {

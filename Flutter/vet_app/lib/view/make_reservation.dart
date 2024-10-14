@@ -4,7 +4,6 @@ import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/reservation_complete.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
-import 'package:vet_app/vm/reservation_handler.dart';
 
 // 긴급 예약 확정페이지
 class MakeReservation extends StatelessWidget {

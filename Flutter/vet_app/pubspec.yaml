@@ -46,15 +46,15 @@ dependencies:
   # 네비게이션 바
   persistent_bottom_nav_bar: ^6.2.1
   http: ^1.2.2
-  
-  #image picker
-  image_picker: ^1.1.2 
 
-  #위도경도
+  # image picker
+  image_picker: ^1.1.2
+
+  # 위도경도
   geocoding: ^3.0.0
   geolocator: ^13.0.1
 
-  #map
+  # map
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
 
@@ -67,15 +67,17 @@ dependencies:
 
   carousel_slider: ^5.0.0
 
-  
   # 로그인 정보 앱에 쓰기
   get_storage: ^2.1.1
 
-  #googlemap
+  # googlemap
   google_maps_flutter: ^2.9.0
 
-  #구글맵 route decode
+  # 구글맵 route decode
   flutter_polyline_points: ^2.1.0
+
+  # intl
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

@@ -19,7 +19,7 @@ class ClinicLocation extends StatelessWidget {
         Completer<GoogleMapController>();
     final value = Get.arguments ?? "__";
     vmHandler.checkLocationPermission();
-    vmHandler.getClinicDetail(value[0]);
+    vmHandler.getClinicDetail();
     final result = vmHandler.clinicDetail[0];
 
     // 0=병원id
@@ -106,8 +106,11 @@ class ClinicLocation extends StatelessWidget {
                                             maxLines: 1,
                                           ),
                                           //병원 끝나는시간
+                                          Text(vmHandler.workText.value,
+                                          style: TextStyle(
+                                            color: vmHandler.workColor.value
+                                          ),),
                                           Text("${result.endTime} 영업종료"),
-                                          // Text(vmHandler.durationText),
                                           Text(
                                               "거리 : ${vmHandler.distanceText}"),
                                         ],
