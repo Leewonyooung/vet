@@ -117,7 +117,7 @@ class ClinicLogin extends StatelessWidget {
         idController.clear();
         passwordController.clear();
         Get.back();
-        Get.to(() => const ClinicReservation());
+        Get.to(() =>  ClinicReservation());
       },
     );
   }
