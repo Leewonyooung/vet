@@ -24,12 +24,12 @@ def connect():
 
 # 긴급예약에서 예약하기 눌렀을시 예약DB에 저장
 @router.get('/insert_reservation')
-async def insert_reservation(user_id: str, clinic_id: str, time: str, symptoms: str):
+async def insert_reservation(user_id: str, clinic_id: str, time: str, symptoms: str, pet_id: str):
     conn = connect()
     curs = conn.cursor()
 
-    sql = "insert into reservation(user_id, clinic_id, time, symptoms) values (%s, %s, %s, %s)"
-    curs.execute(sql, (user_id, clinic_id, time, symptoms))
+    sql = "insert into reservation(user_id, clinic_id, time, symptoms, pet_id) values (%s, %s, %s, %s, %s)"
+    curs.execute(sql, (user_id, clinic_id, time, symptoms, pet_id))
     conn.commit()
     conn.close()
 

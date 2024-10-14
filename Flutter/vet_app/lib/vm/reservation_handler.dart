@@ -38,9 +38,9 @@ class ReservationHandler extends ClinicHandler {
 
   // make_reservation에서 사용할 예약 insert
   makeReservation(
-      String userId, String clinicId, String time, String symptoms) async {
+      String userId, String clinicId, String time, String symptoms, String petId) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/reservation/insert_reservation?user_id=$userId&clinic_id=$clinicId&time=$time&symptoms=$symptoms');
+        'http://127.0.0.1:8000/reservation/insert_reservation?user_id=$userId&clinic_id=$clinicId&time=$time&symptoms=$symptoms&pet_id=$petId');
     var response = await http.get(url);
 
     var dataCovertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -49,10 +49,10 @@ class ReservationHandler extends ClinicHandler {
 
     for (int i = 0; i < results.length; i++) {
       String userId = results[i][0];
-      String clinicId = results[i][1];
-      String time = results[i][2];
-      String symptoms = results[i][3];
-      String petId = results[i][4];
+      String clinicId = results[i][0];
+      String time = results[i][0];
+      String symptoms = results[i][0];
+      String petId = results[i][0];
 
       returnData.add(Reservation(
           userId: userId, clinicId: clinicId, time: time, symptoms: symptoms, petId: petId));

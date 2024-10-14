@@ -44,15 +44,26 @@ class QueryReservation extends StatelessWidget {
                               clinic.address
                             ]);  
                           },
-                          child: Card(
-                            child: Column(
-                              children: [
-                                const Text('예약완료', style: TextStyle(
-                                  fontSize: 12
-                                ),),
-                                Text(clinic.time),
-                                Text(clinic.clinicName)
-                              ],
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                            child: Card(
+                              child: SizedBox(
+                                height: 70,
+                                child: Column(
+                                  children: [
+                                    const Text('예약완료', style: TextStyle(
+                                      fontSize: 12
+                                    ),),
+                                    Text('예약 시간 : ${clinic.time}', style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold
+                                    ),),
+                                    Text('예약 병원 : ${clinic.clinicName}',style: TextStyle(
+                                      fontSize: 14,
+                                    ),)
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         );
