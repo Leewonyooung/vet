@@ -1,7 +1,7 @@
 """
 author: Aeong
 Description: pet
-Fixed: 2024.10.14
+Fixed: 24.10.13
 Usage: Manage Pet
 """
 
