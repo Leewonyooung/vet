@@ -8,10 +8,13 @@ import 'package:vet_app/view/query_reservation.dart';
 // 예약완료 페이지
 class ReservationComplete extends StatelessWidget {
   ReservationComplete({super.key});
-  final value = Get.arguments; // 예약할 때 필요한 병원정보 받아옴
+  final makervalue = Get.arguments; // 예약할 때 필요한 병원정보 받아옴
 
   @override
   Widget build(BuildContext context) {
+    final queryvalue = Get.arguments;
+    var value;
+    makervalue == null ? value = queryvalue : value = makervalue;
     final Completer<GoogleMapController> mapController = // 구글지도 맵
         Completer<GoogleMapController>();
     return Scaffold(

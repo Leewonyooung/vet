@@ -35,7 +35,7 @@ class QueryReservation extends StatelessWidget {
                         final clinic = vmHnadler.searchreservation[index];
                         return GestureDetector(
                           onTap: () {
-                            Get.to(ReservationComplete(), arguments: [
+                            Get.offAll(ReservationComplete(), arguments: [
                               clinic.clinicId,
                               clinic.clinicName,
                               clinic.latitude,

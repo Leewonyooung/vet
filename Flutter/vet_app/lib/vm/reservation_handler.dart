@@ -7,8 +7,8 @@ import 'package:vet_app/vm/clinic_handler.dart';
 import 'package:http/http.dart' as http;
 
 class ReservationHandler extends ClinicHandler {
-  final reservations = <Reservation>[].obs;
-  final searchreservation = <SearchReservations>[].obs;
+  final reservations = <Reservation>[].obs;  // 예약하기 
+  final searchreservation = <SearchReservations>[].obs; // 예약내역 리스트
   final availableclinic = <AvailableClinic>[].obs; // 예약가능한 빠른병원 찾기 리스트
   String reservationTime = "";
   final canReservationClinic =
@@ -49,12 +49,13 @@ class ReservationHandler extends ClinicHandler {
 
     for (int i = 0; i < results.length; i++) {
       String userId = results[i][0];
-      String clinicId = results[i][0];
-      String time = results[i][0];
-      String symptoms = results[i][0];
+      String clinicId = results[i][1];
+      String time = results[i][2];
+      String symptoms = results[i][3];
+      String petId = results[i][4];
 
       returnData.add(Reservation(
-          userId: userId, clinicId: clinicId, time: time, symptoms: symptoms));
+          userId: userId, clinicId: clinicId, time: time, symptoms: symptoms, petId: petId));
       reservations.value = returnData;
     }
   }
