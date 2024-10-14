@@ -17,6 +17,11 @@ import 'package:vet_app/vm/pet_handler.dart';
 class Navigation extends StatelessWidget {
   Navigation({super.key});
 
+  logOut() async {
+    await loginHandler.signOut();
+    Get.offAll(Navigation());
+  }
+
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
   final LoginHandler loginHandler = Get.put(LoginHandler());
