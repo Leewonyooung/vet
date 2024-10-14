@@ -120,10 +120,10 @@ class LoginHandler extends UserHandler {
     } else {}
   }
 
-//     signOut() async {
-//   await FirebaseAuth.instance.signOut();
-//   await GoogleSignIn().signOut(); 
-//   box.write('userEmail', "");
-//   update();
-// }
+    signOut() async {
+  await FirebaseAuth.instance.signOut();
+  await GoogleSignIn().signOut(); 
+  box.write('userEmail', "");
+  update();
+}
 }

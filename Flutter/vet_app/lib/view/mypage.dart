@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/myinfo_update.dart';
+import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/login_handler.dart';
 
 class Mypage extends StatelessWidget {
@@ -52,6 +53,7 @@ class Mypage extends StatelessWidget {
                               children: [
                                 ElevatedButton(
                                     onPressed: (){
+                                      showDialog(loginHandler);
                                     },
                                     child: const Column(
                                       children: [
@@ -85,19 +87,19 @@ class Mypage extends StatelessWidget {
                 }
               });
         })
-        : Center(child: Text('로그인이 필요합니다.'),)
+        : const Center(child: Text('로그인이 필요합니다.'),)
         );
   }
   //ff
-  // showDialog(LoginHandler loginHandler){
-  //   Get.defaultDialog(
-  //     title: "로그아웃",
-  //     middleText: '로그아웃 하시겠습니까?',
-  //     onCancel: () => Get.back(),
-  //     onConfirm: ()async{ 
-  //       await loginHandler.signOut();
-  //       // loginHandler.selectMyinfo(loginHandler.getStoredEmail());
-  //       Get.offAll(()=>Navigation());}
-  //   );
-  // }
+  showDialog(LoginHandler loginHandler){
+    Get.defaultDialog(
+      title: "로그아웃",
+      middleText: '로그아웃 하시겠습니까?',
+      onCancel: () => Get.back(),
+      onConfirm: ()async{ 
+        await loginHandler.signOut();
+        Get.offAll(()=>Navigation());
+        }
+    );
+  }
 }
