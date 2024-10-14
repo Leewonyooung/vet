@@ -43,7 +43,7 @@ class ClinicLocation extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     children: [
                       GoogleMap(
-                        mapType: MapType.normal,
+                        mapType: MapType.terrain,
                         initialCameraPosition: CameraPosition(
                           //
                           zoom: 15,
@@ -79,8 +79,14 @@ class ClinicLocation extends StatelessWidget {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: Column(
-                            mainAxisSize: MainAxisSize.min,
                             children: [
+                              const Text('대중교통 정보만 지원합니다.',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17
+                              ),
+                              ),
                               Card(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
