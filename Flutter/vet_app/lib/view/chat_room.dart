@@ -1,7 +1,7 @@
 /*
 author: 이원영
 Description: 네비게이션 바로 첨 보이는 채팅방 페이지
-Fixed: 10/11
+Fixed: 10/14
 Usage: Navigation 4th page
 */
 
@@ -46,7 +46,7 @@ class ChatRoom extends StatelessWidget {
               await vmHandler.getStatus();
               await vmHandler.queryChat();
               Get.to(()=>ChatView(),
-                  arguments: [room.image, vmHandler.roomName[index]])!.then((value) => vmHandler.queryLastChat());
+                  arguments: [room.image, vmHandler.roomName[index]]);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),

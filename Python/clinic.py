@@ -102,7 +102,8 @@ async def get_file(file_name: str):
     file_path = os.path.join(UPLOAD_FOLDER, file_name)
     if os.path.exists(file_path):
         return FileResponse(path=file_path, filename=file_name)
-    return {'result' : 'Error'}
+    else:
+        return FileResponse(path=file_path, filename='usericon.jpg')
 
 
 @router.delete("/deleteFile/{file_name}")

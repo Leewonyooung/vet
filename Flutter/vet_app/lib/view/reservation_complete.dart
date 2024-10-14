@@ -13,7 +13,7 @@ class ReservationComplete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final queryvalue = Get.arguments;
-    var value;
+    List value=[];
     makervalue == null ? value = queryvalue : value = makervalue;
     final Completer<GoogleMapController> mapController = // 구글지도 맵
         Completer<GoogleMapController>();

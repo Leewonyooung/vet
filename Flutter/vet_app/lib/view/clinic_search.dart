@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_info.dart';
@@ -39,8 +40,7 @@ class ClinicSearch extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      height:
-                          MediaQuery.of(context).size.height / 1.4,
+                      height:MediaQuery.of(context).size.height / 1.4,
                       child: ListView.builder(
                         itemCount: vmHandler.clinicSearch.length,
                         itemBuilder: (context, index) {

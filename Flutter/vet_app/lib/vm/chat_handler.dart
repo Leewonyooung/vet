@@ -19,10 +19,7 @@ class ChatsHandler extends LoginHandler {
   final lastChats = <Chats>[].obs;
   final status = false.obs;
   final roomName = [].obs;
-  Stream<QuerySnapshot> testsnapshot = FirebaseFirestore.instance
-      .collection("chat")
-      .where('clinic', isEqualTo: 'adfki125')
-      .snapshots();
+  Stream<QuerySnapshot> testsnapshot =  FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: 'adfki125').snapshots();
   List<Chatroom> result = [];
   ScrollController listViewContoller = ScrollController();
 
@@ -33,6 +30,14 @@ class ChatsHandler extends LoginHandler {
   void onInit() async {
     super.onInit();
     await getAllData();
+  }
+
+  chatsClear()async{
+    rooms.clear();
+    chats.clear();
+    roomName.clear();
+    lastChats.clear();
+    lastchatroom.clear();
   }
 
   DateTime parseTime(String timeStr) {
@@ -60,7 +65,6 @@ class ChatsHandler extends LoginHandler {
     String endTime = dataConvertedJSON['results'][0][6];
     DateTime time1 = parseTime(startTime);
     DateTime time2 = parseTime(endTime);
-    Duration durationBetween = time2.difference(time1);
     DateTime resetTime1 = DateTime(time1.year, time1.month, time1.day, time1.hour, time1.minute);
     DateTime resetTime2 = DateTime(time2.year, time2.month, time2.day, time2.hour, time2.minute);
     if(DateTime.now().hour >resetTime1.hour && DateTime.now().hour < resetTime2.hour){
@@ -72,18 +76,17 @@ class ChatsHandler extends LoginHandler {
     show.value = true;
     update();
   }
-
-  getAllData() async {
+  getAllData() async{
     await makeChatRoom();
     await queryLastChat();
     await getlastName();
   }
 
-  getClinicName(String name) async {
-    var url =
-        Uri.parse('http://127.0.0.1:8000/clinic/getclinicname?name=$name');
-    var response = await http.get(url);
-    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+  getClinicName(String name) async{
+     var url = Uri.parse(
+          'http://127.0.0.1:8000/clinic/getclinicname?name=$name');
+      var response = await http.get(url);
+      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     currentClinicId.value = dataConvertedJSON['results'][0];
     update();
   }
@@ -125,13 +128,10 @@ class ChatsHandler extends LoginHandler {
     //         lastChats.value = returnResult;
     //       },);
     // }});
-    List<Chats> returnResult = [];
+    List<Chats> returnResult=[];
     result.clear();
-    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-        .instance
-        .collection("chat")
-        .where('user', isEqualTo: box.read('userEmail'))
-        .get();
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await FirebaseFirestore.instance.collection("chat").where('user',isEqualTo: box.read('userEmail')).get();
     var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
     for (int i = 0; i < tempresult.length; i++) {
       Chatroom chatroom = Chatroom(
@@ -163,9 +163,8 @@ class ChatsHandler extends LoginHandler {
     }
   }
 
-  firstChatRoom(id, image) async {
-    final response =
-        await http.get(Uri.parse('http://127.0.0.1:8000/clinic/view/$image'));
+  firstChatRoom(id, image) async{
+    final response = await http.get(Uri.parse('http://127.0.0.1:8000/clinic/view/$image'));
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/temp_image.jpg';
     final file = File(filePath);
@@ -174,7 +173,7 @@ class ChatsHandler extends LoginHandler {
     await firebaseStorage.putFile(file);
     String downloadURL = await firebaseStorage.getDownloadURL();
 
-    _rooms
+   _rooms
         .doc("${id}_${box.read('userEmail')}")
         // .collection('chats')
         .set({
@@ -185,10 +184,7 @@ class ChatsHandler extends LoginHandler {
   }
 
   makeChatRoom() async {
-    _rooms
-        .where('user', isEqualTo: box.read('userEmail'))
-        .snapshots()
-        .listen((event) {
+    _rooms.where('user',isEqualTo: box.read('userEmail')).snapshots().listen((event) {
       rooms.value = event.docs
           .map(
             (doc) => Chatroom(
@@ -215,14 +211,12 @@ class ChatsHandler extends LoginHandler {
   }
 
   isToday() async {
-    if (chats.isEmpty) {
+    if(chats.isEmpty){
       return false;
     }
     bool istoday = true;
-    chats[chats.length - 1].timestamp.toString().substring(0, 10) ==
-            DateTime.now().toString().substring(0, 10)
-        ? istoday
-        : istoday = false;
+    chats[chats.length-1].timestamp.toString().substring(0,10) == DateTime.now().toString().substring(0,10)?
+    istoday : istoday = false;
     return istoday;
   }
 
@@ -236,15 +230,15 @@ class ChatsHandler extends LoginHandler {
     bool istoday = await isToday();
     if (!istoday) {
       await _rooms
-          .doc("${currentClinicId.value}_${box.read('userEmail')}")
-          .collection('chats')
-          .add({
-        'reciever': chat.reciever,
-        'sender': chat.sender,
-        'text': "set${DateTime.now().toString().substring(0, 10)}time",
-        'timestamp': DateTime.now().toString(),
-      });
-      await queryLastChat();
+        .doc("${currentClinicId.value}_${box.read('userEmail')}")
+        .collection('chats')
+        .add({
+      'reciever': chat.reciever,
+      'sender': chat.sender,
+      'text': "set${DateTime.now().toString().substring(0,10)}time",
+      'timestamp': DateTime.now().toString(),
+    });
+    await queryLastChat();
     }
 
     _rooms
