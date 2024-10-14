@@ -4,13 +4,17 @@ import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/reservation_complete.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
+import 'package:vet_app/vm/reservation_handler.dart';
 
 // 긴급 예약 확정페이지
 class MakeReservation extends StatelessWidget {
   MakeReservation({super.key});
   final LoginHandler loginHandler = Get.put(LoginHandler());
   final PetHandler petHandler = Get.put(PetHandler());
+  final ReservationHandler reservationHandler = Get.put(ReservationHandler());
   final value = Get.arguments;
+  
+  get borderList => Colors.black;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,7 @@ class MakeReservation extends StatelessWidget {
                         petHandler.fetchPets(userId);
                       }
                     },
+                    // 반려동물 추가 카드
                     child: const Card(
                       elevation: 4,
                       margin: EdgeInsets.all(8),
@@ -77,49 +82,65 @@ class MakeReservation extends StatelessWidget {
                 String baseUrl = 'http://127.0.0.1:8000'; // 서버 주소
                 String imageUrl =
                     '$baseUrl/pet/uploads/${pet.image}'; // 이미지 경로 조합
-
-                return Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.all(8),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    width: 300,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 이미지 불러오기 (왼쪽)
-                        Image.network(
-                          imageUrl,
-                          height: 150,
-                          width: 150,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.error,
-                              size: 150,
-                            ); // 이미지 로드 실패 시
-                          },
-                        ),
-                        const SizedBox(width: 10), // 이미지와 텍스트 사이 간격
-                        // 텍스트 정보 (오른쪽)
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                pet.name,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text('종류: ${pet.speciesType}'),
-                              Text('성별: ${pet.gender}'),
-                            ],
+                // 반려동물 표시해주는 카드 
+                return GestureDetector(
+                  onTap: () {
+                    rebuildBorder(index) {
+                      for (int i = 0; i < petHandler.pets.length; i++) {
+                        borderList[i] = Colors.black;
+                      }
+                        borderList[index] = Colors.lightGreen;
+                      }
+                  },
+                  child: Card(
+                    elevation: 4,
+                    margin: const EdgeInsets.all(8),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      width: 300,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: borderList[index],
+                                width: 2.0,
+                        )
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 이미지 불러오기 (왼쪽)
+                          Image.network(
+                            imageUrl,
+                            height: 150,
+                            width: 150,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
+                                Icons.error,
+                                size: 150,
+                              ); // 이미지 로드 실패 시
+                            },
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 10), // 이미지와 텍스트 사이 간격
+                          // 텍스트 정보 (오른쪽)
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  pet.name,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text('종류: ${pet.speciesType}'),
+                                Text('성별: ${pet.gender}'),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -151,6 +172,7 @@ class MakeReservation extends StatelessWidget {
                         child: const Text('아니오')),
                     ElevatedButton(
                         onPressed: () {
+                          String userId = loginHandler.getStoredEmail();
                           Get.offAll(() => ReservationComplete(), arguments: [
                             value[0], //clinic_id
                             value[1], //clinic_name
@@ -159,6 +181,11 @@ class MakeReservation extends StatelessWidget {
                             value[4], //clinic_time
                             value[5] //clinic_address
                           ]);
+                          reservationHandler.makeReservation(
+                            userId, 
+                            value[0], 
+                            value[4], 
+                            symptomsController.text);
                         },
                         child: const Text('확정')),
                   ]);

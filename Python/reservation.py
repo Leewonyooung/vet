@@ -34,3 +34,16 @@ async def insert_reservation(user_id: str, clinic_id: str, time: str, symptoms: 
     conn.close()
 
     return {'results': 'OK'}
+
+# 예약내역 보여주는 리스트
+@router.get('/select_reservation')
+async def select_reservation(user_id: str):
+    conn = connect()
+    curs = conn.cursor()
+
+    sql = 'select clinic.id, clinic.name, clinic.latitude, clinic.longitude, reservation.time, clinic.address from reservation , clinic where reservation.clinic_id = clinic.id and user_id = %s'
+    curs.execute(sql, (user_id))
+    conn.commit()
+    conn.close()
+
+    return {'results': 'OK'}

@@ -85,7 +85,7 @@ class Mypage extends StatelessWidget {
                 }
               });
         })
-        : Center(child: Text('로그인이 필요합니다.'),)
+        : const Center(child: Text('로그인이 필요합니다.'),)
         );
   }
   //ff
