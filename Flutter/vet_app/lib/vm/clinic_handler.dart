@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +8,7 @@ import 'package:vet_app/vm/treatment_handler.dart';
 class ClinicHandler extends TreatmentHandler {
   var clinicSearch = <Clinic>[].obs;
   var clinicDetail = <Clinic>[].obs;
+  TextEditingController searchbarController = TextEditingController();
 
   RxString currentIndex = ''.obs;
 
@@ -16,6 +18,14 @@ class ClinicHandler extends TreatmentHandler {
     await getAllClinic();
     await checkLocationPermission();
   }
+  
+  @override
+  void onClose()async{
+    searchbarController.clear();
+    searchbarController.dispose();
+    super.onClose();
+  }
+
 
   updateCurrentIndex(String str) {
     currentIndex.value = str;
@@ -62,7 +72,6 @@ class ClinicHandler extends TreatmentHandler {
 
 //  // 병원 상세 정보
   getClinicDetail(String clinicid)async{
-    // clinicDetail.clear();
     var url = Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$clinicid');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -96,11 +105,8 @@ class ClinicHandler extends TreatmentHandler {
   }
 
   // 병원 검색 기능 => 검색어를 name, address 두 컬럼에서 찾음
-  searchbarClinic(String searchkeyword)async{
-    if(searchkeyword.isEmpty){ //검색어 없을때 전부 불러오기
-      await getAllClinic();
-    }
-    var url = Uri.parse('http://127.0.0.1:8000/clinic/select_search?word=$searchkeyword');
+  searchbarClinic()async{
+    var url = Uri.parse('http://127.0.0.1:8000/clinic/select_search?word=${searchbarController.text.trim()}');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results']; 
@@ -134,8 +140,14 @@ class ClinicHandler extends TreatmentHandler {
     }
     }
     clinicSearch.value = returnData;
-    update();
   }
 
+    searchMGT(){
+      if(searchbarController.text.trim().isEmpty){
+        getAllClinic();
+      }else{
+        searchbarClinic();
+      }
+    }
 
 }
