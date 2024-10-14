@@ -22,28 +22,29 @@ class UserHandler extends LocationHandler {
     var url =
         Uri.parse('http://127.0.0.1:8000/mypage/select_mypage?id=$userid');
     var response = await http.get(url);
-      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      var result = dataConvertedJSON['result'];
-       List<UserData> returnData =[];
-    if(result !=null){
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['result'];
+    List<UserData> returnData = [];
+    if (result != null) {
       mypageUserInfo.clear();
-    String? id = result[0];
-    String password = result[1];
-    String image = result[2];
-    String name = result[3];
-    returnData
-        .add(UserData(password: password, image: image, name: name, id: id));
-    mypageUserInfo.value = returnData;
+      String? id = result[0];
+      String password = result[1];
+      String image = result[2];
+      String name = result[3];
+      returnData
+          .add(UserData(password: password, image: image, name: name, id: id));
+      mypageUserInfo.value = returnData;
     }
   }
 
-    // user name update - mypage update
-  updateUserName(String name, String id)async{
-  var url = Uri.parse('http://127.0.0.1:8000/mypage/name_update?name=$name&id=$id');
-  var response = await http.get(url);
-  var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-  var result = dataConvertedJSON['result'];
-  return result;
+  // user name update - mypage update
+  updateUserName(String name, String id) async {
+    var url =
+        Uri.parse('http://127.0.0.1:8000/mypage/name_update?name=$name&id=$id');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['result'];
+    return result;
   }
 
 // user name image update - mypage update
@@ -54,7 +55,6 @@ class UserHandler extends LocationHandler {
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];
-    return result; 
+    return result;
   }
-
-  }
+}

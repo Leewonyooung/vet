@@ -20,13 +20,13 @@ class Chatroom {
   }
 
   factory Chatroom.fromFirestore(QueryDocumentSnapshot<Object?> doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>; // 문서 데이터를 맵으로 가져오기
+    Map<String, dynamic> data =
+        doc.data() as Map<String, dynamic>; // 문서 데이터를 맵으로 가져오기
 
     return Chatroom(
       clinic: data['clinic'] ?? '', // Firestore의 'clinic' 필드를 클래스 필드에 매핑
-      user: data['user'] ?? '',     // 'user' 필드 매핑
-      image: data['image'] ?? '',   // 'image' 필드 매핑
+      user: data['user'] ?? '', // 'user' 필드 매핑
+      image: data['image'] ?? '', // 'image' 필드 매핑
     );
   }
-
 }
