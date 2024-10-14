@@ -12,6 +12,7 @@ import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/view/reservation.dart';
 import 'package:vet_app/vm/chat_handler.dart';
+import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 
@@ -23,6 +24,7 @@ class Navigation extends StatelessWidget {
   final LoginHandler loginHandler = Get.put(LoginHandler());
   final PetHandler petHandler = Get.put(PetHandler());
   final ChatsHandler chatsHandler = Get.put(ChatsHandler());
+  final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
   final RxBool shouldRefresh = false.obs;
 
   @override
@@ -42,6 +44,10 @@ class Navigation extends StatelessWidget {
         backgroundColor: Colors.grey.shade900,
         isVisible: true,
         onItemSelected: (index) {
+          if(index ==1){
+            favoriteHandler.searchbarController.clear();
+            favoriteHandler.getAllClinic();
+          }
           if (index != 0 && index != 1 && !loginHandler.isLoggedIn()) {
             Get.to(() => Login());
           }

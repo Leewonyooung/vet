@@ -160,7 +160,7 @@ class ClinicHandler extends TreatmentHandler {
     } else {
       searchbarClinic();
     }
-
+  }
 
 
 DateTime parseTime(String timeStr) {
@@ -179,9 +179,9 @@ DateTime parseTime(String timeStr) {
     return DateTime(now.year, now.month, now.day, hour, minute);
   }
 
+
   resetTextfield(){
     searchbarController.clear();
     update();
   }
-
 }
