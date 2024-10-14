@@ -19,13 +19,12 @@ class ClinicHandler extends TreatmentHandler {
     await getAllClinic();
     await checkLocationPermission();
   }
-  
+
   @override
   void onClose()async{
     resetTextfield();
     super.onClose();
   }
-
 
   updateCurrentIndex(String str) {
     currentIndex.value = str;
@@ -117,8 +116,9 @@ class ClinicHandler extends TreatmentHandler {
   }
 
   // 병원 검색 기능 => 검색어를 name, address 두 컬럼에서 찾음
-  searchbarClinic()async{
-    var url = Uri.parse('http://127.0.0.1:8000/clinic/select_search?word=${searchbarController.text.trim()}');
+  searchbarClinic() async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/clinic/select_search?word=${searchbarController.text.trim()}');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];
@@ -154,12 +154,11 @@ class ClinicHandler extends TreatmentHandler {
     clinicSearch.value = returnData;
   }
 
-    searchMGT(){
-      if(searchbarController.text.trim().isEmpty){
-        getAllClinic();
-      }else{
-        searchbarClinic();
-      }
+  searchMGT() {
+    if (searchbarController.text.trim().isEmpty) {
+      getAllClinic();
+    } else {
+      searchbarClinic();
     }
 
 

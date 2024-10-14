@@ -19,7 +19,7 @@ class RailHome extends StatelessWidget {
                 backgroundColor: const Color.fromRGBO(241, 239, 239, 1.0),
                 selectedIndex: controller.currentScreenIndex.value,
                 onDestinationSelected: (int index) {
-                 controller.tabController.index = index;
+                controller.tabController.index = index;
                 },
                 labelType: NavigationRailLabelType.selected,
                 destinations: const [
