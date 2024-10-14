@@ -11,7 +11,7 @@ from fastapi.responses import FileResponse
 import pymysql
 import os
 import shutil
-
+import hosts
 mypage_router = APIRouter()
 
 # uploads = 폴더이름
@@ -24,7 +24,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 #192.168.50.91
 def connect():
     conn = pymysql.connect(
-        host='192.168.50.91',
+        host=hosts.vet_academy,
         user='root',
         password='qwer1234',
         charset='utf8',

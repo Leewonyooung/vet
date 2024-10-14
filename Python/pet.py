@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse
 import os
 import pymysql
 import shutil
-
+import hosts
 router = APIRouter()
 
 UPLOAD_DIRECTORY = "uploads/"  # 이미지 저장 경로
@@ -21,7 +21,7 @@ if not os.path.exists(UPLOAD_DIRECTORY):
 
 def connection():
     conn = pymysql.connect(
-        host='192.168.50.91',
+        host=hosts.vet_academy,
         user='root',
         password='qwer1234',
         charset='utf8',

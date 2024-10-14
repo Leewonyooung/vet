@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse
 import pymysql
 import os
 import shutil
-
+import hosts
 
 router = APIRouter()
 
@@ -22,7 +22,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 def connect():
     conn = pymysql.connect(
-        host = "192.168.50.91", 
+        host=hosts.vet_academy,
         user = "root",
         password = "qwer1234",
         db = "veterinarian",
