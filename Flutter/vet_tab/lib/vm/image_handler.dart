@@ -25,14 +25,12 @@ class ImageHandler extends TabVm {
     // for get file name
     List preFilename = imageFile!.path.split('/');
     filename = preFilename[preFilename.length - 1];
-    print("upload file name : $filename");
 
     var response = await request.send();
 
     if(response.statusCode == 200){
-      print("Image uploaded successfully");
+      
     }else{
-      print("Image upload failed");
     }
   }
 

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:vet_app/view/reservation_complete.dart';
+import 'package:vet_app/vm/login_handler.dart';
+import 'package:vet_app/vm/reservation_handler.dart';
 
 class QueryReservation extends StatelessWidget {
-  const QueryReservation({super.key});
+  QueryReservation({super.key});
+  final vmHnadler = Get.put(ReservationHandler());
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +54,11 @@ class QueryReservation extends StatelessWidget {
                                     const Text('예약완료', style: TextStyle(
                                       fontSize: 12
                                     ),),
-                                    Text('예약 시간 : ${clinic.time}', style: const TextStyle(
+                                    Text('예약 시간 : ${clinic.time}', style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold
                                     ),),
-                                    Text('예약 병원 : ${clinic.clinicName}',style: const TextStyle(
+                                    Text('예약 병원 : ${clinic.clinicName}',style: TextStyle(
                                       fontSize: 14,
                                     ),)
                                   ],

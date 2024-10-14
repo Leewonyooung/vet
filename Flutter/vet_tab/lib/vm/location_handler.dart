@@ -9,7 +9,7 @@ import 'package:vet_tab/vm/image_handler.dart';
 
 class LocationHandler extends ImageHandler {
   Completer<GoogleMapController> mapController = Completer();
-  var selectedPosition = LatLng(0.0, 0.0).obs;
+  var selectedPosition = const LatLng(0.0, 0.0).obs;
   var lat = 0.0.obs;
   var long = 0.0.obs;
   String clinicAddress = "";
@@ -23,7 +23,6 @@ class LocationHandler extends ImageHandler {
     if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       var status = await dataConvertedJSON['status'];
-      print(address);
 
       if (status == "OK") {
         String? locationType =
@@ -52,7 +51,6 @@ class LocationHandler extends ImageHandler {
     if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       var status = await dataConvertedJSON['status'];
-      print(address);
 
       if (status == "OK") {
         String? locationType =

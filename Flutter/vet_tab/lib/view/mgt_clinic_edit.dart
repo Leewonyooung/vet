@@ -100,8 +100,8 @@ class MgtClinicEdit extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 50, 20, 0),
                                   child: Text('~',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                                 ),
                                 Padding(
