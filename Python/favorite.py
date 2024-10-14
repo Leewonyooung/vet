@@ -1,7 +1,7 @@
 """
 author: Aeong
 Description: favorite
-Fixed: 24.10.13
+Fixed: 24.10.14
 Usage: Manage favorite
 """
 
@@ -10,7 +10,6 @@ import pymysql
 import hosts
 router = APIRouter()
 
-# MySQL 연결 함수
 def connection():
     conn = pymysql.connect(
         host=hosts.vet_academy,

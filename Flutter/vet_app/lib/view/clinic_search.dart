@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_info.dart';
@@ -34,72 +33,68 @@ class ClinicSearch extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: Obx(
-                      () {
-                          return Column(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height / 1.5,
-                                child: ListView.builder(
-                                  itemCount: vmHandler.clinicSearch.length,
-                                  itemBuilder: (context, index) {
-                                    final clinic = vmHandler.clinicSearch;
-                                    return GestureDetector(
-                                      onTap: () {
-                                        vmHandler.updateCurrentIndex(
-                                            clinic[index].id);
-                                        Get.to(() => ClinicInfo(), arguments: [
-                                          clinic[index].id,
-                                        ]);
-                                      },
-                                      child: Card(
-                                        child: Center(
-                                          child: Row(
+                  child: Obx(() {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height / 1.5,
+                          child: ListView.builder(
+                            itemCount: vmHandler.clinicSearch.length,
+                            itemBuilder: (context, index) {
+                              final clinic = vmHandler.clinicSearch;
+                              return GestureDetector(
+                                onTap: () {
+                                  vmHandler
+                                      .updateCurrentIndex(clinic[index].id);
+                                  Get.to(() => ClinicInfo(), arguments: [
+                                    clinic[index].id,
+                                  ]);
+                                },
+                                child: Card(
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.network(
+                                            'http://127.0.0.1:8000/clinic/view/${clinic[index].image}',
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.3,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.1),
+                                        Expanded(
+                                          child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Image.network(
-                                                  'http://127.0.0.1:8000/clinic/view/${clinic[index].image}',
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.3,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.1),
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      clinic[index].name,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    Text(
-                                                      clinic[index].address,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    )
-                                                  ],
-                                                ),
+                                              Text(
+                                                clinic[index].name,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
+                                              Text(
+                                                clinic[index].address,
+                                                overflow: TextOverflow.ellipsis,
+                                              )
                                             ],
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          );
-                        // }
-                      }),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                    // }
+                  }),
                 ),
               ],
             );

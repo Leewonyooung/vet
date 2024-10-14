@@ -18,7 +18,10 @@ class ChatsHandler extends LoginHandler {
   final lastchatroom = <Chatroom>[].obs;
   final lastChats = <Chats>[].obs;
   final roomName = [].obs;
-  Stream<QuerySnapshot> testsnapshot =  FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: 'adfki125').snapshots();
+  Stream<QuerySnapshot> testsnapshot = FirebaseFirestore.instance
+      .collection("chat")
+      .where('clinic', isEqualTo: 'adfki125')
+      .snapshots();
   List<Chatroom> result = [];
   ScrollController listViewContoller = ScrollController();
 
@@ -30,21 +33,23 @@ class ChatsHandler extends LoginHandler {
     super.onInit();
     await getAllData();
   }
-  showScreen() async{
+
+  showScreen() async {
     show.value = true;
     update();
   }
-  getAllData() async{
+
+  getAllData() async {
     await makeChatRoom();
     await queryLastChat();
     await getlastName();
   }
 
-  getClinicName(String name) async{
-     var url = Uri.parse(
-          'http://127.0.0.1:8000/clinic/getclinicname?name=$name');
-      var response = await http.get(url);
-      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+  getClinicName(String name) async {
+    var url =
+        Uri.parse('http://127.0.0.1:8000/clinic/getclinicname?name=$name');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     currentClinicId.value = dataConvertedJSON['results'][0];
     update();
   }
@@ -86,10 +91,13 @@ class ChatsHandler extends LoginHandler {
     //         lastChats.value = returnResult;
     //       },);
     // }});
-    List<Chats> returnResult=[];
+    List<Chats> returnResult = [];
     result.clear();
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await FirebaseFirestore.instance.collection("chat").where('user',isEqualTo: box.read('userEmail')).get();
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection("chat")
+        .where('user', isEqualTo: box.read('userEmail'))
+        .get();
     var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
     for (int i = 0; i < tempresult.length; i++) {
       Chatroom chatroom = Chatroom(
@@ -121,8 +129,9 @@ class ChatsHandler extends LoginHandler {
     }
   }
 
-  firstChatRoom(id, image) async{
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/clinic/view/$image'));
+  firstChatRoom(id, image) async {
+    final response =
+        await http.get(Uri.parse('http://127.0.0.1:8000/clinic/view/$image'));
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/temp_image.jpg';
     final file = File(filePath);
@@ -131,7 +140,7 @@ class ChatsHandler extends LoginHandler {
     await firebaseStorage.putFile(file);
     String downloadURL = await firebaseStorage.getDownloadURL();
 
-   _rooms
+    _rooms
         .doc("${id}_${box.read('userEmail')}")
         // .collection('chats')
         .set({
@@ -142,7 +151,10 @@ class ChatsHandler extends LoginHandler {
   }
 
   makeChatRoom() async {
-    _rooms.where('user',isEqualTo: box.read('userEmail')).snapshots().listen((event) {
+    _rooms
+        .where('user', isEqualTo: box.read('userEmail'))
+        .snapshots()
+        .listen((event) {
       rooms.value = event.docs
           .map(
             (doc) => Chatroom(
@@ -169,12 +181,14 @@ class ChatsHandler extends LoginHandler {
   }
 
   isToday() async {
-    if(chats.isEmpty){
+    if (chats.isEmpty) {
       return false;
     }
     bool istoday = true;
-    chats[chats.length-1].timestamp.toString().substring(0,10) == DateTime.now().toString().substring(0,10)?
-    istoday : istoday = false;
+    chats[chats.length - 1].timestamp.toString().substring(0, 10) ==
+            DateTime.now().toString().substring(0, 10)
+        ? istoday
+        : istoday = false;
     return istoday;
   }
 
@@ -188,15 +202,15 @@ class ChatsHandler extends LoginHandler {
     bool istoday = await isToday();
     if (!istoday) {
       await _rooms
-        .doc("${currentClinicId.value}_${box.read('userEmail')}")
-        .collection('chats')
-        .add({
-      'reciever': chat.reciever,
-      'sender': chat.sender,
-      'text': "set${DateTime.now().toString().substring(0,10)}time",
-      'timestamp': DateTime.now().toString(),
-    });
-    await queryLastChat();
+          .doc("${currentClinicId.value}_${box.read('userEmail')}")
+          .collection('chats')
+          .add({
+        'reciever': chat.reciever,
+        'sender': chat.sender,
+        'text': "set${DateTime.now().toString().substring(0, 10)}time",
+        'timestamp': DateTime.now().toString(),
+      });
+      await queryLastChat();
     }
 
     _rooms

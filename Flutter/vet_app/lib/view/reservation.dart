@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vet_app/view/make_reservation.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 import 'package:get/get.dart';
+
 // 긴급 예약 페이지
 class Reservation extends StatelessWidget {
   Reservation({super.key});
@@ -26,8 +27,7 @@ class Reservation extends StatelessWidget {
                   return const Center(
                     child: Text('예약가능한 병원이 없습니다.'),
                   );
-                }
-                else {
+                } else {
                   return Obx(() {
                     return ListView.builder(
                         itemCount: vmHnadler.availableclinic.length,
@@ -45,7 +45,7 @@ class Reservation extends StatelessWidget {
                                 // Text('  ${clinic.address}'),
                                 ElevatedButton(
                                   onPressed: () {
-                                    Get.to(() =>  MakeReservation(), arguments: [
+                                    Get.to(() => MakeReservation(), arguments: [
                                       clinic.id,
                                       clinic.name,
                                       clinic.latitude,
