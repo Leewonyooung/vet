@@ -60,7 +60,7 @@ class ClinicInfo extends StatelessWidget {
                                   children: [
                                     Image.network(
                                       'http://127.0.0.1:8000/clinic/view/${result[0].image}',
-                                      errorBuilder: (context, error, stackTrace) => Text('Image'),
+                                      errorBuilder: (context, error, stackTrace) => const Text('Image'),
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.4 *
@@ -72,9 +72,12 @@ class ClinicInfo extends StatelessWidget {
                                       children: [
                                         // 지도 보는 버튼
                                         IconButton(
-                                            onPressed: () => Get.to(
-                                                () => ClinicLocation(),
-                                                arguments: [result[0].id]),
+                                            onPressed: () async{ 
+                                              await favoriteHandler.getClinicDetail();
+                                              await vmHandler.checkLocationPermission();
+                                              await favoriteHandler.maploading(favoriteHandler.clinicDetail[0].latitude, favoriteHandler.clinicDetail[0].longitude);
+                                              Get.to(() => ClinicLocation(),
+                                                arguments: [result[0].id]);},
                                             icon: const Icon(
                                                 Icons.pin_drop_outlined)),
 

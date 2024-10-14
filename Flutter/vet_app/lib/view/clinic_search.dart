@@ -6,9 +6,7 @@ import 'package:vet_app/vm/favorite_handler.dart';
 
 class ClinicSearch extends StatelessWidget {
   ClinicSearch({super.key});
-
-  final TextEditingController searchKeywardController = TextEditingController();
-  final FavoriteHandler vmHandler = Get.put(FavoriteHandler());
+  final FavoriteHandler vmHandler = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +18,7 @@ class ClinicSearch extends StatelessWidget {
           padding: EdgeInsets.only(left:12.0),
           child: Icon(Icons.search_outlined, size: 25,),
         ),
-        controller: searchKeywardController,
+        controller: vmHandler.searchbarController,
         onChanged: (value) {
           if (value.isNotEmpty) {
             vmHandler.searchbarClinic();

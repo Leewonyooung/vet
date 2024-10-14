@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vet_tab/view/mgt_clinic_map.dart';
-import 'package:vet_tab/vm/chat_handler.dart';
 import 'package:vet_tab/vm/clinic_handler.dart';
 
 class MgtClinicAdd extends StatelessWidget {
@@ -282,7 +281,7 @@ class MgtClinicAdd extends StatelessWidget {
                                             onPressed: () {
                                               clinicHandler.updateAddress(
                                                   addressController.text);
-                                              Get.to(() => MgtClinicMap(),
+                                              Get.to(() => const MgtClinicMap(),
                                                       arguments:
                                                           addressController.text
                                                                   .trim()

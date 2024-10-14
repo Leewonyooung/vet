@@ -54,11 +54,11 @@ class QueryReservation extends StatelessWidget {
                                     const Text('예약완료', style: TextStyle(
                                       fontSize: 12
                                     ),),
-                                    Text('예약 시간 : ${clinic.time}', style: TextStyle(
+                                    Text('예약 시간 : ${clinic.time}', style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold
                                     ),),
-                                    Text('예약 병원 : ${clinic.clinicName}',style: TextStyle(
+                                    Text('예약 병원 : ${clinic.clinicName}',style: const TextStyle(
                                       fontSize: 14,
                                     ),)
                                   ],

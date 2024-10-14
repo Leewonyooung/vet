@@ -265,7 +265,7 @@ class MgtClinicEdit extends StatelessWidget {
                                         suffixIcon: IconButton(
                                             onPressed: () {
                                               clinicHandler.updateAddress(addressController.text);
-                                              Get.to(()=> MgtClinicMap(), arguments:
+                                              Get.to(()=> const MgtClinicMap(), arguments:
                                               addressController.text.trim().isNotEmpty
                                               ? addressController.text
                                               : " ")?.then((value) {

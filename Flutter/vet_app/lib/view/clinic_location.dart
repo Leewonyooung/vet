@@ -17,11 +17,8 @@ class ClinicLocation extends StatelessWidget {
   Widget build(BuildContext context) {
     final Completer<GoogleMapController> mapController =
         Completer<GoogleMapController>();
-    final value = Get.arguments ?? "__";
-    vmHandler.checkLocationPermission();
-    vmHandler.getClinicDetail();
     final result = vmHandler.clinicDetail[0];
-
+    
     // 0=병원id
 
     return Scaffold(

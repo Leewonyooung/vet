@@ -135,8 +135,8 @@ class ClinicHandler extends LoginHandler{
   }
 
 
-  opDateSelection(BuildContext context, bool isStartDate) async {
-    await initializeLocale();
+  opDateSelection(BuildContext context, bool isStartDate)  {
+    initializeLocale();
     DateTime tempDate = selectedDate;
     showCupertinoModalPopup(
       context: context,

@@ -131,8 +131,7 @@ class LoginHandler extends UserHandler {
     await GoogleSignIn().signOut();
     box.write('userEmail', "");
     Get.find<PetHandler>().clearPet();
-    // Get.find<ChatsHandler>().chatsClear();
-    Get.delete<ChatsHandler>();
+    Get.find<ChatsHandler>().chatsClear();
     update();
   }
 }

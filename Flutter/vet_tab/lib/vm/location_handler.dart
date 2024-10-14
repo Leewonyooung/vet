@@ -76,8 +76,6 @@ class LocationHandler extends ImageHandler {
     lat.value = location.latitude;
     long.value = location.longitude;
     await fetchAddressFromLatLng(location.latitude, location.longitude);
-    print(lat.value);
-    print(long.value);
   }
 
   // get the longpressed loaction address by using lat and long extracted from longpressGoogleMap function 
@@ -87,7 +85,6 @@ class LocationHandler extends ImageHandler {
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     clinicAddress = dataConvertedJSON['results'][0]['formatted_address'];
-    print(clinicAddress);
   }
 
   // error dialog when user did not enter appropriate address (안창빈)
@@ -125,17 +122,13 @@ class LocationHandler extends ImageHandler {
   // update map camera programmatically (안창빈)
   updateMapCameraPro() async {
     if(mapController.isCompleted){
-  try{
-    final GoogleMapController controller = await mapController.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: LatLng(lat.value, long.value),
-      zoom: 18, 
-    )));
-    } catch (e){
-      print("Error updating camera: $e");
-    }
+      final GoogleMapController controller = await mapController.future;
+      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(lat.value, long.value),
+        zoom: 18, 
+      )));
+      
     }else{
-      print("Map controller is not ready.");
     }
   }
 
