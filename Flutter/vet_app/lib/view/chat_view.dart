@@ -34,7 +34,6 @@ class ChatView extends StatelessWidget {
       vmHandler.listViewContoller
           .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent + 80);
     });
-
     return Column(
       children: [
         SizedBox(
