@@ -39,7 +39,7 @@ class MakeReservation extends StatelessWidget {
                   return GestureDetector(
                     onTap: () async {
                       // PetRegister 페이지에서 돌아올 때 결과 확인
-                      var result = await Get.to(() =>  PetRegister());
+                      var result = await Get.to(() => PetRegister());
 
                       // 등록 후 화면 갱신
                       if (result == true) {
