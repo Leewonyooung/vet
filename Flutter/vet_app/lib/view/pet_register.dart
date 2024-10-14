@@ -16,16 +16,25 @@ class PetRegister extends StatelessWidget {
   final TextEditingController idController = TextEditingController();
   final TextEditingController birthdayController = TextEditingController();
   final TextEditingController featuresController = TextEditingController();
+
+  // 성별 선택을 위한 변수
   final RxString selectedGender = ''.obs;
+  // 이미지 파일을 위한 변수
   final Rx<File?> image = Rx<File?>(null);
 
   @override
   Widget build(BuildContext context) {
+    // 종 목록 불러오기
     speciesHandler.loadSpeciesTypes();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('반려동물 등록', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          '반려동물 등록',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: Colors.blue,
         elevation: 0,
       ),
@@ -36,25 +45,39 @@ class PetRegister extends StatelessWidget {
           children: [
             _buildImagePicker(),
             const SizedBox(height: 24),
-            _buildTextField(nameController, '이름', Icons.pets),
+            _buildTextField(
+              nameController,
+              '이름',
+              Icons.pets,
+            ),
             const SizedBox(height: 16),
-            _buildTextField(idController, 'ID', Icons.badge),
+            _buildTextField(
+              idController,
+              'ID',
+              Icons.badge,
+            ),
             const SizedBox(height: 16),
             _buildDropdown(
-                '종류',
-                speciesHandler.selectedSpeciesType,
-                speciesHandler.speciesTypes,
-                (newValue) => speciesHandler.setSpeciesType(newValue)),
+              '종류',
+              speciesHandler.selectedSpeciesType,
+              speciesHandler.speciesTypes,
+              (newValue) => speciesHandler.setSpeciesType(newValue),
+            ),
             const SizedBox(height: 16),
             _buildDropdown(
-                '세부 종류',
-                speciesHandler.selectedSpeciesCategory,
-                speciesHandler.speciesCategories,
-                (newValue) => speciesHandler.setSpeciesCategory(newValue)),
+              '세부 종류',
+              speciesHandler.selectedSpeciesCategory,
+              speciesHandler.speciesCategories,
+              (newValue) => speciesHandler.setSpeciesCategory(newValue),
+            ),
             const SizedBox(height: 16),
             _buildDatePicker(context),
             const SizedBox(height: 16),
-            _buildTextField(featuresController, '특징', Icons.description),
+            _buildTextField(
+              featuresController,
+              '특징',
+              Icons.description,
+            ),
             const SizedBox(height: 16),
             _buildGenderSelection(),
             const SizedBox(height: 32),
@@ -65,6 +88,9 @@ class PetRegister extends StatelessWidget {
     );
   }
 
+  // --- Functions ---
+
+  // 이미지 선택
   _buildImagePicker() {
     return Obx(() {
       return Center(
@@ -82,7 +108,11 @@ class PetRegister extends StatelessWidget {
             backgroundImage:
                 image.value != null ? FileImage(image.value!) : null,
             child: image.value == null
-                ? const Icon(Icons.add_a_photo, size: 40, color: Colors.grey)
+                ? const Icon(
+                    Icons.add_a_photo,
+                    size: 40,
+                    color: Colors.grey,
+                  )
                 : null,
           ),
         ),
@@ -90,6 +120,7 @@ class PetRegister extends StatelessWidget {
     });
   }
 
+  // 텍스트 필드
   _buildTextField(
       TextEditingController controller, String label, IconData icon) {
     return TextField(
@@ -104,6 +135,7 @@ class PetRegister extends StatelessWidget {
     );
   }
 
+  // 드롭다운 버튼
   _buildDropdown(String label, Rx<String?> selectedValue, List<String> items,
       Function(String?) onChanged) {
     return Obx(() => DropdownButtonFormField<String>(
@@ -126,6 +158,7 @@ class PetRegister extends StatelessWidget {
         ));
   }
 
+  // 날짜 선택
   _buildDatePicker(BuildContext context) {
     return TextField(
       controller: birthdayController,
@@ -151,6 +184,7 @@ class PetRegister extends StatelessWidget {
     );
   }
 
+  // 성별 선택
   _buildGenderSelection() {
     return Obx(() => Row(
           children: [
@@ -174,6 +208,7 @@ class PetRegister extends StatelessWidget {
         ));
   }
 
+  // 등록 버튼
   _buildRegisterButton() {
     return SizedBox(
       width: double.infinity,
@@ -197,11 +232,17 @@ class PetRegister extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: const Text('등록하기', style: TextStyle(fontSize: 18)),
+        child: const Text(
+          '등록하기',
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
       ),
     );
   }
 
+  // 입력값 확인
   _validateInputs() {
     if (nameController.text.trim().isEmpty ||
         idController.text.trim().isEmpty ||
@@ -209,12 +250,16 @@ class PetRegister extends StatelessWidget {
         speciesHandler.selectedSpeciesCategory.value == null ||
         birthdayController.text.trim().isEmpty ||
         selectedGender.value.isEmpty) {
-      Get.snackbar('오류', '모든 필드를 입력해주세요.');
+      Get.snackbar(
+        '오류',
+        '모든 필드를 입력해주세요.',
+      );
       return false;
     }
     return true;
   }
 
+  // Pet 객체 생성
   _createPet() {
     return Pet(
       id: idController.text.trim(),

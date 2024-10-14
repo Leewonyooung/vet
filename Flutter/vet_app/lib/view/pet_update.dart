@@ -18,7 +18,10 @@ class PetUpdate extends StatelessWidget {
   final TextEditingController idController = TextEditingController();
   final TextEditingController birthdayController = TextEditingController();
   final TextEditingController featuresController = TextEditingController();
+
+  // 성별 선택을 위한 변수
   final RxString selectedGender = ''.obs;
+  // 이미지 파일을 위한 변수
   final Rx<File?> image = Rx<File?>(null);
 
   @override
@@ -40,7 +43,12 @@ class PetUpdate extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('반려동물 정보 수정', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          '반려동물 정보 수정',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: Colors.blue,
         elevation: 0,
       ),
@@ -51,9 +59,17 @@ class PetUpdate extends StatelessWidget {
           children: [
             _buildImagePicker(),
             const SizedBox(height: 24),
-            _buildTextField(nameController, '이름', Icons.pets),
+            _buildTextField(
+              nameController,
+              '이름',
+              Icons.pets,
+            ),
             const SizedBox(height: 16),
-            _buildTextField(idController, 'ID', Icons.badge),
+            _buildTextField(
+              idController,
+              'ID',
+              Icons.badge,
+            ),
             const SizedBox(height: 16),
             _buildDropdown('종류', speciesHandler.selectedSpeciesType,
                 speciesHandler.speciesTypes, (newValue) {
@@ -72,7 +88,11 @@ class PetUpdate extends StatelessWidget {
             const SizedBox(height: 16),
             _buildDatePicker(context),
             const SizedBox(height: 16),
-            _buildTextField(featuresController, '특징', Icons.description),
+            _buildTextField(
+              featuresController,
+              '특징',
+              Icons.description,
+            ),
             const SizedBox(height: 16),
             _buildGenderSelection(),
             const SizedBox(height: 32),
@@ -83,6 +103,9 @@ class PetUpdate extends StatelessWidget {
     );
   }
 
+  // --- Functions ---
+
+  // 이미지 선택
   _buildImagePicker() {
     return Obx(() {
       return Center(
@@ -105,7 +128,11 @@ class PetUpdate extends StatelessWidget {
                         as ImageProvider
                     : null),
             child: (image.value == null && pet.image?.isEmpty != false)
-                ? const Icon(Icons.add_a_photo, size: 40, color: Colors.grey)
+                ? const Icon(
+                    Icons.add_a_photo,
+                    size: 40,
+                    color: Colors.grey,
+                  )
                 : null,
           ),
         ),
@@ -113,6 +140,7 @@ class PetUpdate extends StatelessWidget {
     });
   }
 
+  // 텍스트 필드
   _buildTextField(TextEditingController controller, String label, IconData icon,
       {bool enabled = true}) {
     return TextField(
@@ -128,6 +156,7 @@ class PetUpdate extends StatelessWidget {
     );
   }
 
+  // 드롭다운 버튼
   _buildDropdown(String label, Rx<String?> selectedValue, List<String> items,
       Function(String?) onChanged) {
     return Obx(() => DropdownButtonFormField<String>(
@@ -150,6 +179,7 @@ class PetUpdate extends StatelessWidget {
         ));
   }
 
+  // 날짜 선택
   _buildDatePicker(BuildContext context) {
     return TextField(
       controller: birthdayController,
@@ -175,6 +205,7 @@ class PetUpdate extends StatelessWidget {
     );
   }
 
+  // 성별 선택
   _buildGenderSelection() {
     return Obx(() => Row(
           children: [
@@ -198,6 +229,7 @@ class PetUpdate extends StatelessWidget {
         ));
   }
 
+  // 수정 버튼
   _buildUpdateButton() {
     return SizedBox(
       width: double.infinity,
@@ -209,7 +241,10 @@ class PetUpdate extends StatelessWidget {
             if (success) {
               Get.back(result: true);
             } else {
-              Get.snackbar('오류', '반려동물 정보 수정에 실패했습니다.');
+              Get.snackbar(
+                '오류',
+                '반려동물 정보 수정에 실패했습니다.',
+              );
             }
           }
         },
@@ -221,23 +256,33 @@ class PetUpdate extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: const Text('수정하기', style: TextStyle(fontSize: 18)),
+        child: const Text(
+          '수정하기',
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
       ),
     );
   }
 
+  // 입력값 확인
   _validateInputs() {
     if (nameController.text.trim().isEmpty ||
         speciesHandler.selectedSpeciesType.value == null ||
         speciesHandler.selectedSpeciesCategory.value == null ||
         birthdayController.text.trim().isEmpty ||
         selectedGender.value.isEmpty) {
-      Get.snackbar('오류', '모든 필드를 입력해주세요.');
+      Get.snackbar(
+        '오류',
+        '모든 필드를 입력해주세요.',
+      );
       return false;
     }
     return true;
   }
 
+  // 수정된 Pet 객체 생성
   _createUpdatedPet() {
     return Pet(
       id: pet.id,
