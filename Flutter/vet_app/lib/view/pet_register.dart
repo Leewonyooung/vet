@@ -4,6 +4,7 @@ import 'package:vet_app/model/pet.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/species_handler.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'dart:io';
 
 class PetRegister extends StatelessWidget {
@@ -24,146 +25,207 @@ class PetRegister extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('반려동물 등록'),
+        title: const Text('반려동물 등록', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: '이름'),
-            ),
+            _buildImagePicker(),
+            const SizedBox(height: 24),
+            _buildTextField(nameController, '이름', Icons.pets),
             const SizedBox(height: 16),
-            TextField(
-              controller: idController,
-              decoration: const InputDecoration(labelText: 'ID'),
-            ),
+            _buildTextField(idController, 'ID', Icons.badge),
             const SizedBox(height: 16),
-            Obx(() => DropdownButtonFormField<String>(
-                  value: speciesHandler.selectedSpeciesType.value,
-                  items: speciesHandler.speciesTypes.map((String type) {
-                    return DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(type),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    speciesHandler.setSpeciesType(newValue);
-                  },
-                  decoration: const InputDecoration(labelText: '종류'),
-                  hint: const Text('종류를 선택하세요'),
-                  isExpanded: true,
-                  menuMaxHeight: 300,
-                )),
+            _buildDropdown(
+                '종류',
+                speciesHandler.selectedSpeciesType,
+                speciesHandler.speciesTypes,
+                (newValue) => speciesHandler.setSpeciesType(newValue)),
             const SizedBox(height: 16),
-            Obx(() => DropdownButtonFormField<String>(
-                  value: speciesHandler.selectedSpeciesCategory.value,
-                  items:
-                      speciesHandler.speciesCategories.map((String category) {
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    speciesHandler.setSpeciesCategory(newValue);
-                  },
-                  decoration: const InputDecoration(labelText: '세부 종류'),
-                  hint: const Text('세부 종류를 선택하세요'),
-                  isExpanded: true,
-                  menuMaxHeight: 300,
-                )),
+            _buildDropdown(
+                '세부 종류',
+                speciesHandler.selectedSpeciesCategory,
+                speciesHandler.speciesCategories,
+                (newValue) => speciesHandler.setSpeciesCategory(newValue)),
             const SizedBox(height: 16),
-            TextField(
-              controller: birthdayController,
-              decoration: const InputDecoration(labelText: '생일 (YYYY-MM-DD)'),
-            ),
+            _buildDatePicker(context),
             const SizedBox(height: 16),
-            TextField(
-              controller: featuresController,
-              decoration: const InputDecoration(labelText: '특징'),
-            ),
+            _buildTextField(featuresController, '특징', Icons.description),
             const SizedBox(height: 16),
-            Obx(() => DropdownButtonFormField<String>(
-                  value: selectedGender.value.isNotEmpty
-                      ? selectedGender.value
-                      : null,
-                  items: ['수컷', '암컷'].map((String gender) {
-                    return DropdownMenuItem<String>(
-                      value: gender,
-                      child: Text(gender),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    if (newValue != null) {
-                      selectedGender.value = newValue;
-                    }
-                  },
-                  decoration: const InputDecoration(labelText: '성별'),
-                  hint: const Text('성별을 선택하세요'),
-                )),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                final pickedFile =
-                    await ImagePicker().pickImage(source: ImageSource.gallery);
-                if (pickedFile != null) {
-                  image.value = File(pickedFile.path);
-                }
-              },
-              child: const Text('이미지 선택'),
-            ),
-            Obx(() {
-              if (image.value != null) {
-                return Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    Image.file(image.value!, height: 200),
-                  ],
-                );
-              }
-              return const SizedBox.shrink();
-            }),
+            _buildGenderSelection(),
             const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () async {
-                if (nameController.text.trim().isEmpty ||
-                    idController.text.trim().isEmpty ||
-                    speciesHandler.selectedSpeciesType.value == null ||
-                    speciesHandler.selectedSpeciesCategory.value == null ||
-                    birthdayController.text.trim().isEmpty ||
-                    selectedGender.value.isEmpty) {
-                  Get.snackbar('오류', '모든 필드를 입력해주세요.');
-                  return;
-                }
-
-                final newPet = Pet(
-                  id: idController.text.trim(),
-                  userId: petHandler.box.read('userEmail') ?? '',
-                  name: nameController.text.trim(),
-                  speciesType: speciesHandler.selectedSpeciesType.value!,
-                  speciesCategory:
-                      speciesHandler.selectedSpeciesCategory.value!,
-                  birthday: birthdayController.text.trim(),
-                  features: featuresController.text.trim(),
-                  gender: selectedGender.value,
-                  image: '',
-                );
-
-                final success = await petHandler.addPet(newPet, image.value);
-                if (success) {
-                  Get.back(result: true);
-                } else {
-                  Get.snackbar('오류', '반려동물 등록에 실패했습니다.');
-                }
-              },
-              child: const Text('등록하기'),
-            ),
+            _buildRegisterButton(),
           ],
         ),
       ),
+    );
+  }
+
+  _buildImagePicker() {
+    return Obx(() {
+      return Center(
+        child: GestureDetector(
+          onTap: () async {
+            final pickedFile =
+                await ImagePicker().pickImage(source: ImageSource.gallery);
+            if (pickedFile != null) {
+              image.value = File(pickedFile.path);
+            }
+          },
+          child: CircleAvatar(
+            radius: 80,
+            backgroundColor: Colors.grey[200],
+            backgroundImage:
+                image.value != null ? FileImage(image.value!) : null,
+            child: image.value == null
+                ? const Icon(Icons.add_a_photo, size: 40, color: Colors.grey)
+                : null,
+          ),
+        ),
+      );
+    });
+  }
+
+  _buildTextField(
+      TextEditingController controller, String label, IconData icon) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+
+  _buildDropdown(String label, Rx<String?> selectedValue, List<String> items,
+      Function(String?) onChanged) {
+    return Obx(() => DropdownButtonFormField<String>(
+          value: selectedValue.value,
+          items: items.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            labelText: label,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          isExpanded: true,
+          menuMaxHeight: 300,
+        ));
+  }
+
+  _buildDatePicker(BuildContext context) {
+    return TextField(
+      controller: birthdayController,
+      decoration: InputDecoration(
+        labelText: '생일',
+        prefixIcon: const Icon(Icons.calendar_today),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      readOnly: true,
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime.now(),
+        );
+        if (pickedDate != null) {
+          birthdayController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+        }
+      },
+    );
+  }
+
+  _buildGenderSelection() {
+    return Obx(() => Row(
+          children: [
+            Expanded(
+              child: RadioListTile<String>(
+                title: const Text('수컷'),
+                value: '수컷',
+                groupValue: selectedGender.value,
+                onChanged: (value) => selectedGender.value = value!,
+              ),
+            ),
+            Expanded(
+              child: RadioListTile<String>(
+                title: const Text('암컷'),
+                value: '암컷',
+                groupValue: selectedGender.value,
+                onChanged: (value) => selectedGender.value = value!,
+              ),
+            ),
+          ],
+        ));
+  }
+
+  _buildRegisterButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () async {
+          if (_validateInputs()) {
+            final newPet = _createPet();
+            final success = await petHandler.addPet(newPet, image.value);
+            if (success) {
+              Get.back(result: true);
+            } else {
+              Get.snackbar('오류', '반려동물 등록에 실패했습니다.');
+            }
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: const Text('등록하기', style: TextStyle(fontSize: 18)),
+      ),
+    );
+  }
+
+  _validateInputs() {
+    if (nameController.text.trim().isEmpty ||
+        idController.text.trim().isEmpty ||
+        speciesHandler.selectedSpeciesType.value == null ||
+        speciesHandler.selectedSpeciesCategory.value == null ||
+        birthdayController.text.trim().isEmpty ||
+        selectedGender.value.isEmpty) {
+      Get.snackbar('오류', '모든 필드를 입력해주세요.');
+      return false;
+    }
+    return true;
+  }
+
+  _createPet() {
+    return Pet(
+      id: idController.text.trim(),
+      userId: petHandler.box.read('userEmail') ?? '',
+      name: nameController.text.trim(),
+      speciesType: speciesHandler.selectedSpeciesType.value!,
+      speciesCategory: speciesHandler.selectedSpeciesCategory.value!,
+      birthday: birthdayController.text.trim(),
+      features: featuresController.text.trim(),
+      gender: selectedGender.value,
+      image: '',
     );
   }
 }
