@@ -13,9 +13,6 @@ class ClinicLocation extends StatelessWidget {
   final FavoriteHandler vmHandler = Get.find();
   final ReservationHandler reservationHandler = Get.find();
 
-
-
-
   @override
   Widget build(BuildContext context) {
     final Completer<GoogleMapController> mapController =
@@ -49,8 +46,9 @@ class ClinicLocation extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     children: [
                       GoogleMap(
-                        mapType: MapType.hybrid,
-                        initialCameraPosition: CameraPosition( //
+                        mapType: MapType.normal,
+                        initialCameraPosition: CameraPosition(
+                          //
                           zoom: 15,
                           target: LatLng(
                               vmHandler.currentlat, vmHandler.currentlng),
@@ -65,8 +63,8 @@ class ClinicLocation extends StatelessWidget {
                                   title: result.name,
                                   snippet: result.name), //병원 이름 표시
                               markerId: MarkerId(result.name),
-                              position: LatLng(result.latitude, result.longitude)
-                            ),
+                              position:
+                                  LatLng(result.latitude, result.longitude)),
                           Marker(
                             markerId: const MarkerId('병원'),
                             position: LatLng(
@@ -109,7 +107,9 @@ class ClinicLocation extends StatelessWidget {
                                           ),
                                           //병원 끝나는시간
                                           Text("${result.endTime} 영업종료"),
-                                          Text(vmHandler.durationText)
+                                          // Text(vmHandler.durationText),
+                                          Text(
+                                              "거리 : ${vmHandler.distanceText}"),
                                         ],
                                       ),
                                     )
@@ -117,7 +117,8 @@ class ClinicLocation extends StatelessWidget {
                                 ),
                               ),
                               Visibility(
-                                visible: reservationHandler.resButtonValue.value,
+                                visible:
+                                    reservationHandler.resButtonValue.value,
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: SizedBox(
@@ -125,21 +126,33 @@ class ClinicLocation extends StatelessWidget {
                                         MediaQuery.of(context).size.width * 0.8,
                                     child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.yellowAccent),
+                                            backgroundColor:
+                                                Colors.yellowAccent),
                                         onPressed: () {
-                                          if(vmHandler.isLoggedIn() == false){
-                                            Get.to(()=>Login());
-                                          }else{
-                                          Get.to(()=> MakeReservation(),
-                                          arguments: [
-                                      reservationHandler.canReservationClinic[0].id,
-                                      reservationHandler.canReservationClinic[0].name,
-                                      reservationHandler.canReservationClinic[0].latitude,
-                                      reservationHandler.canReservationClinic[0].longitude,
-                                      reservationHandler.canReservationClinic[0].time,
-                                      reservationHandler.canReservationClinic[0].address,
-                                          ]
-                                          );
+                                          if (vmHandler.isLoggedIn() == false) {
+                                            Get.to(() => Login());
+                                          } else {
+                                            Get.to(() => MakeReservation(),
+                                                arguments: [
+                                                  reservationHandler
+                                                      .canReservationClinic[0]
+                                                      .id,
+                                                  reservationHandler
+                                                      .canReservationClinic[0]
+                                                      .name,
+                                                  reservationHandler
+                                                      .canReservationClinic[0]
+                                                      .latitude,
+                                                  reservationHandler
+                                                      .canReservationClinic[0]
+                                                      .longitude,
+                                                  reservationHandler
+                                                      .canReservationClinic[0]
+                                                      .time,
+                                                  reservationHandler
+                                                      .canReservationClinic[0]
+                                                      .address,
+                                                ]);
                                           }
                                         },
                                         child: const Text('예약하기')),

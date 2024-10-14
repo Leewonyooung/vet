@@ -9,7 +9,6 @@ class Splash extends StatefulWidget {
 
   @override
   State<Splash> createState() => _SplashState();
-  
 }
 
 class _SplashState extends State<Splash> {
@@ -19,15 +18,15 @@ class _SplashState extends State<Splash> {
     goScreen();
   }
 
-  goScreen() async{
-    await Future.delayed(const Duration(seconds: 2),()=>Get.to(Navigation()));
+  goScreen() async {
+    await Future.delayed(
+        const Duration(seconds: 2), () => Get.to(() => Navigation()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Image.asset('images/pet_splash.gif')),
+      body: Center(child: Image.asset('images/pet_splash.gif')),
     );
   }
 }

@@ -34,37 +34,50 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+
+  # 라우팅 및 상태 관리
   get: ^4.6.6
+
+  # Firebase 연동
   firebase_core: ^3.6.0
   cloud_firestore: ^5.4.3
   firebase_storage: ^12.3.2
-  persistent_bottom_nav_bar: ^6.2.1 # 네비게이션 바
+
+  # 네비게이션 바
+  persistent_bottom_nav_bar: ^6.2.1
   http: ^1.2.2
-  image_picker: ^1.1.2 #image picker
-  #위도경도
+
+  # image picker
+  image_picker: ^1.1.2
+
+  # 위도경도
   geocoding: ^3.0.0
   geolocator: ^13.0.1
-  #map
+
+  # map
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
+
+  # 사진 업로드시 경로 가져오기
   path_provider: ^2.0.11
 
-  # slider
-  flutter_slidable: ^3.1.1
-  # 별점
-  flutter_rating_bar: ^4.0.1
+  # 구글 로그인 연동
   google_sign_in: ^6.2.1
   firebase_auth: ^5.3.1
 
-  # 갤러리
   carousel_slider: ^5.0.0
-  # getStroage
+
+  # 로그인 정보 앱에 쓰기
   get_storage: ^2.1.1
-  #googlemap
+
+  # googlemap
   google_maps_flutter: ^2.9.0
 
-  #구글맵 route decode
+  # 구글맵 route decode
   flutter_polyline_points: ^2.1.0
+
+  # intl
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

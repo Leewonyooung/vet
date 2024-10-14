@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse
 import pymysql
 import os
 import shutil
-
+import hosts
 
 router = APIRouter()
 
@@ -21,7 +21,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 def connect():
     conn = pymysql.connect(
-        host = "192.168.50.91", 
+        host=hosts.vet_academy,
         user = "root",
         password = "qwer1234",
         db = "veterinarian",
@@ -161,19 +161,20 @@ async def get_user_name(id:str):
 
 # 병원 검색 활용
 @router.get('/select_search')
-async def search_clinic(name:str=None):
+async def select_search(word:str=None):
     try:
         conn = connect()
         curs = conn.cursor()
-        sql = 'select * from clinic where id = %s'
-        curs.execute(sql,(name))
+        sql = 'select * from clinic where name like %s or address like %s'
+        keyword = f"%{word}%"
+        curs.execute(sql,(keyword, keyword))
         rows = curs.fetchall()
         conn.close()
         return{'results' : rows}
     except Exception as e:
         conn.close()
         print("Error : ", e)
-        return{'result' " 'error"}
+        return{'results' " 'error"}
 
 # 상세화면 정보 불러오기
 @router.get('/detail_clinic')
@@ -208,38 +209,7 @@ async def all_clinic():
         print("Error:", e)
         return {'Error' : 'error'}
 
-# 병원 검색 활용
-@router.get('/select_search')
-async def search_clinic(name:str=None):
-    try:
-        conn = connect()
-        curs = conn.cursor()
-        sql = 'select * from clinic where id = %s'
-        curs.execute(sql,(name))
-        rows = curs.fetchall()
-        conn.close()
-        return{'results' : rows}
-    except Exception as e:
-        conn.close()
-        print("Error:", e)
-        return {'Error' : 'error'}
 
-# 상세화면 정보 불러오기
-@router.get('/detail_clinic')
-async def detail_clinic(id: str):
-    try:
-        conn = connect()
-        curs = conn.cursor()
-        sql = "select * from clinic where id=%s"
-        curs.execute(sql,(id))
-        rows = curs.fetchall()
-        conn.close()
-        print(rows)
-        return {'results' : rows} # 결과 값 = list(key값 x)
-    except Exception as e:
-        conn.close()
-        print("Error:", e)
-        return {'Error' : 'error'}
 
 # insert new clinic information to DB (안창빈)
 

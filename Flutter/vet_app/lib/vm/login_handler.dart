@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vet_app/model/userdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_app/view/navigation.dart';
+import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/user_handler.dart';
 
 class LoginHandler extends UserHandler {
@@ -16,13 +17,13 @@ class LoginHandler extends UserHandler {
   String userName = '';
 
   // 로그인 상태 확인
-  bool isLoggedIn() {
+  isLoggedIn() {
     return FirebaseAuth.instance.currentUser != null &&
         getStoredEmail().isNotEmpty;
   }
 
   // GetStorage에서 저장된 이메일을 가져옴
-  String getStoredEmail() {
+  getStoredEmail() {
     return box.read('userEmail') ?? '';
   }
 
@@ -81,7 +82,10 @@ class LoginHandler extends UserHandler {
         await FirebaseAuth.instance.signInWithCredential(credential);
 
     // Navigate to Navigation page after successful sign-in (안창빈)
-    Get.to(Navigation());
+    Get.to(() => Navigation());
+
+    // 로그인 성공 후 반려동물 정보 불러오기
+    await Get.find<PetHandler>().fetchPets(getStoredEmail());
 
     // print(userCredential);
     // Return the UserCredential after successful sign-in (안창빈)
@@ -98,14 +102,7 @@ class LoginHandler extends UserHandler {
     }
   }
 
-  // sign out (안창빈)
-  signOut() async {
-  await FirebaseAuth.instance.signOut();
-  await GoogleSignIn().signOut(); 
-}
-
-
-// query inserted google email from db to differentiate whether email is registered or not  
+// query inserted google email from db to differentiate whether email is registered or not
   userloginCheckJSONData(email) async {
     var url = Uri.parse('http://127.0.0.1:8000/user/selectuser?id=$email');
     var response = await http.get(url);
@@ -127,10 +124,12 @@ class LoginHandler extends UserHandler {
     } else {}
   }
 
-//     signOut() async {
-//   await FirebaseAuth.instance.signOut();
-//   await GoogleSignIn().signOut(); 
-//   box.write('userEmail', "");
-//   update();
-// }
+  // 로그아웃 및 비우기
+  signOut() async {
+    await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
+    box.write('userEmail', "");
+    Get.find<PetHandler>().clearPet();
+    update();
+  }
 }

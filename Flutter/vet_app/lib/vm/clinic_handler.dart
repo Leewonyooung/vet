@@ -1,13 +1,14 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_app/vm/treatment_handler.dart';
 
 class ClinicHandler extends TreatmentHandler {
-  String searchkeyward = "";
   var clinicSearch = <Clinic>[].obs;
   var clinicDetail = <Clinic>[].obs;
+  TextEditingController searchbarController = TextEditingController();
 
   RxString currentIndex = ''.obs;
 
@@ -16,6 +17,13 @@ class ClinicHandler extends TreatmentHandler {
     super.onInit();
     await getAllClinic();
     await checkLocationPermission();
+  }
+
+  @override
+  void onClose() async {
+    searchbarController.clear();
+    searchbarController.dispose();
+    super.onClose();
   }
 
   updateCurrentIndex(String str) {
@@ -62,9 +70,9 @@ class ClinicHandler extends TreatmentHandler {
   }
 
 //  // 병원 상세 정보
-  getClinicDetail(String clinicid)async{
-    // clinicDetail.clear();
-    var url = Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$clinicid');
+  getClinicDetail(String clinicid) async {
+    var url =
+        Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$clinicid');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'][0];
@@ -96,4 +104,50 @@ class ClinicHandler extends TreatmentHandler {
     clinicDetail.value = returnData;
   }
 
+  // 병원 검색 기능 => 검색어를 name, address 두 컬럼에서 찾음
+  searchbarClinic() async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/clinic/select_search?word=${searchbarController.text.trim()}');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    List results = dataConvertedJSON['results'];
+    List<Clinic> returnData = [];
+    if (results.isNotEmpty) {
+      for (int i = 0; i < results.length; i++) {
+        String id = results[i][0];
+        String name = results[i][1];
+        String password = results[i][2];
+        double latitude = results[i][3];
+        double longitude = results[i][4];
+        String startTime = results[i][5];
+        String endTime = results[i][6];
+        String? introduction = results[i][7];
+        String? address = results[i][8];
+        String? phone = results[i][9];
+        String? image = results[i][10];
+
+        returnData.add(Clinic(
+            id: id,
+            name: name,
+            password: password,
+            latitude: latitude,
+            longitude: longitude,
+            startTime: startTime,
+            endTime: endTime,
+            introduction: introduction!,
+            address: address!,
+            phone: phone!,
+            image: image!));
+      }
+    }
+    clinicSearch.value = returnData;
+  }
+
+  searchMGT() {
+    if (searchbarController.text.trim().isEmpty) {
+      getAllClinic();
+    } else {
+      searchbarClinic();
+    }
+  }
 }

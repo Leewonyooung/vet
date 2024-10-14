@@ -7,13 +7,13 @@ Usage: store user acoount information
 
 from fastapi import APIRouter 
 import pymysql
-
+import hosts
 
 router = APIRouter()
 
 def connect():
     conn = pymysql.connect(
-        host='192.168.50.91',
+        host=hosts.vet_academy,
         user='root',
         passwd='qwer1234',
         db='veterinarian',

@@ -7,12 +7,12 @@ Usage: Manage species types and categories
 
 from fastapi import APIRouter, HTTPException
 import pymysql
-
+import hosts
 router = APIRouter()
 
 def connection():
     conn = pymysql.connect(
-        host='192.168.50.91',
+        host=hosts.vet_academy,
         user='root',
         password='qwer1234',
         charset='utf8',
