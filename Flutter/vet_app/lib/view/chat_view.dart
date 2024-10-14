@@ -194,6 +194,7 @@ class ChatView extends StatelessWidget {
 
   inputChat(var temp) async {
     if(vmHandler.currentClinicId.isEmpty) {
+      print(temp[1]);
       await vmHandler.getClinicName(temp[1]);
     }
     Chats inputchat = Chats(
