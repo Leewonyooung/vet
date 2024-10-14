@@ -17,7 +17,7 @@ class ClinicHandler extends TreatmentHandler {
   void onInit() async {
     super.onInit();
     await getAllClinic();
-    await checkLocationPermission();
+    // await checkLocationPermission();
   }
 
   @override
