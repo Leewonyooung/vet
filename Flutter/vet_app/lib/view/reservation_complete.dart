@@ -30,7 +30,10 @@ class ReservationComplete extends StatelessWidget {
             ),
             Text("감사합니다\n 고객님\n${value[1]}의 예약이\n확정되셨습니다."),
             Row(
-              children: [const Icon(Icons.arrow_forward), Text(' 일정 : ${value[4]}')],
+              children: [
+                const Icon(Icons.arrow_forward),
+                Text(' 일정 : ${value[4]}')
+              ],
             ),
             const Text(
               '찾아오시는길',
@@ -72,7 +75,7 @@ class ReservationComplete extends StatelessWidget {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () => Get.to(() =>  QueryReservation()),
+                  onPressed: () => Get.to(() => const QueryReservation()),
                   child: const Text('예약내역'),
                 ),
                 ElevatedButton(

@@ -1,8 +1,8 @@
 """
 author: Aeong
 Description: pet
-Fixed: 2024.10.11
-Usage: 
+Fixed: 24.10.14
+Usage: Manage Pet
 """
 
 from fastapi import APIRouter, HTTPException, File, UploadFile, Form
@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse
 import os
 import pymysql
 import shutil
-
+import hosts
 router = APIRouter()
 
 UPLOAD_DIRECTORY = "uploads/"  # 이미지 저장 경로
@@ -21,7 +21,7 @@ if not os.path.exists(UPLOAD_DIRECTORY):
 
 def connection():
     conn = pymysql.connect(
-        host='192.168.50.91',
+        host=hosts.vet_academy,
         user='root',
         password='qwer1234',
         charset='utf8',
@@ -29,7 +29,7 @@ def connection():
     )
     return conn
 
-# 반려동물 조회 API (GET)
+# 반려동물 조회
 @router.get("/pets")
 async def get_pets(user_id: str):
     conn = connection()
@@ -60,7 +60,7 @@ async def get_pets(user_id: str):
     finally:
         conn.close()
 
-# 반려동물 등록 API (POST)
+# 반려동물 등록
 @router.post("/insert")
 async def add_pet(
     id: str = Form(...),
@@ -71,15 +71,17 @@ async def add_pet(
     birthday: str = Form(...),
     features: str = Form(...),
     gender: str = Form(...),
-    image: UploadFile = File(...)
+    image: UploadFile = File(None)
 ):
-    # 이미지 파일 이름만 추출
-    image_filename = image.filename
-    image_path = os.path.join(UPLOAD_DIRECTORY, image_filename)  # 전체 경로
+    image_filename = ''
+    if image:
+        # 이미지 파일 이름만 추출
+        image_filename = image.filename
+        image_path = os.path.join(UPLOAD_DIRECTORY, image_filename)  # 전체 경로
 
-    # 이미지 저장
-    with open(image_path, "wb") as buffer:
-        shutil.copyfileobj(image.file, buffer)
+        # 이미지 저장
+        with open(image_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
 
     # 데이터베이스에는 파일 이름만 저장
     conn = connection()
@@ -95,10 +97,13 @@ async def add_pet(
             ))
             conn.commit()  # 데이터베이스에 변경사항 저장
             return {"message": "Pet added successfully!"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         conn.close()
 
-# 이미지 제공 API
+# 이미지 업로드
 @router.get("/uploads/{file_name}")
 async def get_file(file_name: str):
     file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
@@ -106,13 +111,67 @@ async def get_file(file_name: str):
         return FileResponse(path=file_path, filename=file_name)
     return {"error": "File not found"}
 
-# 반려동물 삭제 API (DELETE)
-@router.delete("/pets/{pet_id}")
+# 반려동물 수정
+@router.post("/update")
+async def update_pet(
+    id: str = Form(...),
+    user_id: str = Form(...),
+    species_type: str = Form(...),
+    species_category: str = Form(...),
+    name: str = Form(...),
+    birthday: str = Form(...),
+    features: str = Form(...),
+    gender: str = Form(...),
+    image: UploadFile = File(None)
+):
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            if image:
+                # 이미지가 추가된 경우, 새 이미지를 저장하고 파일 이름을 업데이트
+                image_filename = image.filename
+                image_path = os.path.join(UPLOAD_DIRECTORY, image_filename)
+                with open(image_path, "wb") as buffer:
+                    shutil.copyfileobj(image.file, buffer)
+                
+                sql = """
+                    UPDATE pet 
+                    SET species_type = %s, species_category = %s, name = %s, 
+                        birthday = %s, features = %s, gender = %s, image = %s
+                    WHERE id = %s AND user_id = %s
+                """
+                cursor.execute(sql, (
+                    species_type, species_category, name, birthday, 
+                    features, gender, image_filename, id, user_id
+                ))
+            else:
+                # 이미지가 추가되지 않은 경우, 이미지를 제외한 다른 정보만 업데이트
+                sql = """
+                    UPDATE pet 
+                    SET species_type = %s, species_category = %s, name = %s, 
+                        birthday = %s, features = %s, gender = %s
+                    WHERE id = %s AND user_id = %s
+                """
+                cursor.execute(sql, (
+                    species_type, species_category, name, birthday, 
+                    features, gender, id, user_id
+                ))
+            
+            conn.commit()
+            return {"message": "Pet updated successfully!"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
+
+# 반려동물 삭제
+@router.delete("/delete/{pet_id}")
 async def delete_pet(pet_id: str):
     conn = connection()
     try:
         with conn.cursor() as cursor:
-            sql = "DELETE FROM pets WHERE id = %s"
+            sql = "DELETE FROM pet WHERE id = %s"
             result = cursor.execute(sql, (pet_id,))
             conn.commit()
 

@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException, File, UploadFile
 from fastapi.responses import FileResponse
 import pymysql
 import os
-
+import hosts
 router = APIRouter()
 
 UPLOAD_FOLDER = 'uploads'
@@ -19,7 +19,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 # MySQL 연결 함수
 def connect():
     conn = pymysql.connect(
-        host='192.168.50.91',
+        host=hosts.vet_academy,
         user='root',
         password='qwer1234',
         charset='utf8',

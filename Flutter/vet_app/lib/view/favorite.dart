@@ -40,7 +40,23 @@ class Favorite extends StatelessWidget {
               return Card(
                 margin: const EdgeInsets.all(10),
                 child: ListTile(
-                  leading: const Icon(Icons.local_hospital),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      'http://127.0.0.1:8000/clinic/view/${clinic.image}',
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: 60,
+                          height: 60,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.error, color: Colors.red),
+                        );
+                      },
+                    ),
+                  ),
                   title: Text(clinic.name),
                   subtitle: Text('${clinic.address}\n전화: ${clinic.phone}'),
                   onTap: () async {

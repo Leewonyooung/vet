@@ -18,7 +18,7 @@ class PetHandler extends SpeciesHandler {
   }
 
   // 유저 ID를 기반으로 반려동물 정보 가져오기
-  Future<void> fetchPets(String userId) async {
+  fetchPets(String userId) async {
     var url = Uri.parse('http://127.0.0.1:8000/pet/pets?user_id=$userId');
     try {
       var response = await http.get(url);
@@ -53,11 +53,11 @@ class PetHandler extends SpeciesHandler {
   }
 
   // 반려동물 등록 (이미지 파일을 포함)
-  Future<bool> addPet(Pet pet, File? imageFile) async {
+  addPet(Pet pet, File? imageFile) async {
     var url = Uri.parse('http://127.0.0.1:8000/pet/insert');
 
     var request = http.MultipartRequest('POST', url)
-      ..fields['id'] = pet.id!
+      ..fields['id'] = pet.id
       ..fields['user_id'] = pet.userId
       ..fields['species_type'] = pet.speciesType
       ..fields['species_category'] = pet.speciesCategory
@@ -80,5 +80,70 @@ class PetHandler extends SpeciesHandler {
     } else {
       return false;
     }
+  }
+
+  // 반려동물 정보 수정
+  updatePet(Pet pet, File? imageFile) async {
+    var url = Uri.parse('http://127.0.0.1:8000/pet/update');
+
+    var request = http.MultipartRequest('POST', url)
+      ..fields['id'] = pet.id
+      ..fields['user_id'] = pet.userId
+      ..fields['species_type'] = pet.speciesType
+      ..fields['species_category'] = pet.speciesCategory
+      ..fields['name'] = pet.name
+      ..fields['birthday'] = pet.birthday
+      ..fields['features'] = pet.features
+      ..fields['gender'] = pet.gender;
+
+    if (imageFile != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('image', imageFile.path),
+      );
+    }
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      await fetchPets(pet.userId); // 업데이트 후 반려동물 목록 새로고침
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // 반려동물 삭제
+  deletePet(String petId) async {
+    var url = Uri.parse('http://127.0.0.1:8000/pet/delete/$petId');
+    try {
+      var response = await http.delete(url);
+
+      if (response.statusCode == 200) {
+        // 삭제 성공 시 로컬 목록에서도 제거
+        pets.removeWhere((pet) => pet.id == petId);
+        await fetchPets(box.read('userEmail'));
+        return true;
+      } else {
+        // 삭제 실패
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // 반려동물 수정 후 UI에 반영
+  Pet? getPet(String id) {
+    try {
+      return pets.firstWhere((pet) => pet.id == id);
+    } catch (e) {
+      // 해당 ID를 가진 반려동물이 없을 경우 null 반환
+      return null;
+    }
+  }
+
+  clearPet() {
+    pets.clear();
+    update();
   }
 }
