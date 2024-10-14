@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vet_app/view/chat_view.dart';
 import 'package:vet_app/view/clinic_location.dart';
 import 'package:vet_app/view/login.dart';
 import 'package:vet_app/view/make_reservation.dart';
+import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 

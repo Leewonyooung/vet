@@ -45,7 +45,7 @@ return Row(
           return GestureDetector(
             onTap: () async {
               // print(room.user);
-              await chatsHandler.setCurrentUserName(chatsHandler.roomName[index]);
+              // await chatsHandler.setCurrentUserName(chatsHandler.roomName[index]);
               await chatsHandler.setcurrentUserId(room.user);
               await chatsHandler.setcurrentRoomImage(room.image);
               await chatsHandler.showChat();
@@ -82,10 +82,10 @@ return Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    // Text(
-                                    //   chatsHandler.roomName[index],
-                                    //   style: const TextStyle(fontSize: 30),
-                                    // ),
+                                    Text(
+                                      chatsHandler.roomName[index],
+                                      style: const TextStyle(fontSize: 30),
+                                    ),
                                     Row(
                                       children: [
                                         index <= chatsHandler.lastChats.length-1 ?

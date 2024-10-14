@@ -18,7 +18,7 @@ class ChatsHandler extends LoginHandler {
   final lastchatroom = <Chatroom>[].obs;
   final lastChats = <Chats>[].obs;
   final roomName = [].obs;
-
+  Stream<QuerySnapshot> testsnapshot =  FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: 'adfki125').snapshots();
   List<Chatroom> result = [];
   ScrollController listViewContoller = ScrollController();
 
@@ -67,6 +67,25 @@ class ChatsHandler extends LoginHandler {
   }
 
   queryLastChat() async {
+    // List<Chats> returnResult=[];
+    // FirebaseFirestore.instance.collection("chat").where('user',isEqualTo: box.read('userEmail')).snapshots().listen((parent) {for(var parentdoc in parent.docs){
+    //   _rooms
+    //       .doc(parentdoc.id)
+    //       .collection('chats')
+    //       .orderBy('timestamp', descending: true)
+    //       .limit(1)
+    //       .snapshots().listen((sub) {
+    //         for(var subdoc in sub.docs){
+    //           var chat = subdoc.data();
+    //           returnResult.add(Chats(
+    //             reciever: chat['reciever'],
+    //             sender: chat['sender'],
+    //             text: chat['text'],
+    //             timestamp: chat['timestamp']));
+    //         }
+    //         lastChats.value = returnResult;
+    //       },);
+    // }});
     List<Chats> returnResult=[];
     result.clear();
     QuerySnapshot<Map<String, dynamic>> snapshot =
@@ -124,7 +143,6 @@ class ChatsHandler extends LoginHandler {
 
   makeChatRoom() async {
     _rooms.where('user',isEqualTo: box.read('userEmail')).snapshots().listen((event) {
-      print(event.docs.length);
       rooms.value = event.docs
           .map(
             (doc) => Chatroom(
@@ -169,7 +187,6 @@ class ChatsHandler extends LoginHandler {
   addChat(Chats chat) async {
     bool istoday = await isToday();
     if (!istoday) {
-
       await _rooms
         .doc("${currentClinicId.value}_${box.read('userEmail')}")
         .collection('chats')
@@ -179,6 +196,7 @@ class ChatsHandler extends LoginHandler {
       'text': "set${DateTime.now().toString().substring(0,10)}time",
       'timestamp': DateTime.now().toString(),
     });
+    await queryLastChat();
     }
 
     _rooms
@@ -190,5 +208,6 @@ class ChatsHandler extends LoginHandler {
       'text': chat.text,
       'timestamp': DateTime.now().toString(),
     });
+    queryLastChat();
   }
 }
