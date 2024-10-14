@@ -18,30 +18,22 @@ class ReservationHandler extends ClinicHandler {
   // 예약된 리스트
   getReservation(String userId) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/reservation/select_reservatioin?user_id=$userId'); //미완성
+        'http://127.0.0.1:8000/reservation/select_reservation?user_id=$userId'); //미완성
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];
     List<SearchReservations> returnData = [];
-
     for (int i = 0; i < results.length; i++) {
-      String userId = results[i][0];
-      String clinic_name = results[i][1];
-      String clinic_latitude = results[i][2];
-      String clinic_longitude = results[i][3];
-      String time = results[i][4];
-      String clinic_address = results[i][5];
 
-      returnData.add(SearchReservations(
-          userId: userId,
-          clinic_name: clinic_name,
-          clinic_latitude: clinic_latitude,
-          clinic_longitude: clinic_longitude,
-          time: time,
-          clinic_address: clinic_address));
-      searchreservation.value = returnData;
+    returnData.add(SearchReservations(
+      clinicId: results[i][0], 
+      clinicName: results[i][1], 
+      latitude: results[i][2], 
+      longitude: results[i][3], 
+      time: results[i][4], 
+      address: results[i][5]));
     }
-    return results;
+    searchreservation.value = returnData;
   }
 
   // make_reservation에서 사용할 예약 insert
@@ -65,7 +57,6 @@ class ReservationHandler extends ClinicHandler {
           userId: userId, clinicId: clinicId, time: time, symptoms: symptoms));
       reservations.value = returnData;
     }
-    return results;
   }
 
   // 메인화면에서 긴급예약 눌렀을때 보여주는 리스트

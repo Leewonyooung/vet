@@ -43,7 +43,8 @@ async def select_reservation(user_id: str):
 
     sql = 'select clinic.id, clinic.name, clinic.latitude, clinic.longitude, reservation.time, clinic.address from reservation , clinic where reservation.clinic_id = clinic.id and user_id = %s'
     curs.execute(sql, (user_id))
+    rows= curs.fetchall()
     conn.commit()
     conn.close()
 
-    return {'results': 'OK'}
+    return {'results': rows}

@@ -1,16 +1,16 @@
 class SearchReservations {
-  String userId;
-  String clinic_name;
-  String clinic_latitude;
-  String clinic_longitude;
+  String clinicId;
+  String clinicName;
+  double latitude;
+  double longitude;
   String time;
-  String clinic_address;
+  String address;
 
   SearchReservations(
-      {required this.userId,
-      required this.clinic_name,
-      required this.clinic_latitude,
-      required this.clinic_longitude,
+      {required this.clinicId,
+      required this.clinicName,
+      required this.latitude,
+      required this.longitude,
       required this.time,
-      required this.clinic_address});
+      required this.address});
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vet_app/view/reservation_complete.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 
@@ -29,23 +30,37 @@ class QueryReservation extends StatelessWidget {
                 } else{
                   return Obx(() {
                     return ListView.builder(
-                      itemCount: vmHnadler.reservations.length,
+                      itemCount: vmHnadler.searchreservation.length,
                       itemBuilder: (context, index) {
-                        final clinic = vmHnadler.availableclinic[index];
-                        return Card(
-                          child: Column(
-                            children: [
-                              const Text('예약완료'),
-                              Text(clinic.time),
-                              Text(clinic.name)
-                            ],
+                        final clinic = vmHnadler.searchreservation[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(ReservationComplete(), arguments: [
+                              clinic.clinicId,
+                              clinic.clinicName,
+                              clinic.latitude,
+                              clinic.longitude,
+                              clinic.time,
+                              clinic.address
+                            ]);  
+                          },
+                          child: Card(
+                            child: Column(
+                              children: [
+                                const Text('예약완료', style: TextStyle(
+                                  fontSize: 12
+                                ),),
+                                Text(clinic.time),
+                                Text(clinic.clinicName)
+                              ],
+                            ),
                           ),
                         );
                       },
                     );
                   },);
                 }
-          },
+            },
         );
       },),
     );
