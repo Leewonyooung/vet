@@ -1,7 +1,7 @@
 """
 author: Aeong
 Description: pet
-Fixed: 2024.10.14
+Fixed: 24.10.14
 Usage: Manage Pet
 """
 
@@ -29,7 +29,7 @@ def connection():
     )
     return conn
 
-# 반려동물 조회 API (GET)
+# 반려동물 조회
 @router.get("/pets")
 async def get_pets(user_id: str):
     conn = connection()
@@ -60,7 +60,7 @@ async def get_pets(user_id: str):
     finally:
         conn.close()
 
-# 반려동물 등록 API (POST)
+# 반려동물 등록
 @router.post("/insert")
 async def add_pet(
     id: str = Form(...),
@@ -103,7 +103,7 @@ async def add_pet(
     finally:
         conn.close()
 
-# 이미지 제공 API
+# 이미지 업로드
 @router.get("/uploads/{file_name}")
 async def get_file(file_name: str):
     file_path = os.path.join(UPLOAD_DIRECTORY, file_name)
@@ -111,7 +111,7 @@ async def get_file(file_name: str):
         return FileResponse(path=file_path, filename=file_name)
     return {"error": "File not found"}
 
-# 반려동물 수정 API
+# 반려동물 수정
 @router.post("/update")
 async def update_pet(
     id: str = Form(...),
@@ -128,7 +128,7 @@ async def update_pet(
     try:
         with conn.cursor() as cursor:
             if image:
-                # 이미지가 제공된 경우, 새 이미지를 저장하고 파일 이름을 업데이트합니다.
+                # 이미지가 추가된 경우, 새 이미지를 저장하고 파일 이름을 업데이트
                 image_filename = image.filename
                 image_path = os.path.join(UPLOAD_DIRECTORY, image_filename)
                 with open(image_path, "wb") as buffer:
@@ -145,7 +145,7 @@ async def update_pet(
                     features, gender, image_filename, id, user_id
                 ))
             else:
-                # 이미지가 제공되지 않은 경우, 이미지를 제외한 다른 정보만 업데이트합니다.
+                # 이미지가 추가되지 않은 경우, 이미지를 제외한 다른 정보만 업데이트
                 sql = """
                     UPDATE pet 
                     SET species_type = %s, species_category = %s, name = %s, 
@@ -165,7 +165,7 @@ async def update_pet(
     finally:
         conn.close()
 
-# 반려동물 삭제 API (DELETE)
+# 반려동물 삭제
 @router.delete("/delete/{pet_id}")
 async def delete_pet(pet_id: str):
     conn = connection()

@@ -17,6 +17,11 @@ import 'package:vet_app/vm/pet_handler.dart';
 class Navigation extends StatelessWidget {
   Navigation({super.key});
 
+  logOut() async {
+    await loginHandler.signOut();
+    Get.offAll(Navigation());
+  }
+
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
   final LoginHandler loginHandler = Get.put(LoginHandler());
@@ -141,7 +146,7 @@ class Navigation extends StatelessWidget {
                         color: Colors.amber.shade400,
                         onTap: () {
                           if (loginHandler.isLoggedIn()) {
-                            Get.to(() => const QueryReservation());
+                            Get.to(() => QueryReservation());
                           } else {
                             Get.to(Login());
                           }
@@ -158,7 +163,7 @@ class Navigation extends StatelessWidget {
         }),
       ),
       ClinicSearch(),
-      const QueryReservation(),
+      QueryReservation(),
       ChatRoom(),
       const Mypage(),
     ];

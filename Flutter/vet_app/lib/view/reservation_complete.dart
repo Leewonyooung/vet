@@ -8,10 +8,13 @@ import 'package:vet_app/view/query_reservation.dart';
 // 예약완료 페이지
 class ReservationComplete extends StatelessWidget {
   ReservationComplete({super.key});
-  final value = Get.arguments; // 예약할 때 필요한 병원정보 받아옴
+  final makervalue = Get.arguments; // 예약할 때 필요한 병원정보 받아옴
 
   @override
   Widget build(BuildContext context) {
+    final queryvalue = Get.arguments;
+    var value;
+    makervalue == null ? value = queryvalue : value = makervalue;
     final Completer<GoogleMapController> mapController = // 구글지도 맵
         Completer<GoogleMapController>();
     return Scaffold(
@@ -27,7 +30,10 @@ class ReservationComplete extends StatelessWidget {
             ),
             Text("감사합니다\n 고객님\n${value[1]}의 예약이\n확정되셨습니다."),
             Row(
-              children: [const Icon(Icons.arrow_forward), Text(' 일정 : ${value[4]}')],
+              children: [
+                const Icon(Icons.arrow_forward),
+                Text(' 일정 : ${value[4]}')
+              ],
             ),
             const Text(
               '찾아오시는길',
@@ -69,7 +75,7 @@ class ReservationComplete extends StatelessWidget {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () => Get.to(() =>  QueryReservation()),
+                  onPressed: () => Get.to(() => QueryReservation()),
                   child: const Text('예약내역'),
                 ),
                 ElevatedButton(

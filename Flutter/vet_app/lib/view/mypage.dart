@@ -158,8 +158,9 @@ class Mypage extends StatelessWidget {
         : const Center(child: Text('로그인이 필요합니다.'),)
         );
   }
+
   //ff
-  showDialog(LoginHandler loginHandler){
+  showDialog(LoginHandler loginHandler) {
     Get.defaultDialog(
       title: "로그아웃",
       middleText: '로그아웃 하시겠습니까?',

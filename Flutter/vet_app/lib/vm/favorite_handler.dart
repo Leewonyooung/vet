@@ -123,8 +123,4 @@ class FavoriteHandler extends ClinicHandler {
     }
     favoriteIconValue.value = !favoriteIconValue.value;
   }
-
-
-
-
 }

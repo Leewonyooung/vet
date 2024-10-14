@@ -75,17 +75,34 @@ class ClinicInfo extends StatelessWidget {
                                                 Icons.pin_drop_outlined)),
 
                                         // 즐겨찾기 등록 버튼
-                                      IconButton(
-                                        onPressed: () async{
-                                        await  favoriteHandler.favoriteIconValueMgt(favoriteHandler.getStoredEmail(), value[0]);
-                                        if(favoriteHandler.favoriteIconValue.value == true){
-                                          showSnackBar('추가성공','즐겨찾기에 등록되었습니다.',Colors.green);
-                                        } else{
-                                          showSnackBar('삭제', '즐겨찾기가 삭제되었습니다.', Colors.red);
-                                        }
-                                      }, 
-                                      icon: favoriteHandler.favoriteIconValue.value ? const Icon(Icons.favorite, color: Colors.red,) : const Icon(Icons.favorite_border_outlined), 
-                                      )
+                                        IconButton(
+                                          onPressed: () async {
+                                            await favoriteHandler
+                                                .favoriteIconValueMgt(
+                                                    favoriteHandler
+                                                        .getStoredEmail(),
+                                                    value[0]);
+                                            if (favoriteHandler
+                                                    .favoriteIconValue.value ==
+                                                true) {
+                                              showSnackBar(
+                                                  '추가성공',
+                                                  '즐겨찾기에 등록되었습니다.',
+                                                  Colors.green);
+                                            } else {
+                                              showSnackBar('삭제',
+                                                  '즐겨찾기가 삭제되었습니다.', Colors.red);
+                                            }
+                                          },
+                                          icon: favoriteHandler
+                                                  .favoriteIconValue.value
+                                              ? const Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                )
+                                              : const Icon(Icons
+                                                  .favorite_border_outlined),
+                                        )
                                       ],
                                     ),
                                   ],
@@ -105,10 +122,9 @@ class ClinicInfo extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(20),
-                            child: Text(result[0].introduction,
-                            style: const TextStyle(
-                              fontSize: 15
-                            ),
+                            child: Text(
+                              result[0].introduction,
+                              style: const TextStyle(fontSize: 15),
                             ),
                           ),
 
@@ -132,35 +148,39 @@ class ClinicInfo extends StatelessWidget {
                               child: const Text('상담하기'),
                             ),
                           ),
-                            Visibility(
-                              visible: reservationHandler.resButtonValue.value,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    if(vmHandler.isLoggedIn() == false){
-                                      Get.to(()=>Login());
-                                    }else{
-                                    Get.to(()=>MakeReservation(),
-                                    arguments: [
-                                      reservationHandler.canReservationClinic[0].id,
-                                      reservationHandler.canReservationClinic[0].name,
-                                      reservationHandler.canReservationClinic[0].latitude,
-                                      reservationHandler.canReservationClinic[0].longitude,
-                                      reservationHandler.canReservationClinic[0].time,
-                                      reservationHandler.canReservationClinic[0].address,
-                                    ]
-                                    );
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      minimumSize: const Size(300, 40),
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 237, 220, 61)),
-                                  child: const Text('예약하기'),
-                                ),
+                          Visibility(
+                            visible: reservationHandler.resButtonValue.value,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (vmHandler.isLoggedIn() == false) {
+                                    Get.to(() => Login());
+                                  } else {
+                                    Get.to(() => MakeReservation(), arguments: [
+                                      reservationHandler
+                                          .canReservationClinic[0].id,
+                                      reservationHandler
+                                          .canReservationClinic[0].name,
+                                      reservationHandler
+                                          .canReservationClinic[0].latitude,
+                                      reservationHandler
+                                          .canReservationClinic[0].longitude,
+                                      reservationHandler
+                                          .canReservationClinic[0].time,
+                                      reservationHandler
+                                          .canReservationClinic[0].address,
+                                    ]);
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    minimumSize: const Size(300, 40),
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 237, 220, 61)),
+                                child: const Text('예약하기'),
                               ),
-                            )
+                            ),
+                          )
                         ],
                       ),
                     );
@@ -172,16 +192,10 @@ class ClinicInfo extends StatelessWidget {
     );
   }
 
-
-showSnackBar(String title, String message, Color color){
-  Get.snackbar(
-    title,
-    message,
-    backgroundColor: color, 
-    duration: const Duration(seconds: 2),
-    colorText: Colors.black
-    );
-}
-
-
+  showSnackBar(String title, String message, Color color) {
+    Get.snackbar(title, message,
+        backgroundColor: color,
+        duration: const Duration(seconds: 2),
+        colorText: Colors.black);
+  }
 }

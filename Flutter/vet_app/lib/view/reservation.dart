@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:vet_app/view/make_reservation.dart';
+import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 import 'package:get/get.dart';
+
 // 긴급 예약 페이지
 class Reservation extends StatelessWidget {
   Reservation({super.key});
   final vmHnadler = Get.put(ReservationHandler());
+  final petHandler = Get.put(PetHandler());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,8 +29,7 @@ class Reservation extends StatelessWidget {
                   return const Center(
                     child: Text('예약가능한 병원이 없습니다.'),
                   );
-                }
-                else {
+                } else {
                   return Obx(() {
                     return ListView.builder(
                         itemCount: vmHnadler.availableclinic.length,
@@ -36,16 +38,26 @@ class Reservation extends StatelessWidget {
                           return Card(
                             child: Row(
                               children: [
-                                Image.network(
-                                  'http://127.0.1:8000/available/view/${clinic.image}',
+                                SizedBox(
                                   width: 100,
                                   height: 80,
+                                  child: Image.network(
+                                    'http://127.0.1:8000/available/view/${clinic.image}',
+                                  ),
                                 ),
-                                Text('  ${clinic.name}'),
-                                // Text('  ${clinic.address}'),
+                                SizedBox(
+                                  width: 220,
+                                  height: 80,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(' ${clinic.name}'),
+                                    ],
+                                  )),
                                 ElevatedButton(
-                                  onPressed: () {
-                                    Get.to(() =>  MakeReservation(), arguments: [
+                                  onPressed: () async{
+                                    await petHandler.makeBorderlist();
+                                    Get.to(() => MakeReservation(), arguments: [
                                       clinic.id,
                                       clinic.name,
                                       clinic.latitude,

@@ -1,8 +1,8 @@
 """
-author: 
-Description: 
-Fixed: 
-Usage: 
+author: Aeong
+Description: favorite
+Fixed: 24.10.14
+Usage: Manage favorite
 """
 
 from fastapi import APIRouter, HTTPException 
@@ -10,7 +10,6 @@ import pymysql
 import hosts
 router = APIRouter()
 
-# MySQL 연결 함수
 def connection():
     conn = pymysql.connect(
         host=hosts.vet_academy,
@@ -53,8 +52,8 @@ async def add_favorite(user_id: str, clinic_id: str):
 
     # 즐겨찾기 추가 (clinic 테이블에서 데이터를 가져와 favorite 테이블에 삽입)
     sql = """
-        INSERT INTO favorite (user_id, clinic_id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone)
-        SELECT %s, id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone
+        INSERT INTO favorite (user_id, clinic_id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image)
+        SELECT %s, id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image
         FROM clinic WHERE id = %s
     """
     curs.execute(sql, (user_id, clinic_id))

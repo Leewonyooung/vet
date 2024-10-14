@@ -11,7 +11,9 @@ import 'package:vet_app/model/chats.dart';
 import 'package:vet_app/vm/chat_handler.dart';
 
 class ChatView extends StatelessWidget {
-  ChatView({super.key,});
+  ChatView({
+    super.key,
+  });
   final ChatsHandler vmHandler = Get.find();
   final TextEditingController chatController = TextEditingController();
   @override
@@ -73,7 +75,7 @@ class ChatView extends StatelessWidget {
       vmHandler.listViewContoller
           .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent);
     });
-    
+
     return Column(
       children: [
         SizedBox(
@@ -84,7 +86,7 @@ class ChatView extends StatelessWidget {
             itemBuilder: (context, index) {
               Chats chat = vmHandler.chats[index];
               return Padding(
-                padding: const EdgeInsets.fromLTRB(8,8,8,0),
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: vmHandler.checkToday(chat)?
@@ -146,54 +148,141 @@ class ChatView extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left:8.0),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width/1.4,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(temp[1],style: const TextStyle(fontSize: 20),),
-                                    chat.text.length == vmHandler.checkToday(chat)?
-                                    Text(chat.text.substring(3,chat.text.length-4)):
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                          ),
+                        )
+                      : vmHandler.box.read('userEmail') == chat.sender
+                          ? Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                  MediaQuery.of(context).size.width / 10,
+                                  0,
+                                  0,
+                                  0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 5),
+                                    child:
+                                        Text(chat.timestamp.substring(11, 16)),
+                                  ),
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Flexible(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.green[200],
-                                              borderRadius: BorderRadius.circular(15),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(12),
-                                              child: Text(
-                                                chat.text,
-                                                style: const TextStyle(fontSize: 20,
-                                                ),
-                                              ),
-                                            ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.green[200],
+                                            borderRadius:
+                                                BorderRadius.circular(15),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left:8.0),
-                                          child: Text(chat.timestamp.substring(11,16)),
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(15),
+                                              child: SizedBox(
+                                                child: Text(
+                                                  chat.text,
+                                                  style: const TextStyle(
+                                                      fontSize: 20),
+                                                ),
+                                              )),
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.only(right: 15.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        width: 60,
+                                        height: 60,
+                                        child: Image.network(
+                                          temp[0],
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              1.4,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                temp[1],
+                                                style: const TextStyle(
+                                                    fontSize: 20),
+                                              ),
+                                              chat.text.length ==
+                                                      vmHandler.checkToday(chat)
+                                                  ? Text(chat.text.substring(
+                                                      3, chat.text.length - 4))
+                                                  : Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        Flexible(
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .green[200],
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(12),
+                                                              child: Text(
+                                                                chat.text,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 20,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 8.0),
+                                                          child: Text(chat
+                                                              .timestamp
+                                                              .substring(
+                                                                  11, 16)),
+                                                        ),
+                                                      ],
+                                                    ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                 ),
               );
             },
@@ -255,7 +344,6 @@ class ChatView extends StatelessWidget {
       timestamp: DateTime.now().toString(),
     );
     if (chatController.text != "" && chatController.text.isNotEmpty) {
-      
       await vmHandler.addChat(inputchat);
     }
     chatController.text = '';

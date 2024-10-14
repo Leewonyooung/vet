@@ -73,7 +73,8 @@ class LocationHandler extends ImageHandler {
     polyline = polylinePoints.decodePolyline(
         dataConvertedJSON['routes'][0]['overview_polyline']['points']);
     // durationText=dataConvertedJSON['routes'][0]['legs'][0]['duration']['text']; // 소요시간
-    distanceText=dataConvertedJSON['routes'][0]['legs'][0]['distance']['text']; // 거리
+    distanceText =
+        dataConvertedJSON['routes'][0]['legs'][0]['distance']['text']; // 거리
 
     route = polyline
         .map(
@@ -86,13 +87,10 @@ class LocationHandler extends ImageHandler {
         color: Colors.red));
   }
 
-     maploading(double clinicLat, double clinicLong)async{
-      await getCurrentPlaceID();
-      await getClinicPlaceId(clinicLat, clinicLong); //병원에 들어갈 place id
-      await createRoute();
-      update();
-    }
-
-
-
+  maploading(double clinicLat, double clinicLong) async {
+    await getCurrentPlaceID();
+    await getClinicPlaceId(clinicLat, clinicLong); //병원에 들어갈 place id
+    await createRoute();
+    update();
+  }
 }
