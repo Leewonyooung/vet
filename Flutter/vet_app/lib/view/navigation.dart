@@ -148,7 +148,7 @@ class Navigation extends StatelessWidget {
                         color: Colors.amber.shade400,
                         onTap: () {
                           if (loginHandler.isLoggedIn()) {
-                            Get.to(() => QueryReservation());
+                            Get.to(() => const QueryReservation());
                           } else {
                             Get.to(Login());
                           }
@@ -165,7 +165,7 @@ class Navigation extends StatelessWidget {
         }),
       ),
       ClinicSearch(),
-      QueryReservation(),
+      const QueryReservation(),
       ChatRoom(),
       const Mypage(),
     ];
