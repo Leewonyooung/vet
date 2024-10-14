@@ -76,9 +76,9 @@ class Navigation extends StatelessWidget {
               icon: const Icon(Icons.favorite),
               onPressed: () {
                 if (loginHandler.isLoggedIn()) {
-                  Get.to(Favorite());
+                  Get.to(() => Favorite());
                 } else {
-                  Get.to(Login());
+                  Get.to(() => Login());
                 }
               },
             ),
@@ -86,9 +86,9 @@ class Navigation extends StatelessWidget {
               icon: const Icon(Icons.person),
               onPressed: () {
                 if (loginHandler.isLoggedIn()) {
-                  Get.to(const Mypage());
+                  Get.to(() => const Mypage());
                 } else {
-                  Get.to(Login());
+                  Get.to(() => Login());
                 }
               },
             ),
@@ -136,9 +136,9 @@ class Navigation extends StatelessWidget {
                         color: Colors.red.shade400,
                         onTap: () {
                           if (loginHandler.isLoggedIn()) {
-                            Get.to(Reservation());
+                            Get.to(() => Reservation());
                           } else {
-                            Get.to(Login());
+                            Get.to(() => Login());
                           }
                         },
                       ),
@@ -150,7 +150,7 @@ class Navigation extends StatelessWidget {
                           if (loginHandler.isLoggedIn()) {
                             Get.to(() => const QueryReservation());
                           } else {
-                            Get.to(Login());
+                            Get.to(() => Login());
                           }
                         },
                       ),
