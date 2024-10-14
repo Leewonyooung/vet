@@ -82,7 +82,7 @@ class LoginHandler extends UserHandler {
         await FirebaseAuth.instance.signInWithCredential(credential);
 
     // Navigate to Navigation page after successful sign-in (안창빈)
-    Get.to(Navigation());
+    Get.to(() => Navigation());
 
     // 로그인 성공 후 반려동물 정보 불러오기
     await Get.find<PetHandler>().fetchPets(getStoredEmail());
