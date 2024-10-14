@@ -18,16 +18,16 @@ class ClinicSearch extends StatelessWidget {
           builder: (_) {
             return Column(
               children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SearchBar(
-                      controller: vmHandler.searchbarController,
-                      onChanged: (value) {
-                        vmHandler.searchbarController.text = value;
-                        vmHandler.searchMGT();
-                      },
-                    ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SearchBar(
+                    controller: vmHandler.searchbarController,
+                    onChanged: (value) {
+                      vmHandler.searchbarController.text = value;
+                      vmHandler.searchMGT();
+                    },
                   ),
+                ),
                 Expanded(
                   child: Obx(() {
                     return Column(
