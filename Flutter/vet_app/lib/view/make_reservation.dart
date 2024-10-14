@@ -13,8 +13,6 @@ class MakeReservation extends StatelessWidget {
   final PetHandler petHandler = Get.find();
   final ReservationHandler reservationHandler = Get.put(ReservationHandler());
   final value = Get.arguments;
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +24,8 @@ class MakeReservation extends StatelessWidget {
       body: SizedBox(
         width: 500,
         height: 500,
-        child: GetBuilder<PetHandler>(
-          builder: (_) {
-            return Padding(
+        child: GetBuilder<PetHandler>(builder: (_) {
+          return Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +53,8 @@ class MakeReservation extends StatelessWidget {
                               // 반려동물 정보 다시 로드
                               String userId = loginHandler.getStoredEmail();
                               petHandler.fetchPets(userId);
-                              petHandler.currentPetID.value = petHandler.pets[index].id;
+                              petHandler.currentPetID.value =
+                                  petHandler.pets[index].id;
                             }
                           },
                           // 반려동물 추가 카드
@@ -83,19 +81,22 @@ class MakeReservation extends StatelessWidget {
                           ),
                         );
                       }
-          
+
                       // 기존 반려동물 정보 표시
                       final pet = petHandler.pets[index];
                       String baseUrl = 'http://127.0.0.1:8000'; // 서버 주소
                       String imageUrl =
                           '$baseUrl/pet/uploads/${pet.image}'; // 이미지 경로 조합
                       // 반려동물 표시해주는 카드
-                      return Obx((){
+                      return Obx(() {
                         return GestureDetector(
                           onTap: () {
-                            petHandler.setborder(index);   // 펫 카드 클릭시 빨간테두리 바꿔주는 기능
+                            petHandler
+                                .setborder(index); // 펫 카드 클릭시 빨간테두리 바꿔주는 기능
                             String userId = loginHandler.getStoredEmail();
-                              petHandler.fetchPets(userId);
+                            petHandler.fetchPets(userId);
+                            petHandler.currentPetID.value =
+                                  petHandler.pets[index].id;
                           },
                           child: Card(
                             elevation: 4,
@@ -128,7 +129,8 @@ class MakeReservation extends StatelessWidget {
                                   // 텍스트 정보 (오른쪽)
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           pet.name,
@@ -147,8 +149,8 @@ class MakeReservation extends StatelessWidget {
                               ),
                             ),
                           ),
-                        );}
-                      );
+                        );
+                      });
                     },
                   ),
                 ),
@@ -162,7 +164,6 @@ class MakeReservation extends StatelessWidget {
                 TextField(
                   maxLines: 4,
                   controller: symptomsController,
-                  
                 ),
                 SizedBox(
                   width: 500,
@@ -186,15 +187,19 @@ class MakeReservation extends StatelessWidget {
                                   child: const Text('아니오')),
                               ElevatedButton(
                                   onPressed: () {
-                                    String userId = loginHandler.getStoredEmail();
-                                    Get.offAll(() => ReservationComplete(), arguments: [ // ReservationComplete 페이지로 이전페이지 없이 새롭게 이동
-                                      value[0], //clinic_id
-                                      value[1], //clinic_name
-                                      value[2], //clinic_latitude
-                                      value[3], //clinic_longitude
-                                      value[4], //clinic_time
-                                      value[5], //clinic_address
-                                    ]);
+                                    String userId =
+                                        loginHandler.getStoredEmail();
+                                    Get.offAll(() => ReservationComplete(),
+                                        arguments: [
+                                          // ReservationComplete 페이지로 이전페이지 없이 새롭게 이동
+                                          value[0], //clinic_id
+                                          value[1], //clinic_name
+                                          value[2], //clinic_latitude
+                                          value[3], //clinic_longitude
+                                          value[4], //clinic_time
+                                          value[5], //clinic_address
+                                        ]);
+                                        print(petHandler.currentPetID.value);
                                     reservationHandler.makeReservation(
                                         userId,
                                         value[0],
@@ -211,8 +216,8 @@ class MakeReservation extends StatelessWidget {
                 ),
               ],
             ),
-          );}
-        ),
+          );
+        }),
       ),
     );
   }
