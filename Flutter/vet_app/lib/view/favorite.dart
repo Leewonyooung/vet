@@ -32,120 +32,114 @@ class Favorite extends StatelessWidget {
       body: GetBuilder<FavoriteHandler>(
         builder: (controller) {
           if (controller.favoriteClinics.isEmpty) {
-            return _buildEmptyState();
-          }
-          return _buildFavoriteList(controller, userId);
-        },
-      ),
-    );
-  }
-
-  // 즐겨찾기 목록이 비어있을 때
-  _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.favorite_border, size: 80, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          Text(
-            '즐겨찾기 목록이 비어있습니다.',
-            style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 즐겨찾기 목록
-  _buildFavoriteList(FavoriteHandler controller, String userId) {
-    return ListView.builder(
-      itemCount: controller.favoriteClinics.length,
-      itemBuilder: (context, index) {
-        final clinic = controller.favoriteClinics[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: InkWell(
-            onTap: () async {
-              await favoriteHandler.updateCurrentIndex(clinic.id);
-              Get.to(() => ClinicInfo(), arguments: [clinic.id]);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildClinicImage(clinic),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  Icon(
+                    Icons.favorite_border,
+                    size: 80,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '즐겨찾기 목록이 비어있습니다.',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: controller.favoriteClinics.length,
+            itemBuilder: (context, index) {
+              final clinic = controller.favoriteClinics[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                child: InkWell(
+                  onTap: () async {
+                    await favoriteHandler.updateCurrentIndex(clinic.id);
+                    Get.to(() => ClinicInfo(), arguments: [clinic.id]);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          clinic.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            'http://127.0.0.1:8000/clinic/view/${clinic.image}',
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 80,
+                                height: 80,
+                                color: Colors.grey[300],
+                                child: const Icon(Icons.local_hospital,
+                                    color: Colors.white),
+                              );
+                            },
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          clinic.address,
-                          style: TextStyle(
-                            color: Colors.grey[600],
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                clinic.name,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                clinic.address,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '전화: ${clinic.phone}',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '전화: ${clinic.phone}',
-                          style: TextStyle(
-                            color: Colors.grey[600],
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
                           ),
+                          onPressed: () =>
+                              _showDeleteConfirmation(userId, clinic.id),
                         ),
                       ],
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    onPressed: () => _showDeleteConfirmation(userId, clinic.id),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  // 병원 사진
-  _buildClinicImage(dynamic clinic) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Image.network(
-        'http://127.0.0.1:8000/clinic/view/${clinic.image}',
-        width: 80,
-        height: 80,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            width: 80,
-            height: 80,
-            color: Colors.grey[300],
-            child: const Icon(Icons.local_hospital, color: Colors.white),
+                ),
+              );
+            },
           );
         },
       ),
     );
   }
 
-// 즐겨찾기 삭제 확인
   _showDeleteConfirmation(String userId, String clinicId) {
     Get.dialog(
       AlertDialog(
