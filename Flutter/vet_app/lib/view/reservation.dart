@@ -36,13 +36,17 @@ class Reservation extends StatelessWidget {
                           return Card(
                             child: Row(
                               children: [
-                                Image.network(
-                                  'http://127.0.1:8000/available/view/${clinic.image}',
+                                SizedBox(
                                   width: 100,
                                   height: 80,
+                                  child: Image.network(
+                                    'http://127.0.1:8000/available/view/${clinic.image}',
+                                  ),
                                 ),
-                                Text('  ${clinic.name}'),
-                                // Text('  ${clinic.address}'),
+                                SizedBox(
+                                  width: 220,
+                                  height: 80,
+                                  child: Text('  ${clinic.name}')),
                                 ElevatedButton(
                                   onPressed: () {
                                     Get.to(() => MakeReservation(), arguments: [
