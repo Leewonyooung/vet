@@ -1,18 +1,23 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:vet_tab/model/clinic.dart';
+import 'package:vet_tab/vm/image_handler.dart';
 import 'package:vet_tab/vm/login_handler.dart';
 
 class ClinicHandler extends LoginHandler{
+  ImageHandler imageHandler = ImageHandler();
   String searchkeyward ="";
   var clinicSearch = <Clinic>[].obs;
   var clinicDetail = <Clinic>[].obs;
-  String startOpTime = '';
-  String endOpTime = '';
+  var startOpTime = ''.obs;
+  var endOpTime = ''.obs;
   DateTime selectedDate = DateTime.now();
+  RxString selected = ''.obs;
 
     getUserId() async {
     // api를 통해 userID가져옴
@@ -98,7 +103,7 @@ class ClinicHandler extends LoginHandler{
       String phone,
       String image) async {
     var url = Uri.parse(
-        "http://127.0.0.1:8000/clinic/insert?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&stime=$stime&etime=$etime&introduction=$introduction&address=$address&phone=$phone&image=$image");
+        "http://127.0.0.1:8000/clinic/insert?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&starttime=$stime&endtime=$etime&introduction=$introduction&address=$address&phone=$phone&image=$image");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var results = dataConvertedJSON['results'];
@@ -117,32 +122,62 @@ class ClinicHandler extends LoginHandler{
 
   // insert clinic (안창빈)
 
+  // Format date to '오전 7:30' style in Korean
   String formatDate(DateTime date) {
-    final DateFormat formatter = DateFormat('HH:mm');
-    return formatter.format(date);
+    final DateFormat formatter = DateFormat('a h:mm', 'ko');
+    final formattedDate = formatter.format(date);
+    print("Formatted Date: $formattedDate"); 
+    return formattedDate;
   }
 
-  opDateSelection(bool isStartDate) {
-    showCupertinoDialog(
+  // Initialize locale to Korean (안창빈)
+  initializeLocale() async {
+    await initializeDateFormatting('ko', null); 
+  }
+
+
+  opDateSelection(BuildContext context, bool isStartDate) async {
+    await initializeLocale();
+    DateTime tempDate = selectedDate;
+    showCupertinoModalPopup(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return Align(
           alignment: Alignment.bottomCenter,
           child: Container(
             height: 300,
-            child: CupertinoDatePicker(
-              maximumYear: 2030,
-              minimumYear: 2020,
-              initialDateTime: DateTime.now(),
-              mode: CupertinoDatePickerMode.time,
-              onDateTimeChanged: (DateTime date) {
-                  selectedDate = date;
-                  if (isStartDate) {
-                    startOpTime = formatDate(date);
-                  } else {
-                    endOpTime = formatDate(date);
-                  }
-              },
+            color: Colors.white,
+            child: Column(
+              children: [
+                Container(
+                  height: 200,
+                  child: CupertinoDatePicker(
+                    backgroundColor: Colors.white,
+                    maximumYear: 2030,
+                    minimumYear: 2020,
+                    initialDateTime: selectedDate, 
+                    mode: CupertinoDatePickerMode.time,
+                    onDateTimeChanged: (DateTime date) {
+                      tempDate = date;
+                    },
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    selectedDate = tempDate; 
+                    if (isStartDate) {
+                      startOpTime.value = formatDate(selectedDate);
+                    } else if (!isStartDate){
+                      endOpTime.value = formatDate(selectedDate);
+                    }
+                    print("start: $startOpTime.value" );
+                    print("end: $endOpTime.value");
+                    update();
+                    Get.back(); 
+                  },
+                  child: const Text('시간선택'),
+                ),
+              ],
             ),
           ),
         );

@@ -19,7 +19,6 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 
-
 def connect():
     conn = pymysql.connect(
         host = "192.168.50.91", 
@@ -242,17 +241,17 @@ async def detail_clinic(id: str):
         print("Error:", e)
         return {'Error' : 'error'}
 
-# insert clinic (안창빈)
+# insert new clinic information to DB (안창빈)
 
 @router.get("/insert")
 async def insert(
     id: str=None, 
     name: str=None, 
     password: str=None, 
-    latitude: float=None, 
-    longitude: float=None, 
-    start_time: str=None, 
-    end_time: str=None, 
+    latitude: str=None, 
+    longitude: str=None, 
+    starttime: str=None, 
+    endtime: str=None, 
     introduction: str=None, 
     address: str=None, 
     phone: str=None, 
@@ -262,8 +261,8 @@ async def insert(
     curs = conn.cursor()
 
     try:
-        sql ="insert into clinic(id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image) values (%s,%s,%s,%s,%s)"
-        curs.execute(sql, (id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image))
+        sql ="insert into clinic(id, name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        curs.execute(sql, (id, name, password, latitude, longitude, starttime, endtime, introduction, address, phone, image))
         conn.commit()
         conn.close()
         return {'results': 'OK'}
@@ -273,17 +272,17 @@ async def insert(
         print("Error :", e)
         return {'result': 'Error'}    
     
-# update clinic (안창빈)
+# edit clinic information to DB (안창빈)
 
 @router.get("/update")
 async def update(
     id: str=None, 
     name: str=None, 
     password: str=None, 
-    latitude: float=None, 
-    longitude: float=None, 
-    start_time: str=None, 
-    end_time: str=None, 
+    latitude: str=None, 
+    longitude: str=None, 
+    starttime: str=None, 
+    endtime: str=None, 
     introduction: str=None, 
     address: str=None, 
     phone: str=None, 
@@ -299,15 +298,15 @@ async def update(
         password = %s,
         latitude = %s,
         longitude = %s,
-        start_time = %s,
-        end_time = %s,
+        starttime = %s,
+        endtime = %s,
         introduction = %s,
         address = %s,
         phone = %s,
         image = %s
         WHERE id = %s
         """
-        curs.execute(sql, (name, password, latitude, longitude, start_time, end_time, introduction, address, phone, image, id))
+        curs.execute(sql, (name, password, latitude, longitude, starttime, endtime, introduction, address, phone, image, id))
         conn.commit()
         conn.close
         return {'results': 'OK'} 

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart';
 import 'package:vet_tab/vm/clinic_handler.dart';
 
 class MgtClinicMap extends StatelessWidget {
@@ -36,8 +35,6 @@ class MgtClinicMap extends StatelessWidget {
                 // print(value);
                 // clinicHandler.getSearchLocation(value);
                 searchController.text = loctionvalue;
-                print(clinicHandler.lat);
-                print(clinicHandler.long);
                 return Obx(
                   () {
                     return Stack(alignment: Alignment.bottomCenter, children: [

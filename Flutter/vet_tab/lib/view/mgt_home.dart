@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_tab/view/mgt_clinic_add.dart';
+import 'package:vet_tab/view/mgt_clinic_list.dart';
 
 class MgtHome extends StatelessWidget {
   const MgtHome({super.key});
@@ -21,7 +22,15 @@ class MgtHome extends StatelessWidget {
                   onPressed: () {
                     Get.to(() => MgtClinicAdd());
                   },
-                  child: const Text('Create Clinic account')),
+                  child: const Text('새로운 병원 추가')),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => MgtClinicList());
+                  },
+                  child: const Text('병원 정보 병경')),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -29,7 +38,7 @@ class MgtHome extends StatelessWidget {
                   onPressed: () {
                     //
                   },
-                  child: const Text('Create Species')),
+                  child: const Text('종 추가')),
             ),
           ],
         ),
