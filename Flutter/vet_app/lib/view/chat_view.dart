@@ -16,27 +16,68 @@ class ChatView extends StatelessWidget {
   final TextEditingController chatController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+
+    vmHandler.getStatus();
     final temp = Get.arguments??"__";
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: Text(temp[1]),
+        backgroundColor: Colors.grey[100],
+        toolbarHeight: 75,
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(temp[0],width: 50,)
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left:12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(temp[1], style: const TextStyle(fontSize: 20),),
+                  vmHandler.status.value ? 
+                  const Text(
+                    '진료 중',
+                    style: TextStyle(
+                      color: Colors.green, 
+                      fontWeight: FontWeight.bold, 
+                      fontSize: 20
+                    ),
+                  ) : 
+                  const Text(
+                    '진료 종료', 
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold, 
+                      fontSize: 20
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
+      extendBodyBehindAppBar: true,
       body: Obx(() {
         return chatList(context, temp);
       }),
     );
   }
 
+
   chatList(context, temp){
     SchedulerBinding.instance.addPostFrameCallback((_) async{
       vmHandler.listViewContoller
-          .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent+80);
+          .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent);
     });
     
     return Column(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height / 1.35,
+          height: MediaQuery.of(context).size.height / 1.125,
           child: ListView.builder(
             controller: vmHandler.listViewContoller,
             itemCount: vmHandler.chats.length,
@@ -50,6 +91,7 @@ class ChatView extends StatelessWidget {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     alignment: Alignment.center,
+                    // 날짜 표시
                     child: Text(chat.text.substring(3,13), style: const TextStyle(fontSize: 18,),),
                   ):
                   vmHandler.box.read('userEmail') == chat.sender? 
@@ -157,32 +199,42 @@ class ChatView extends StatelessWidget {
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top:8.0),
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.all(Radius.circular(15))
-            ),
-            height: MediaQuery.of(context).size.height / 13,
-            width: MediaQuery.of(context).size.width / 1.1,
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: const BorderRadius.all(Radius.circular(15))
+          ),
+          height: MediaQuery.of(context).size.height / 9,
+          width: MediaQuery.of(context).size.width ,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom:8.0),
             child: Row(
               children: [
-                Container(
-                  decoration: const BoxDecoration(
-                  ),
-                  width: MediaQuery.of(context).size.width / 1.3,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: chatController,
-                      decoration:const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(25))), ),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                    ),
+                    height: 50,
+                    width: MediaQuery.of(context).size.width / 1.23,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:8.0),
+                      child: TextField(
+                        controller: chatController,
+                        decoration:const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(25))
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                IconButton(
-                  onPressed: () => inputChat(temp),
-                  icon: const Icon(Icons.arrow_circle_up_outlined),
+                SizedBox(
+                  child: IconButton(
+                    onPressed: () => inputChat(temp),
+                    icon: const Icon(Icons.arrow_circle_up_outlined, size: 35,),
+                  ),
                 ),
               ],
             ),
@@ -194,7 +246,6 @@ class ChatView extends StatelessWidget {
 
   inputChat(var temp) async {
     if(vmHandler.currentClinicId.isEmpty) {
-      print(temp[1]);
       await vmHandler.getClinicName(temp[1]);
     }
     Chats inputchat = Chats(

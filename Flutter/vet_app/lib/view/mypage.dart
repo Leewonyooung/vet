@@ -12,7 +12,7 @@ class Mypage extends StatelessWidget {
     final LoginHandler loginHandler = Get.put(LoginHandler());
     return Scaffold(
         appBar: AppBar(
-          title: const Text('마이페이지'),
+          title: const Text('마이페이지',style: TextStyle(fontSize: 26),),
         ),
         body: loginHandler.isLoggedIn()?
         GetBuilder<LoginHandler>(builder: (_) {
@@ -35,13 +35,67 @@ class Mypage extends StatelessWidget {
                         child: Column(
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.network(
-                                    'http://127.0.0.1:8000/mypage/view/${result[0].image}'),
-                                Text(result[0].name),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                    'http://127.0.0.1:8000/mypage/view/${result[0].image}',
+                                    width: MediaQuery.of(context).size.width/1.5,  
+                                  ),
+                                ),
                               ],
                             ),
-                            Text(result[0].id!),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width/1.15,
+                                height: MediaQuery.of(context).size.height/20,
+                                child: const Text(
+                                  '회원 정보',
+                                  style:TextStyle(
+                                    fontSize: 24,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              width: MediaQuery.of(context).size.width/1.1,
+                              height: MediaQuery.of(context).size.height/5,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Theme.of(context).colorScheme.onSecondary
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('이름: ${result[0].name}',
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      ),
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        const Padding(
+                                          padding:  EdgeInsets.only(top:6.0),
+                                          child:  Text('이메일: ',
+                                            style:  TextStyle(
+                                            fontSize: 22,
+                                          ),),
+                                        ),
+                                        Text(result[0].id!,
+                                        style: const TextStyle(fontSize: 22),),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
                             const Divider(
                               color: Colors.grey, // 선의 색상
                               thickness: 1, // 선의 두께
@@ -52,29 +106,43 @@ class Mypage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(
+                                      MediaQuery.of(context).size.width/3, 
+                                      MediaQuery.of(context).size.height/14
+                                    ),
+                                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer
+                                  ),
                                     onPressed: (){
                                       showDialog(loginHandler);
                                     },
                                     child: const Column(
                                       children: [
-                                        Icon(Icons.pets),
-                                        Text('로그아웃')
+                                        Icon(Icons.pets, size: 35,),
+                                        Text('로그아웃', style:  TextStyle(fontSize: 16),)
                                       ],
                                     )),
                                 ElevatedButton(
-                                    onPressed: () {
-                                      Get.to(
-                                        MyinfoUpdate(),
-                                        arguments: result[0].id,
-                                      )!
-                                          .then((value) => loginHandler
-                                              .selectMyinfo(loginHandler
-                                                  .getStoredEmail()));
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(
+                                      MediaQuery.of(context).size.width/3, 
+                                      MediaQuery.of(context).size.height/14
+                                    ),
+                                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer
+                                  ),
+                                  onPressed: () {
+                                    Get.to(
+                                      MyinfoUpdate(),
+                                      arguments: result[0].id,
+                                    )!
+                                        .then((value) => loginHandler
+                                            .selectMyinfo(loginHandler
+                                                .getStoredEmail()));
                                     },
                                     child: const Column(
                                       children: [
-                                        Icon(Icons.account_circle),
-                                        Text('내정보 수정')
+                                        Icon(Icons.account_circle,size: 35,),
+                                        Text('내정보 수정',style: TextStyle(fontSize: 16),)
                                       ],
                                     )),
                               ],
@@ -95,7 +163,7 @@ class Mypage extends StatelessWidget {
     Get.defaultDialog(
       title: "로그아웃",
       middleText: '로그아웃 하시겠습니까?',
-      onCancel: () => Get.back(),
+      onCancel: () => (),
       onConfirm: ()async{ 
         await loginHandler.signOut();
         Get.offAll(()=>Navigation());

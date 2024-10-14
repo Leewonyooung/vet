@@ -88,15 +88,13 @@ class Navigation extends StatelessWidget {
               },
             ),
           ],
-          backgroundColor: Colors.white,
           elevation: 0,
           iconTheme: const IconThemeData(color: Colors.black),
           titleTextStyle: const TextStyle(color: Colors.black, fontSize: 18),
         ),
         body: Obx(() {
           shouldRefresh.value;
-          return Container(
-            color: Colors.white,
+          return SizedBox(
             child: Column(
               children: [
                 const SizedBox(height: 10),

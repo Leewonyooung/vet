@@ -17,6 +17,7 @@ class ChatsHandler extends LoginHandler {
   final currentClinicId = "".obs;
   final lastchatroom = <Chatroom>[].obs;
   final lastChats = <Chats>[].obs;
+  final status = false.obs;
   final roomName = [].obs;
   Stream<QuerySnapshot> testsnapshot =  FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: 'adfki125').snapshots();
   List<Chatroom> result = [];
@@ -29,6 +30,40 @@ class ChatsHandler extends LoginHandler {
   void onInit() async {
     super.onInit();
     await getAllData();
+  }
+
+  DateTime parseTime(String timeStr) {
+    bool isPM = timeStr.contains("오후");
+    timeStr = timeStr.replaceRange(0, 2, '');
+    List<String> timeParts = timeStr.split(":");
+
+    int hour = int.parse(timeParts[0]);
+    int minute = int.parse(timeParts[1]);
+    if (isPM && hour != 12) {
+      hour += 12;
+    } else if (!isPM && hour == 12) {
+      hour = 0;
+    }
+    DateTime now = DateTime.now();
+    return DateTime(now.year, now.month, now.day, hour, minute);
+  }
+
+  getStatus() async{
+    var url = Uri.parse(
+          'http://127.0.0.1:8000/clinic/detail_clinic?id=$currentClinicId');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    String startTime = dataConvertedJSON['results'][0][5];
+    String endTime = dataConvertedJSON['results'][0][6];
+    DateTime time1 = parseTime(startTime);
+    DateTime time2 = parseTime(endTime);
+    Duration durationBetween = time2.difference(time1);
+    DateTime resetTime1 = DateTime(time1.year, time1.month, time1.day, time1.hour, time1.minute);
+    DateTime resetTime2 = DateTime(time2.year, time2.month, time2.day, time2.hour, time2.minute);
+    if(DateTime.now().hour >resetTime1.hour && DateTime.now().hour < resetTime2.hour){
+      status.value = true;
+    }
+    update();
   }
   showScreen() async{
     show.value = true;

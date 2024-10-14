@@ -117,7 +117,10 @@ class ClinicInfo extends StatelessWidget {
                             padding: const EdgeInsets.all(20.0),
                             child: ElevatedButton(
                               onPressed: () async{
+                                chatsHandler.currentClinicId.value = result[0].id;
                                 await chatsHandler.firstChatRoom(result[0].id ,result[0].image);
+                                await chatsHandler.makeChatRoom();
+                                await chatsHandler.queryChat();
                                 Get.to(()=> ChatView(),
                                   arguments: [favoriteHandler.clinicDetail[0].image, favoriteHandler.clinicDetail[0].name,]
                                 );

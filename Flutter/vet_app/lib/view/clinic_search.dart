@@ -13,97 +13,131 @@ class ClinicSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('검색'),
+    appBar: AppBar(
+      toolbarHeight: 80,
+      title: SearchBar(
+        leading: const Padding(
+          padding: EdgeInsets.only(left:12.0),
+          child: Icon(Icons.search_outlined, size: 25,),
         ),
-        body: GetBuilder<FavoriteHandler>(
-          builder: (_) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SearchBar(
-                    controller: searchKeywardController,
-                    onChanged: (value) {
-                      if (value.isNotEmpty) {
-                        vmHandler.searchbarClinic(value);
-                      } else {
-                        vmHandler.getAllClinic();
-                      }
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: Obx(
-                      () {
-                          return Column(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height / 1.5,
-                                child: ListView.builder(
-                                  itemCount: vmHandler.clinicSearch.length,
-                                  itemBuilder: (context, index) {
-                                    final clinic = vmHandler.clinicSearch;
-                                    return GestureDetector(
-                                      onTap: () {
-                                        vmHandler.updateCurrentIndex(
-                                            clinic[index].id);
-                                        Get.to(() => ClinicInfo(), arguments: [
-                                          clinic[index].id,
-                                        ]);
-                                      },
-                                      child: Card(
-                                        child: Center(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Image.network(
-                                                  'http://127.0.0.1:8000/clinic/view/${clinic[index].image}',
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.3,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.1),
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      clinic[index].name,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    Text(
-                                                      clinic[index].address,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    )
-                                                  ],
+        controller: searchKeywardController,
+        onChanged: (value) {
+          if (value.isNotEmpty) {
+            vmHandler.searchbarClinic(value);
+          } else {
+            vmHandler.getAllClinic();
+          }
+        },
+      ),
+    ),
+    body: GetBuilder<FavoriteHandler>(
+      builder: (_) {
+        return Column(
+          children: [
+            Expanded(
+              child: Obx(() {
+                return Column(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height:
+                          MediaQuery.of(context).size.height / 1.4,
+                      child: ListView.builder(
+                        itemCount: vmHandler.clinicSearch.length,
+                        itemBuilder: (context, index) {
+                          final clinic = vmHandler.clinicSearch;
+                          return GestureDetector(
+                            onTap: () {
+                              vmHandler.updateCurrentIndex(
+                                  clinic[index].id);
+                              Get.to(() => ClinicInfo(), arguments: [
+                                clinic[index].id,
+                              ]);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: MediaQuery.of(context).size.height / 8,
+                                decoration: BoxDecoration(
+                                  color: index %3 ==1 ?Theme.of(context).colorScheme.primaryContainer:index %3 ==2 
+                                  ?Theme.of(context).colorScheme.secondaryContainer:
+                                  Theme.of(context).colorScheme.tertiaryContainer,
+                                  borderRadius: BorderRadius.circular(15),
+                                  // border: Border.all(color: Colors.black)
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(15),
+                                          child: Image.network(
+                                              'http://127.0.0.1:8000/clinic/view/${clinic[index].image}',
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.3,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.1,
+                                                  fit: BoxFit.cover,),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left:8.0,top: 8),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  clinic[index].name,
+                                                  style: TextStyle(
+                                                    color: index % 3 == 1 ?Theme.of(context).colorScheme.primary:
+                                                    index % 3 == 2 ?Theme.of(context).colorScheme.secondary : 
+                                                    Theme.of(context).colorScheme.tertiary,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  overflow:TextOverflow.ellipsis,
                                                 ),
-                                              ),
-                                            ],
+                                                Text(
+                                                  clinic[index].address,
+                                                  style:TextStyle(
+                                                    color: index % 3 == 1 ?Theme.of(context).colorScheme.primary:
+                                                    index % 3 == 2 ?Theme.of(context).colorScheme.secondary : 
+                                                    Theme.of(context).colorScheme.tertiary,
+                                                    // fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  overflow:TextOverflow.ellipsis,
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ],
+                            ),
                           );
-                        // }
-                      }),
-                ),
-              ],
-            );
-          },
-        ));
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              // }
+            }),
+            ),
+          ],
+        );
+      },
+    ));
   }
 }
