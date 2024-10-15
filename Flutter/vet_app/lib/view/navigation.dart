@@ -350,6 +350,10 @@ class Navigation extends StatelessWidget {
                 ),
               ),
             ),
+            Container(
+              height: 2,
+              color: Colors.green.shade300,
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
