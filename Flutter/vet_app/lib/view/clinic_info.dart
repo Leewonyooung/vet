@@ -23,6 +23,7 @@ class ClinicInfo extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('검색 결과'),
+        
       ),
       body: GetBuilder<FavoriteHandler>(
         builder: (_) {

@@ -64,6 +64,8 @@ class PetInfo extends StatelessWidget {
     );
   }
 
+  // --- Functions ---
+
   // 반려동물 이미지
   _buildPetImage(Pet updatedPet) {
     return SizedBox(

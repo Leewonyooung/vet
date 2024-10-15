@@ -41,7 +41,7 @@ class PetHandler extends SpeciesHandler {
 
   // 유저 ID를 기반으로 반려동물 정보 가져오기
   fetchPets(String userId) async {
-    var url = Uri.parse('http://127.0.0.1:8000/pet/pets?user_id=$userId');
+    var url = Uri.parse('http://127.0.0.1:8000/pet/pets?user_id=${box.read('userEmail')}');
     try {
       var response = await http.get(url);
 

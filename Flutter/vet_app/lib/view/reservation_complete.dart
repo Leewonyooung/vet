@@ -13,13 +13,19 @@ class ReservationComplete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final queryvalue = Get.arguments;
-    List makervalue=[];
+    List makervalue = [];
     value == null ? makervalue = queryvalue : makervalue = makervalue;
     final Completer<GoogleMapController> mapController = // 구글지도 맵
         Completer<GoogleMapController>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('예약'),
+        title: const Text(
+          '예약',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.blue.shade400,
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Center(
         child: Column(
