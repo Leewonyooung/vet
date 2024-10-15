@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_tab/view/clinic_reservation.dart';
+import 'package:vet_tab/view/rail_home.dart';
 import 'package:vet_tab/vm/login_handler.dart';
 
 class ClinicLogin extends StatelessWidget {
@@ -71,7 +72,9 @@ class ClinicLogin extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: ElevatedButton(
-                          onPressed: () => clinicloginJsonCheck(),
+                          onPressed: () {
+                            clinicloginJsonCheck();
+                          },
                           child: const Text('login'),
                         ),
                       ),
@@ -117,7 +120,7 @@ class ClinicLogin extends StatelessWidget {
         idController.clear();
         passwordController.clear();
         Get.back();
-        Get.to(() =>  ClinicReservation());
+        Get.to(() => RailHome());
       },
     );
   }

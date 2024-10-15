@@ -61,9 +61,9 @@ async def select_reservation(clinic_id: str, time: str):
         (select reservation.user_id, pet.species_type, pet.species_category, pet.features, reservation.symptoms, reservation.time
         from reservation inner join pet
         on reservation.pet_id = pet.id and clinic_id = %s) as res
-    where res.user_id = user.id '''
-    time1 =f'%{time}%'
-    curs.execute(sql, (clinic_id, time))
+    where res.user_id = user.id and time like %s order by time asc'''
+    time1 =f'{time}%'
+    curs.execute(sql, (clinic_id, time1))
     rows= curs.fetchall()
     conn.commit()
     conn.close()
