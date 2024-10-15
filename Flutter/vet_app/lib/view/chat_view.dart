@@ -20,49 +20,52 @@ class ChatView extends StatelessWidget {
   Widget build(BuildContext context) {
     vmHandler.getStatus();
     final temp = Get.arguments ?? "__";
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: Colors.lightGreen[100],
-        elevation: 0,
-        toolbarHeight: 75,
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 25,
-              backgroundImage: NetworkImage(temp[0]),
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  temp[1],
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          backgroundColor: Colors.lightGreen[100],
+          elevation: 0,
+          toolbarHeight: 75,
+          title: Row(
+            children: [
+              CircleAvatar(
+                radius: 25,
+                backgroundImage: NetworkImage(temp[0]),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    temp[1],
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                Obx(() => Text(
-                      vmHandler.status.value ? '진료 중' : '진료 종료',
-                      style: TextStyle(
-                        color: vmHandler.status.value
-                            ? Colors.green[400]
-                            : Colors.red[400],
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    )),
-              ],
-            ),
-          ],
+                  Obx(() => Text(
+                        vmHandler.status.value ? '진료 중' : '진료 종료',
+                        style: TextStyle(
+                          color: vmHandler.status.value
+                              ? Colors.green[400]
+                              : Colors.red[400],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      )),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: Expanded(
-            child: Obx(
-              () => _buildChatList(context, temp),
+        body: SafeArea(
+          child: Center(
+            child: Expanded(
+              child: Obx(
+                () => _buildChatList(context, temp),
+              ),
             ),
           ),
         ),
