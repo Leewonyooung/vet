@@ -4,6 +4,7 @@ Description: 병원과 유저간 채팅 페이지
 Fixed: 10/11
 Usage: 채팅 목록
 */
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -11,241 +12,216 @@ import 'package:vet_app/model/chats.dart';
 import 'package:vet_app/vm/chat_handler.dart';
 
 class ChatView extends StatelessWidget {
-  ChatView({super.key,});
+  ChatView({super.key});
+
   final ChatsHandler vmHandler = Get.find();
   final TextEditingController chatController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-
     vmHandler.getStatus();
-    final temp = Get.arguments??"__";
+    final temp = Get.arguments ?? "__";
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.lightGreen[100],
+        elevation: 0,
         toolbarHeight: 75,
         title: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.network(temp[0],width: 50,)
+            CircleAvatar(
+              radius: 25,
+              backgroundImage: NetworkImage(temp[0]),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left:12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(temp[1], style: const TextStyle(fontSize: 20),),
-                  vmHandler.status.value ? 
-                  const Text(
-                    '진료 중',
-                    style: TextStyle(
-                      color: Colors.green, 
-                      fontWeight: FontWeight.bold, 
-                      fontSize: 20
-                    ),
-                  ) : 
-                  const Text(
-                    '진료 종료', 
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold, 
-                      fontSize: 20
-                    ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  temp[1],
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
                   ),
-                ],
-              ),
+                ),
+                Obx(() => Text(
+                      vmHandler.status.value ? '진료 중' : '진료 종료',
+                      style: TextStyle(
+                        color: vmHandler.status.value
+                            ? Colors.green[400]
+                            : Colors.red[400],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    )),
+              ],
             ),
           ],
         ),
       ),
-      extendBodyBehindAppBar: true,
-      body: Obx(() {
-        return chatList(context, temp);
-      }),
+      body: SafeArea(
+        child: Center(
+          child: Expanded(
+            child: Obx(
+              () => _buildChatList(context, temp),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-
-  chatList(context, temp){
-    SchedulerBinding.instance.addPostFrameCallback((_) async{
+  _buildChatList(BuildContext context, var temp) {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
       vmHandler.listViewContoller
           .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent);
     });
-    
+
     return Column(
       children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height / 1.125,
+        Expanded(
           child: ListView.builder(
             controller: vmHandler.listViewContoller,
             itemCount: vmHandler.chats.length,
             itemBuilder: (context, index) {
               Chats chat = vmHandler.chats[index];
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(8,8,8,0),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: vmHandler.checkToday(chat)?
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.center,
-                    // 날짜 표시
-                    child: Text(chat.text.substring(3,13), style: const TextStyle(fontSize: 18,),),
-                  ):
-                  vmHandler.box.read('userEmail') == chat.sender? 
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/10,0,0,0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: Text(chat.timestamp.substring(11,16)),
-                        ),
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.green[200],
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15),
-                                  child:
-                                  SizedBox(
-                                    child: Text(
-                                      chat.text,
-                                      style: const TextStyle(fontSize: 20),
-                                    ),
-                                  )
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Padding(
-                  padding: const EdgeInsets.only(right:15.0),
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: [
-                            SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: Image.network(
-                                temp[0],
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left:8.0),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width/1.4,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(temp[1],style: const TextStyle(fontSize: 20),),
-                                    chat.text.length == vmHandler.checkToday(chat)?
-                                    Text(chat.text.substring(3,chat.text.length-4)):
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Flexible(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.green[200],
-                                              borderRadius: BorderRadius.circular(15),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(12),
-                                              child: Text(
-                                                chat.text,
-                                                style: const TextStyle(fontSize: 20,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left:8.0),
-                                          child: Text(chat.timestamp.substring(11,16)),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                ),
-                ),
-              );
+              return _buildChatItem(context, chat, temp);
             },
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: const BorderRadius.all(Radius.circular(15))
+        _buildInputField(context, temp),
+      ],
+    );
+  }
+
+  _buildChatItem(BuildContext context, Chats chat, var temp) {
+    if (vmHandler.checkToday(chat)) {
+      return _buildDateSeparator(chat);
+    } else if (vmHandler.box.read('userEmail') == chat.sender) {
+      return _buildSentMessage(context, chat);
+    } else {
+      return _buildReceivedMessage(context, chat, temp);
+    }
+  }
+
+  _buildDateSeparator(Chats chat) {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        chat.text.substring(3, 13),
+        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+      ),
+    );
+  }
+
+  _buildSentMessage(BuildContext context, Chats chat) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            chat.timestamp.substring(11, 16),
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),
-          height: MediaQuery.of(context).size.height / 9,
-          width: MediaQuery.of(context).size.width ,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom:8.0),
-            child: Row(
+          const SizedBox(width: 8),
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.green[100],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                chat.text,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildReceivedMessage(BuildContext context, Chats chat, var temp) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(temp[0]),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                    ),
-                    height: 50,
-                    width: MediaQuery.of(context).size.width / 1.23,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left:8.0),
-                      child: TextField(
-                        controller: chatController,
-                        decoration:const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(25))
-                          ),
-                        ),
-                      ),
-                    ),
+                Text(temp[1],
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ),
-                SizedBox(
-                  child: IconButton(
-                    onPressed: () => inputChat(temp),
-                    icon: const Icon(Icons.arrow_circle_up_outlined, size: 35,),
+                  child: Text(
+                    chat.text,
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
               ],
             ),
           ),
-        )
-      ],
+          const SizedBox(width: 8),
+          Text(
+            chat.timestamp.substring(11, 16),
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildInputField(BuildContext context, var temp) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      color: Colors.grey[100],
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: chatController,
+              decoration: InputDecoration(
+                hintText: '메시지를 입력하세요',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.grey[300],
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.send,
+              color: Colors.green,
+            ),
+            onPressed: () => inputChat(temp),
+          ),
+        ],
+      ),
     );
   }
 
   inputChat(var temp) async {
-    if(vmHandler.currentClinicId.isEmpty) {
+    if (vmHandler.currentClinicId.isEmpty) {
       await vmHandler.getClinicName(temp[1]);
     }
     Chats inputchat = Chats(
@@ -255,7 +231,6 @@ class ChatView extends StatelessWidget {
       timestamp: DateTime.now().toString(),
     );
     if (chatController.text != "" && chatController.text.isNotEmpty) {
-      
       await vmHandler.addChat(inputchat);
     }
     chatController.text = '';
