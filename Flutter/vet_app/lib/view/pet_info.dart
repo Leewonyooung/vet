@@ -20,7 +20,10 @@ class PetInfo extends StatelessWidget {
           final updatedPet = petHandler.getPet(pet.id);
           return Text(
             updatedPet != null ? '${updatedPet.name} 정보' : '반려동물 정보',
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           );
         }),
         centerTitle: true,
@@ -125,7 +128,7 @@ class PetInfo extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Colors.blue,
+            color: Colors.lightGreen,
             size: 24,
           ),
           const SizedBox(width: 16),

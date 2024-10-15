@@ -74,7 +74,9 @@ class Navigation extends StatelessWidget {
         appBar: AppBar(
           title: const Text(
             '멍스파인더',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           backgroundColor: Colors.green.shade400,
           foregroundColor: Colors.white,
@@ -319,6 +321,10 @@ class Navigation extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: Colors.white,
+          border: Border.all(
+            color: Colors.green.shade200,
+            width: 2,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.shade300,
@@ -352,12 +358,6 @@ class Navigation extends StatelessWidget {
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    pet.speciesType,
-                    style: TextStyle(
-                      color: Colors.grey[600],
                     ),
                   ),
                   Text(

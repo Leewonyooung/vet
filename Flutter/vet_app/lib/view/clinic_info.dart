@@ -91,7 +91,7 @@ class ClinicInfo extends StatelessWidget {
     );
   }
 
-  Widget _buildClinicInfo(dynamic result, FavoriteHandler favoriteHandler,
+  _buildClinicInfo(dynamic result, FavoriteHandler favoriteHandler,
       String value, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -235,7 +235,7 @@ class ClinicInfo extends StatelessWidget {
               ]);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green.shade200,
+              backgroundColor: Colors.lightGreen.shade300,
               minimumSize: const Size(double.infinity, 50),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
