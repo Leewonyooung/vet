@@ -278,7 +278,7 @@ class Navigation extends StatelessWidget {
             Icon(
               Icons.pets,
               size: 40,
-              color: Colors.green.shade400,
+              color: Colors.grey[900],
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -287,7 +287,7 @@ class Navigation extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green.shade700,
+                  color: Colors.grey[900],
                 ),
               ),
             ),

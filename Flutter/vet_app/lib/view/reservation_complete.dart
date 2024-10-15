@@ -15,85 +15,182 @@ class ReservationComplete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final queryvalue = Get.arguments;
-    var value=  makervalue == null ?  queryvalue :makervalue ?? [' ',' ',' ',' ',' ',' ',' ',];
+    var value = makervalue == null
+        ? queryvalue
+        : makervalue ??
+            [
+              ' ',
+              ' ',
+              ' ',
+              ' ',
+              ' ',
+              ' ',
+              ' ',
+            ];
     final Completer<GoogleMapController> mapController = // 구글지도 맵
         Completer<GoogleMapController>();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '예약',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          '예약 확정',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         backgroundColor: Colors.green.shade400,
-        foregroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text(
-              '예약 확정',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Text("감사합니다\n 고객님\n${value[1]}의 예약이\n확정되셨습니다."),
-            Row(
-              children: [
-                const Icon(Icons.arrow_forward),
-                Text(' 일정 : ${value[4]}')
-              ],
-            ),
-            const Text(
-              '찾아오시는길',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Text(' * 주소: ${value[5]}'),
-            SizedBox(
-              width: 300,
-              height: 200,
-              child: GoogleMap(
-                mapType: MapType.normal,
-                initialCameraPosition: CameraPosition(
-                  zoom: 15,
-                  target: LatLng(value[2], value[3]),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              Center(
+                child: Icon(
+                  Icons.check_circle_outline,
+                  size: 100,
+                  color: Colors.green.shade400,
                 ),
-                onMapCreated: (GoogleMapController controller) {
-                  mapController.complete(controller);
-                },
-                markers: {
-                  Marker(
-                      icon: BitmapDescriptor.defaultMarker,
-                      infoWindow: InfoWindow(
-                          title: value[1], snippet: value[1]), //병원 이름 표시
-                      markerId: MarkerId(value[1]),
-                      position: LatLng(value[2], value[3])),
-                  Marker(
-                    markerId: const MarkerId('병원'),
-                    position: LatLng(value[2], value[3]),
-                  ),
-                },
-                myLocationButtonEnabled: false,
-                myLocationEnabled: false,
-                zoomControlsEnabled: false,
-                zoomGesturesEnabled: false,
-                rotateGesturesEnabled: false,
-                buildingsEnabled: false,
               ),
+              const SizedBox(height: 20),
+              Center(
+                child: Text(
+                  "예약이 확정되었습니다",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green.shade700,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              _buildInfoCard(value),
+              const SizedBox(height: 30),
+              const Text(
+                '찾아오시는 길',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                ' * 주소: ${value[5]}',
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 20),
+              _buildMap(value, mapController),
+              const SizedBox(height: 30),
+              _buildButtons(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildInfoCard(List<dynamic> value) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "${value[1]}",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 10),
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: () => Get.to(() => QueryReservation()),
-                  child: const Text('예약내역'),
-                ),
-                ElevatedButton(
-                  onPressed: () => Get.to(()=>Navigation()),
-                  child: const Text('홈으로'),
-                ),
+                const Icon(Icons.calendar_today, color: Colors.green),
+                const SizedBox(width: 10),
+                Text('일정: ${value[4]}', style: const TextStyle(fontSize: 16)),
               ],
-            )
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  _buildMap(List<dynamic> value, Completer<GoogleMapController> mapController) {
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+            zoom: 15,
+            target: LatLng(value[2], value[3]),
+          ),
+          onMapCreated: (GoogleMapController controller) {
+            mapController.complete(controller);
+          },
+          markers: {
+            Marker(
+              icon: BitmapDescriptor.defaultMarker,
+              infoWindow: InfoWindow(title: value[1], snippet: value[1]),
+              markerId: MarkerId(value[1]),
+              position: LatLng(value[2], value[3]),
+            ),
+          },
+          myLocationButtonEnabled: false,
+          myLocationEnabled: false,
+          zoomControlsEnabled: false,
+          zoomGesturesEnabled: false,
+          rotateGesturesEnabled: false,
+          buildingsEnabled: false,
+        ),
+      ),
+    );
+  }
+
+  _buildButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ElevatedButton.icon(
+          icon: const Icon(Icons.list),
+          label: const Text('예약내역'),
+          onPressed: () => Get.to(() => QueryReservation()),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green.shade400,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.home),
+          label: const Text('홈으로'),
+          onPressed: () => Get.to(() => Navigation()),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue.shade400,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+      ],
     );
   }
 }
