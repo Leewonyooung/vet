@@ -47,6 +47,8 @@ class ClinicSearch extends StatelessWidget {
                             onTap: () {
                               vmHandler.updateCurrentIndex(
                                   clinic[index].id);
+                              vmHandler.searchbarController.clear();
+                              vmHandler.getAllClinic();
                               Get.to(() => ClinicInfo(), arguments: [
                                 clinic[index].id,
                               ]);
