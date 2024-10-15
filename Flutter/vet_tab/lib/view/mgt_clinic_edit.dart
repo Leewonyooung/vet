@@ -30,7 +30,7 @@ class MgtClinicEdit extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            '병원 추가',
+            '병원 정보 변경',
             style: TextStyle(fontSize: 30),
           ),
           leading: IconButton(

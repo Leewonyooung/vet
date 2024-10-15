@@ -73,7 +73,7 @@ class ClinicLogin extends StatelessWidget {
                         padding: const EdgeInsets.all(20.0),
                         child: ElevatedButton(
                           onPressed: () => clinicloginJsonCheck(),
-                          child: const Text('login'),
+                          child: const Text('로그인'),
                         ),
                       ),
                     ],
@@ -102,7 +102,7 @@ class ClinicLogin extends StatelessWidget {
     Get.defaultDialog(
       title: 'error',
       content: const Text(
-          'please contact management to create your clinic account \n TEL: 010-3116-9966'),
+          '병원정보가 정확하지 않습니다. \n병원을 등록하지 않으셨다면 하기 전화번호로 문의 부탁드립니다 \n TEL: 010-3116-9966'),
       textCancel: 'cancel',
       onCancel: Get.back,
     );
@@ -110,15 +110,15 @@ class ClinicLogin extends StatelessWidget {
 
   loginDialog() {
     Get.defaultDialog(
-      title: 'Welcome',
-      content: const Text('Login Successful'),
+      title: '환영합니다',
+      content: const Text('로그인을 성공하셨습니다'),
       barrierDismissible: false,
-      textConfirm: 'proceed',
+      textConfirm: '확인',
       onConfirm: () {
         idController.clear();
         passwordController.clear();
         Get.back();
-        Get.to(() =>  RailHome());
+        Get.to(() => RailHome());
       },
     );
   }

@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_tab/view/mgt_clinic_add.dart';
 import 'package:vet_tab/view/mgt_clinic_list.dart';
-import 'package:vet_tab/view/mgt_species_mgt.dart';
+import 'package:vet_tab/vm/species_handler.dart';
 
 class MgtHome extends StatelessWidget {
-  const MgtHome({super.key});
+  MgtHome({super.key});
+  final speciesHandler = Get.put(SpeciesHandler());
 
   @override
+
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Management Page'),
+          title: const Text('개발자 페이지'),
         ),
         body: Center(
           child: Column(
@@ -33,13 +35,14 @@ class MgtHome extends StatelessWidget {
                     onPressed: () {
                       Get.to(() => MgtClinicList());
                     },
-                    child: const Text('병원 정보 병경')),
+                    child: const Text('병원 정보 변경')),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                     onPressed: () {
-                      Get.to(() => MgtSpeciesMgt());
+                    speciesHandler.speciesController.clear();
+                    speciesHandler.speciesInsertDialog();
                     },
                     child: const Text('견종 추가하기')),
               ),

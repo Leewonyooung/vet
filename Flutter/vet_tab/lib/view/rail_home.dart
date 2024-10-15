@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_tab/view/chat_room_view.dart';
 import 'package:vet_tab/view/clinic_reservation.dart';
-import 'package:vet_tab/view/mgt_home.dart';
-import 'package:vet_tab/view/mgt_species_mgt.dart';
 import 'package:vet_tab/vm/tab_vm.dart';
 
 class RailHome extends StatelessWidget {
@@ -30,16 +28,6 @@ class RailHome extends StatelessWidget {
                     label: Text('Home'),
                   ),
                   NavigationRailDestination(
-                    icon: Icon(Icons.search),
-                    selectedIcon: Icon(Icons.search),
-                    label: Text('Search'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.favorite),
-                    selectedIcon: Icon(Icons.favorite),
-                    label: Text('Favorites'),
-                  ),
-                  NavigationRailDestination(
                     icon: Icon(Icons.calendar_month),
                     selectedIcon: Icon(Icons.calendar_month),
                     label: Text('Reservation'),
@@ -61,10 +49,6 @@ class RailHome extends StatelessWidget {
       case 0:
         return ChatRoomView();
       case 1:
-        return const MgtHome();
-      case 2:
-        return MgtSpeciesMgt();
-      case 3:
         return ClinicReservation();
       default:
         return Container();

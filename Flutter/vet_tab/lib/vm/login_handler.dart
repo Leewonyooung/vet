@@ -31,19 +31,19 @@ var isObscured = true.obs;
 
   showMGTloginDialog(){
     Get.defaultDialog(
-      title: 'Alert',
+      title: '경고',
       content: const SizedBox( 
         height: 75,
         width: 250,
-        child:  Text('Are you going proceed to Management page?',style: TextStyle(fontSize: 20),)),
+        child:  Text('관리자 페이지로이동\n하시겠습니까?',style: TextStyle(fontSize: 20),)),
       barrierDismissible: false,
-      textConfirm: 'proceed',
+      textConfirm: '계속',
       onConfirm: () {
         tapCount = 0;
         Get.back();
-        Get.to(() => const MgtHome());
+        Get.to(() => MgtHome());
       },
-      textCancel: 'Cencel',
+      textCancel: '뒤로가기',
       onCancel: () {
         tapCount = 0;
         Get.back();

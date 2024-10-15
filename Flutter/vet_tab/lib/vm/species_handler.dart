@@ -1,7 +1,5 @@
-import 'package:vet_tab/model/speciessearch.dart';
 import 'package:vet_tab/vm/login_handler.dart';
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -9,22 +7,6 @@ import 'package:http/http.dart' as http;
 class SpeciesHandler extends LoginHandler {
   TextEditingController speciesController = TextEditingController();
   var categoryList = [].obs;
-  var selectedItem = 0.obs;
-
-  categoryquery() async {
-    var url = Uri.parse(
-        "http://127.0.0.1:8000/species/categories");
-    var response = await http.get(url);
-    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    var results = dataConvertedJSON['results'];
-    List <Speciessearch> returnData = [];
-
-        for (int i = 0; i < results.length; i++) {
-      String  categoryinsert= results[i];
-      returnData.add(Speciessearch(category: categoryinsert ));}
-    categoryList.value = returnData;
-  }
-
 
   categoryInsert(String category) async {
     var url = Uri.parse(
@@ -33,19 +15,20 @@ class SpeciesHandler extends LoginHandler {
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var results = dataConvertedJSON['results'];
     if (results == 'OK'){
+      speciesController.clear();
       clinicInsertCompleteDialog();
     }else{
-      clinicInsertEditErrorDialog();
+      speciesInsertEditErrorDialog();
     }
       return results;
   }
 
   // error dialog insert clinic (안창빈)
 
-  clinicInsertEditErrorDialog()async{
+  speciesInsertEditErrorDialog()async{
       await Get.defaultDialog(
       title: '에러',
-      content: const Text('예기치 못한 오류가 발생했습니다.'),
+      content: const Text('이미 있는 견종입니다'),
       textConfirm: '확인',
       onConfirm: () {
         Get.back();
@@ -59,20 +42,48 @@ class SpeciesHandler extends LoginHandler {
   clinicInsertCompleteDialog()async{
       await Get.defaultDialog(
       title: '확인',
-      content: const Text('병원 정보가 추가되었습니다'),
+      content: const Text('견종이 추가되었습니다'),
       textConfirm: '확인',
       onConfirm: () {
+        Get.back();
         Get.back();
       },
       barrierDismissible: true,
     );
   }
 
-
-  void updateSelectedItem(int index) {
-    selectedItem.value = index;
+  speciesInsertDialog()async{
+      await Get.defaultDialog(
+        radius: 10,
+      title: '견종 추가',
+      content: Center(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: SizedBox(
+                width: 300,
+                child: TextField(
+                    controller: speciesController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: '견종을 입력하세요',
+                      suffixIcon: IconButton(
+                        onPressed:() {
+                        categoryInsert(speciesController.text);
+                        },
+                        icon: Icon(Icons.add),
+                      ),
+                    ),
+                  ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      barrierDismissible: true,
+    );
   }
-
 
 
 
