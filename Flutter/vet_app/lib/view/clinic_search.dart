@@ -54,7 +54,6 @@ class ClinicSearch extends StatelessWidget {
                     await vmHandler.getAllClinic();
                     vmHandler.updateCurrentIndex(clinic.id);
                     vmHandler.searchbarController.clear();
-                    vmHandler.getAllClinic();
                     Get.to(() => ClinicInfo(), arguments: [clinic.id]);
                   },
                   child: Card(
