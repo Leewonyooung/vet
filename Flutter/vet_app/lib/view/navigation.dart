@@ -336,16 +336,18 @@ class Navigation extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(15)),
-              child: Image.network(
-                'http://127.0.0.1:8000/pet/uploads/${pet.image}',
-                height: 120,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.error, size: 120),
+            Center(
+              child: ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(15)),
+                child: Image.network(
+                  'http://127.0.0.1:8000/pet/uploads/${pet.image}',
+                  height: 120,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.error, size: 120),
+                ),
               ),
             ),
             Padding(
