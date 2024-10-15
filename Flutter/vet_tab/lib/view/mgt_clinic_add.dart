@@ -430,7 +430,6 @@ class MgtClinicAdd extends StatelessWidget {
                                 errorDialogClinicAdd();
                               } else {
                                 clincAdd();
-                                Get.back();
                               }
                             },
                             child: const Text(

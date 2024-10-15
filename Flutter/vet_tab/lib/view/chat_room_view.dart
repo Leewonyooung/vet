@@ -15,7 +15,7 @@ class ChatRoomView extends StatelessWidget {
       body: FutureBuilder(
         future: chatsHandler.getAllData(),
         builder: (context, snapshot) {
-           if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(

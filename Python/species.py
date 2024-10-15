@@ -39,35 +39,39 @@ async def get_species_types():
 
 # 특정 종류의 세부 종류 조회 API (GET)
 @router.get("/categories")
-async def get_species_categories(type: str):
+async def get_species_categories():
     conn = connection()
+    curs = conn.cursor()
     try:
-        with conn.cursor() as cursor:
-            sql = "SELECT category FROM species WHERE type = %s"
-            cursor.execute(sql, (type,))
-            categories = cursor.fetchall()
-
-            if not categories:
-                raise HTTPException(status_code=404, detail="No categories found for this species type.")
-
-            return [category[0] for category in categories]
-    finally:
+        sql = 'SELECT category FROM species'
+        curs.execute(sql)
+        rows= curs.fetchall()
         conn.close()
+        result = [row[0] for row in rows]
+        print(f"병원 검색 \n{result}")
+        return{'results': result}
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return{"results" : "Error"}
 
-# 새로운 종류 추가 API (POST)
-@router.post("/add")
-async def add_species(species_type: str, species_category: str):
+# 새로운 종류 추가 API 
+@router.get("/add")
+async def add_species(species_category: str):
     conn = connection()
+    curs = conn.cursor()
     try:
-        with conn.cursor() as cursor:
-            sql = "INSERT INTO species (type, category) VALUES (%s, %s)"
-            cursor.execute(sql, (species_type, species_category))
-            conn.commit()
-            return {"message": "Species added successfully!"}
-    except pymysql.IntegrityError:
-        raise HTTPException(status_code=400, detail="This species already exists.")
-    finally:
+        sql ="INSERT INTO species (type, category) VALUES (%s, %s)"
+        curs.execute(sql, ('강아지', species_category))
+        conn.commit()
         conn.close()
+        return {'results': 'OK'}
+
+    except Exception as e:
+        conn.close()
+        print("Error :", e)
+        return {'result': 'Error'}    
+
 
 # 종류 삭제 API (DELETE)
 @router.delete("/delete")

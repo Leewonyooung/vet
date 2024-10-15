@@ -108,10 +108,53 @@ class ClinicHandler extends LoginHandler{
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var results = dataConvertedJSON['results'];
-    return results;
+    if (results == 'OK'){
+      clinicInsertCompleteDialog();
+    }else{
+      clinicInsertEditErrorDialog();
+    }
+      return results;
   }
 
-  // update clinic (안창빈)
+  // error dialog insert clinic (안창빈)
+
+  clinicInsertEditErrorDialog()async{
+      await Get.defaultDialog(
+      title: '에러',
+      content: const Text('예기치 못한 오류가 발생했습니다.'),
+      textConfirm: '확인',
+      onConfirm: () {
+        Get.back();
+      },
+      barrierDismissible: true,
+    );
+  }
+
+  // complete dialog insert clinic (안창빈)
+
+  clinicInsertCompleteDialog()async{
+      await Get.defaultDialog(
+      title: '확인',
+      content: const Text('병원 정보가 추가되었습니다'),
+      textConfirm: '확인',
+      onConfirm: () {
+        Get.back();
+      },
+      barrierDismissible: true,
+    );
+  }
+
+  // errorDialog when any of the textfield from the page are empty (안창빈)
+  errorDialogClinicAdd() async {
+    await Get.defaultDialog(
+      title: 'error',
+      content: const Text('빈칸이 있는지 확인해주세요'),
+      textCancel: '확인',
+      barrierDismissible: true,
+    );
+  }
+
+  // update clinic except image (안창빈)
 
   getClinicUpdate(
       String id,
@@ -129,9 +172,16 @@ class ClinicHandler extends LoginHandler{
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var results = dataConvertedJSON['results'];
+    if (results == 'OK'){
+      clinicEditCompleteDialog();
+    }else{
+      clinicInsertEditErrorDialog();
+    }
     return results;
+    
   }
 
+  // update clinic include image (안창빈)
 
   getClinicUpdateAll(
       String id,
@@ -151,10 +201,29 @@ class ClinicHandler extends LoginHandler{
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];
+    if (result == 'OK'){
+      clinicEditCompleteDialog();
+    }else{
+      clinicInsertEditErrorDialog();
+    }
     return result;
+    
   }
 
-  // insert clinic (안창빈)
+    // complete dialog insert clinic (안창빈)
+
+  clinicEditCompleteDialog()async{
+      await Get.defaultDialog(
+      title: '확인',
+      content: const Text('병원 정보가 변경되었습니다'),
+      textConfirm: '확인',
+      onConfirm: () {
+        Get.back();
+      },
+      barrierDismissible: true,
+    );
+  }
+
 
   // Format date to '오전 7:30' style in Korean
   String formatDate(DateTime date) {
@@ -168,6 +237,7 @@ class ClinicHandler extends LoginHandler{
     await initializeDateFormatting('ko', null); 
   }
 
+  // Date picker for clinic edit and add page (안창빈) 
 
   opDateSelection(BuildContext context, bool isStartDate)  {
     initializeLocale();
@@ -217,6 +287,7 @@ class ClinicHandler extends LoginHandler{
     );
   }
 
+  // update initial time setting while entering clinic edit page(안창빈)
   updateInitialClinicTimeEdit(String starttime,String endtime){
     startOpTime.value = starttime;
     endOpTime.value = endtime;

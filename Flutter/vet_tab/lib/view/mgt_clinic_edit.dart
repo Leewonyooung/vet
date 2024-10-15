@@ -438,8 +438,10 @@ class MgtClinicEdit extends StatelessWidget {
                               } else {
                                 if (clinicHandler.firstDisp == 0) {
                                   clinicEdit();
+                                  Get.back();
                                 } else {
                                   clinicEditAll();
+                                  Get.back();
                                 }
                               }
                             },
@@ -460,6 +462,8 @@ class MgtClinicEdit extends StatelessWidget {
     );
   }
   //Function
+
+   // input the address lat and long data which were inputed from mgt_clinic_map apge (안창빈)
   updateClinicAddressData(String address,double lat,double long){
     addressController.text = address.toString();
     latController.text = lat.toString();
@@ -476,23 +480,6 @@ class MgtClinicEdit extends StatelessWidget {
     );
   }
 
-  //add clinic information (안창빈)
-  clincAdd() async {
-    await clinicHandler.uploadImage();
-    clinicHandler.getClinicInsert(
-      idController.text,
-      nameController.text,
-      passwordController.text,
-      double.parse(latController.text),
-      double.parse(longController.text),
-      stimeController.text,
-      etimeController.text,
-      introController.text,
-      addressController.text,
-      telController.text,
-      clinicHandler.filename,
-    );
-  }
   //edit clinic information (안창빈)
 clinicEdit()async{
     await clinicHandler.getClinicUpdate(
@@ -540,6 +527,5 @@ clinicEditAll() async{
       addressController.text = result[0].address; 
       telController.text = result[0].phone; 
       clinicHandler.updateInitialClinicTimeEdit(result[0].startTime, result[0].endTime);
-      print(result[0].image);
   }
 }//END

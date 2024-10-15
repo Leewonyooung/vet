@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:vet_tab/view/chat_room_view.dart';
 import 'package:vet_tab/view/clinic_reservation.dart';
 import 'package:vet_tab/view/mgt_home.dart';
-import 'package:vet_tab/view/mgt_species_add.dart';
+import 'package:vet_tab/view/mgt_species_mgt.dart';
 import 'package:vet_tab/vm/tab_vm.dart';
 
 class RailHome extends StatelessWidget {
@@ -63,7 +63,7 @@ class RailHome extends StatelessWidget {
       case 1:
         return const MgtHome();
       case 2:
-        return const MgtSpeciesAdd();
+        return MgtSpeciesMgt();
       case 3:
         return ClinicReservation();
       default:
