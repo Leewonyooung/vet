@@ -86,12 +86,12 @@ return Row(
                                       chatsHandler.roomName[index],
                                       style: const TextStyle(fontSize: 30),
                                     ),
-                                    Row(
-                                      children: [
-                                        index <= chatsHandler.lastChats.length-1 ?
-                                        Text(chatsHandler.lastChats[index].text,style: const TextStyle(fontSize: 22)):const Text('채팅이 없습니다.')
-                                      ],
-                                    ),
+                                    // Row(
+                                    //   children: [
+                                    //     index <= chatsHandler.lastChats.length-1 ?
+                                    //     Text(chatsHandler.lastChats[index].text,style: const TextStyle(fontSize: 22)):const Text('채팅이 없습니다.')
+                                    //   ],
+                                    // ),
                                     Container(
                                       alignment: Alignment.bottomRight,
                                       width: MediaQuery.of(context).size.width /4,

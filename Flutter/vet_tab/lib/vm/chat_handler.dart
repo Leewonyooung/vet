@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:vet_tab/model/chatroom.dart';
 import 'package:vet_tab/model/chats.dart';
 import 'package:vet_tab/vm/clinic_handler.dart';
+import 'package:vet_tab/vm/login_handler.dart';
 
 class ChatsHandler extends ClinicHandler {
   final chats = <Chats>[].obs;
@@ -66,7 +67,7 @@ class ChatsHandler extends ClinicHandler {
 
   queryChat() async{
      _rooms
-        .doc("adfki125_${currentUserId.value}")
+        .doc("${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
         .collection('chats')
         .orderBy('timestamp', descending: false)
         .snapshots()
@@ -88,7 +89,7 @@ class ChatsHandler extends ClinicHandler {
       result.clear();
     }
     QuerySnapshot<Map<String, dynamic>> snapshot =
-        await FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: 'adfki125').get();
+        await FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: Get.find<LoginHandler>().box.read('id')).get();
     var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
     for (int i = 0; i < tempresult.length; i++) {
       Chatroom chatroom = Chatroom(
@@ -99,7 +100,7 @@ class ChatsHandler extends ClinicHandler {
     }
     for (int i = 0; i < result.length; i++) {
       _rooms
-          .doc("adfki125_${result[i].user}")
+          .doc("${Get.find<LoginHandler>().box.read('id')}_${result[i].user}")
           .collection('chats')
           .orderBy('timestamp', descending: true)
           .limit(1)
@@ -121,7 +122,7 @@ class ChatsHandler extends ClinicHandler {
   }
 
   makeChatRoom() async {
-    _rooms.where('clinic', isEqualTo: 'adfki125'). snapshots().listen((event) {
+    _rooms.where('clinic', isEqualTo: Get.find<LoginHandler>().box.read('id')). snapshots().listen((event) {
       rooms.value = event.docs
           .map(
             (doc) => Chatroom(
@@ -164,7 +165,7 @@ class ChatsHandler extends ClinicHandler {
     bool istoday = await isToday();
     if(!istoday){
       await _rooms
-        .doc("adfki125_${currentUserId.value}")
+        .doc("${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
         .collection('chats')
         .add({
       'reciever': chat.reciever,
@@ -175,7 +176,7 @@ class ChatsHandler extends ClinicHandler {
     }
 
     _rooms
-        .doc("adfki125_${currentUserId.value}")
+        .doc("${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
         .collection('chats')
         .add({
       'reciever': chat.reciever,
