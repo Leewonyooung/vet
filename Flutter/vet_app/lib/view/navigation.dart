@@ -15,6 +15,7 @@ import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
+import 'package:vet_app/vm/reservation_handler.dart';
 
 class Navigation extends StatelessWidget {
   Navigation({super.key});
@@ -27,6 +28,7 @@ class Navigation extends StatelessWidget {
   final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
   final RxBool shouldRefresh = false.obs;
 
+  final vmHnadler = Get.put(ReservationHandler());
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -4,17 +4,18 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/view/query_reservation.dart';
+import 'package:vet_app/vm/reservation_handler.dart';
 
 // 예약완료 페이지
 class ReservationComplete extends StatelessWidget {
+  final ReservationHandler vmHandler = Get.find();
   ReservationComplete({super.key});
-  final value = Get.arguments; // 예약할 때 필요한 병원정보 받아옴
+  final makervalue = Get.arguments; // 예약할 때 필요한 병원정보 받아옴
 
   @override
   Widget build(BuildContext context) {
     final queryvalue = Get.arguments;
-    List makervalue = [];
-    value == null ? makervalue = queryvalue : makervalue = makervalue;
+    var value=  makervalue == null ?  queryvalue :makervalue ?? [' ',' ',' ',' ',' ',' ',' ',];
     final Completer<GoogleMapController> mapController = // 구글지도 맵
         Completer<GoogleMapController>();
     return Scaffold(
@@ -85,7 +86,7 @@ class ReservationComplete extends StatelessWidget {
                   child: const Text('예약내역'),
                 ),
                 ElevatedButton(
-                  onPressed: () => Get.to(Navigation()),
+                  onPressed: () => Get.to(()=>Navigation()),
                   child: const Text('홈으로'),
                 ),
               ],

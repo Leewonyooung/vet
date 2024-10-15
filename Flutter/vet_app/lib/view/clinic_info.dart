@@ -225,6 +225,9 @@ class ClinicInfo extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () async {
+              if(chatsHandler.isLoggedIn() ==false){
+                Get.to(()=>Login());
+              }else{
               chatsHandler.currentClinicId.value = result.id;
               await chatsHandler.firstChatRoom(result.id, result.image);
               await chatsHandler.makeChatRoom();
@@ -232,7 +235,7 @@ class ClinicInfo extends StatelessWidget {
               Get.to(() => ChatView(), arguments: [
                 favoriteHandler.clinicDetail[0].image,
                 favoriteHandler.clinicDetail[0].name,
-              ]);
+              ]);}
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.lightGreen.shade300,
