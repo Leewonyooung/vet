@@ -21,11 +21,11 @@ class ClinicSearch extends StatelessWidget {
         controller: vmHandler.searchbarController,
         onChanged: (value) {
           vmHandler.searchbarController.text = value;
-          // if (value.isNotEmpty) {
-            // vmHandler.searchbarClinic();
-          // } else {
-            // vmHandler.getAllClinic();
-          // }
+          if (value.isNotEmpty) {
+            vmHandler.searchbarClinic();
+          } else {
+            vmHandler.getAllClinic();
+          }
         },
       ),
     ),
