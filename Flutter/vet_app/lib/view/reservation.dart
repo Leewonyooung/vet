@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vet_app/view/make_reservation.dart';
+import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 import 'package:get/get.dart';
 
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 class Reservation extends StatelessWidget {
   Reservation({super.key});
   final vmHnadler = Get.put(ReservationHandler());
+  final petHandler = Get.put(PetHandler());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,10 +43,18 @@ class Reservation extends StatelessWidget {
                                   width: 100,
                                   height: 80,
                                 ),
-                                Text('  ${clinic.name}'),
-                                // Text('  ${clinic.address}'),
+                                SizedBox(
+                                  width: 220,
+                                  height: 80,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(' ${clinic.name}'),
+                                    ],
+                                  )),
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async{
+                                    await petHandler.makeBorderlist();
                                     Get.to(() => MakeReservation(), arguments: [
                                       clinic.id,
                                       clinic.name,

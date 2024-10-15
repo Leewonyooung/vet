@@ -280,7 +280,7 @@ class MgtClinicAdd extends StatelessWidget {
                                             onPressed: () {
                                               clinicHandler.updateAddress(
                                                   addressController.text);
-                                              Get.to(() => MgtClinicMap(),
+                                              Get.to(() => const MgtClinicMap(),
                                                       arguments:
                                                           addressController.text
                                                                   .trim()

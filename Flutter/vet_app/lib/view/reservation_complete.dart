@@ -12,6 +12,9 @@ class ReservationComplete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final queryvalue = Get.arguments;
+    List makervalue=[];
+    value == null ? makervalue = queryvalue : makervalue = makervalue;
     final Completer<GoogleMapController> mapController = // 구글지도 맵
         Completer<GoogleMapController>();
     return Scaffold(
@@ -72,7 +75,7 @@ class ReservationComplete extends StatelessWidget {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () => Get.to(() => const QueryReservation()),
+                  onPressed: () => Get.to(() => QueryReservation()),
                   child: const Text('예약내역'),
                 ),
                 ElevatedButton(

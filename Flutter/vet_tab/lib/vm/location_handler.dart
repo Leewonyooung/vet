@@ -9,7 +9,7 @@ import 'package:vet_tab/vm/image_handler.dart';
 
 class LocationHandler extends ImageHandler {
   Completer<GoogleMapController> mapController = Completer();
-  var selectedPosition = LatLng(0.0, 0.0).obs;
+  var selectedPosition = const LatLng(0.0, 0.0).obs;
   var lat = 0.0.obs;
   var long = 0.0.obs;
   String clinicAddress = "";
@@ -23,7 +23,6 @@ class LocationHandler extends ImageHandler {
     if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       var status = await dataConvertedJSON['status'];
-      print(address);
 
       if (status == "OK") {
         String? locationType =
@@ -52,7 +51,6 @@ class LocationHandler extends ImageHandler {
     if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       var status = await dataConvertedJSON['status'];
-      print(address);
 
       if (status == "OK") {
         String? locationType =
@@ -78,8 +76,6 @@ class LocationHandler extends ImageHandler {
     lat.value = location.latitude;
     long.value = location.longitude;
     await fetchAddressFromLatLng(location.latitude, location.longitude);
-    print(lat.value);
-    print(long.value);
   }
 
   // get the longpressed loaction address by using lat and long extracted from longpressGoogleMap function 
@@ -89,7 +85,6 @@ class LocationHandler extends ImageHandler {
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     clinicAddress = dataConvertedJSON['results'][0]['formatted_address'];
-    print(clinicAddress);
   }
 
   // error dialog when user did not enter appropriate address (안창빈)
@@ -127,17 +122,13 @@ class LocationHandler extends ImageHandler {
   // update map camera programmatically (안창빈)
   updateMapCameraPro() async {
     if(mapController.isCompleted){
-  try{
-    final GoogleMapController controller = await mapController.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: LatLng(lat.value, long.value),
-      zoom: 18, 
-    )));
-    } catch (e){
-      print("Error updating camera: $e");
-    }
+      final GoogleMapController controller = await mapController.future;
+      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(lat.value, long.value),
+        zoom: 18, 
+      )));
+      
     }else{
-      print("Map controller is not ready.");
     }
   }
 

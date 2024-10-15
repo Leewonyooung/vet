@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:vet_app/model/pet.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -7,7 +8,8 @@ import 'package:vet_app/vm/species_handler.dart';
 
 class PetHandler extends SpeciesHandler {
   var pets = <Pet>[].obs;
-
+  var borderList = <Color>[].obs;
+  final currentPetID =''.obs;
   @override
   void onInit() async {
     super.onInit();
@@ -15,18 +17,38 @@ class PetHandler extends SpeciesHandler {
       box.write('userEmail', '');
     }
     await fetchPets(box.read('userEmail'));
+    // makeBorderlist();
   }
+
+  makeBorderlist(){
+    if(borderList.length >= pets.length){
+      borderList.clear();
+    }
+    for (int i = 0; i < pets.length; i++) {
+      borderList.add(Colors.white);
+    }
+  }
+
+
+  setborder(index){
+    for (int i = 0; i < pets.length; i++) {
+      borderList[i] = Colors.white;
+    }
+    borderList[index] = Colors.red;
+    update();
+  }
+
 
   // 유저 ID를 기반으로 반려동물 정보 가져오기
   fetchPets(String userId) async {
-    var url = Uri.parse('http://127.0.0.1:8000/pet/pets?user_id=$userId');
+    var url = Uri.parse('http://127.0.0.1:8000/pet/pets?user_id=${box.read('userEmail')}');
     try {
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
         var data = json.decode(utf8.decode(response.bodyBytes));
         pets.value = (data as List).map((petJson) {
-          return Pet(
+          return  Pet(
             id: petJson['id'],
             userId: petJson['user_id'],
             speciesType: petJson['species_type'],

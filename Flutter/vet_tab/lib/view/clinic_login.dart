@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vet_tab/view/clinic_reservation.dart';
 import 'package:vet_tab/view/rail_home.dart';
 import 'package:vet_tab/vm/login_handler.dart';
 
@@ -117,7 +118,7 @@ class ClinicLogin extends StatelessWidget {
         idController.clear();
         passwordController.clear();
         Get.back();
-        Get.to(() => RailHome());
+        Get.to(() =>  RailHome());
       },
     );
   }

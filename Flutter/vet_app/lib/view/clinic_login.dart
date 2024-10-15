@@ -82,8 +82,7 @@ class ClinicLogin extends StatelessWidget {
 
   //Function
   clinicloginJsonCheck() async {
-    String id = idController.text.trim();
-    String password = passwordController.text.trim();
+
 
     // List results = await vmHandler.clinicloginJsonCheck(id, password);
     // if (results.isEmpty) {

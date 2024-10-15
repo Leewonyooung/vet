@@ -8,7 +8,7 @@ class TabVm extends GetxController with GetSingleTickerProviderStateMixin{
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
     tabController.addListener(() {
       currentScreenIndex.value = tabController.index;
     });

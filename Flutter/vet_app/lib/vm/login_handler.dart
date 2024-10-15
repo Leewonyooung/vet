@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vet_app/model/userdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_app/view/navigation.dart';
+import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/user_handler.dart';
 
@@ -83,7 +84,7 @@ class LoginHandler extends UserHandler {
 
     // Navigate to Navigation page after successful sign-in (안창빈)
     Get.to(() => Navigation());
-
+    await Get.find<ChatsHandler>().getAllData();
     // 로그인 성공 후 반려동물 정보 불러오기
     await Get.find<PetHandler>().fetchPets(getStoredEmail());
 
@@ -130,6 +131,7 @@ class LoginHandler extends UserHandler {
     await GoogleSignIn().signOut();
     box.write('userEmail', "");
     Get.find<PetHandler>().clearPet();
+    Get.find<ChatsHandler>().chatsClear();
     update();
   }
 }

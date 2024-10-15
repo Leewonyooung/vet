@@ -5,7 +5,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:vet_tab/firebase_options.dart';
 import 'package:vet_tab/view/clinic_login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:vet_tab/view/rail_home.dart';
 
 void main() async {
   await GetStorage.init();

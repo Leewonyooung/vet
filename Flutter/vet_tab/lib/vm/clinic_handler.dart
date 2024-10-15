@@ -160,7 +160,6 @@ class ClinicHandler extends LoginHandler{
   String formatDate(DateTime date) {
     final DateFormat formatter = DateFormat('a h:mm', 'ko');
     final formattedDate = formatter.format(date);
-    print("Formatted Date: $formattedDate"); 
     return formattedDate;
   }
 
@@ -170,8 +169,8 @@ class ClinicHandler extends LoginHandler{
   }
 
 
-  opDateSelection(BuildContext context, bool isStartDate) async {
-    await initializeLocale();
+  opDateSelection(BuildContext context, bool isStartDate)  {
+    initializeLocale();
     DateTime tempDate = selectedDate;
     showCupertinoModalPopup(
       context: context,
@@ -183,7 +182,7 @@ class ClinicHandler extends LoginHandler{
             color: Colors.white,
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   height: 200,
                   child: CupertinoDatePicker(
                     backgroundColor: Colors.white,
@@ -204,8 +203,6 @@ class ClinicHandler extends LoginHandler{
                     } else if (!isStartDate){
                       endOpTime.value = formatDate(selectedDate);
                     }
-                    print("start: $startOpTime.value" );
-                    print("end: $endOpTime.value");
                     update();
                     Get.back(); 
                   },

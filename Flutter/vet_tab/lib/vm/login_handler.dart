@@ -51,25 +51,6 @@ var isObscured = true.obs;
     );
   }
 
-  // ///Login Clinic (안창빈)
-
-  // clincgetJSONData() async {
-  //   cliniclogindata.clear();
-  //   var url = Uri.parse('http://127.0.0.1:8000/user/selectclinic');
-  //   var response = await http.get(url);
-  //   var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-  //   List results = dataConvertedJSON['results'];
-
-  //   List<ClinicLogin> returnResult = [];
-  //   String id = results[0]['id'];
-  //   String password = results[0]['password'];
-
-  //   returnResult.add(ClinicLogin(id: id, password: password));
-  //   box.write('id', id);
-
-  //   cliniclogindata.value = returnResult;
-  // }
-
   // Clinic login & check whether account trying to login is registerd in our db (안창빈)
 
   var cliniclogindata = <ClinicLogin>[].obs;
