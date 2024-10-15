@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:get/state_manager.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_tab/model/available_clinic.dart';
 import 'package:vet_tab/model/current_situation_clinic.dart';
 import 'package:vet_tab/model/reservation.dart';
 import 'package:vet_tab/vm/clinic_handler.dart';
+import 'package:vet_tab/vm/login_handler.dart';
 
 class ReservationHandler extends ClinicHandler {
   final reservations = <Reservation>[].obs;
@@ -13,11 +13,8 @@ class ReservationHandler extends ClinicHandler {
   String reservationTime = "";
   final clinicreservations = <CurrentSituationClinic>[].obs;
   String resuserid = "";
-  @override
-  void onInit() async {
-    super.onInit();
-      boxread();  
-    }
+  LoginHandler loginHandler = Get.find();
+
 
   // 예약된 리스트
   getReservation() async {
@@ -84,8 +81,10 @@ class ReservationHandler extends ClinicHandler {
 
   // 병원 예약 현황
   currentReservationClinic() async {
+    await storeuser();
+    await adjustedTime();
     var url = Uri.parse(
-        'http://127.0.0.1:8000/reservation/select_reservation_clinic?clinic_id=$resuserid');
+        'http://127.0.0.1:8000/reservation/select_reservation_clinic?clinic_id=$resuserid&time=${reservationTime.substring(0,8)}');
     var response = await http.get(url);
     clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -111,8 +110,9 @@ class ReservationHandler extends ClinicHandler {
     }
   }
 
-boxread(){
-  resuserid = box.read('id')??"";
-}
+  storeuser(){
+    resuserid = loginHandler.box.read('id') ?? 'cmzmnvj274';
+    update();
+  }
 
 }

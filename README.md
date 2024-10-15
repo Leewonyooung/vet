@@ -29,10 +29,12 @@
 
   # 네비게이션 바
   persistent_bottom_nav_bar: ^6.2.1
+
+  # http 통신
   http: ^1.2.2
-  
+
   # image picker
-  image_picker: ^1.1.2 
+  image_picker: ^1.1.2
 
   # 위도경도
   geocoding: ^3.0.0
@@ -49,16 +51,17 @@
   google_sign_in: ^6.2.1
   firebase_auth: ^5.3.1
 
-  carousel_slider: ^5.0.0
-  
   # 로그인 정보 앱에 쓰기
   get_storage: ^2.1.1
 
-  # 구글맵 연동
+  # googlemap
   google_maps_flutter: ^2.9.0
 
   # 구글맵 route decode
   flutter_polyline_points: ^2.1.0
+
+  # Date Format
+  intl: ^0.19.0
 ```
 
 

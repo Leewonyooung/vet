@@ -18,7 +18,6 @@ class LocationHandler extends ImageHandler {
   List<LatLng> route = []; // 길 찾기에 필요한 체크포인트 latlong
   var lines = <Polyline>[].obs; // 길 찾기 그림
   String distanceText = "";
-
   // GPS 제공 동의
   checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();

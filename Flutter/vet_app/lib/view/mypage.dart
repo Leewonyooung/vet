@@ -122,29 +122,32 @@ class Mypage extends StatelessWidget {
                                         Text('로그아웃', style:  TextStyle(fontSize: 16),),
                                       ],
                                     )),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    fixedSize: Size(
-                                      MediaQuery.of(context).size.width/3, 
-                                      MediaQuery.of(context).size.height/14
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize: Size(
+                                        MediaQuery.of(context).size.width/3, 
+                                        MediaQuery.of(context).size.height/14
+                                      ),
+                                      backgroundColor: Theme.of(context).colorScheme.secondaryContainer
                                     ),
-                                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer
-                                  ),
-                                  onPressed: () {
-                                    Get.to(
-                                      MyinfoUpdate(),
-                                      arguments: result[0].id,
-                                    )!
-                                        .then((value) => loginHandler
-                                            .selectMyinfo(loginHandler
-                                                .getStoredEmail()));
-                                    },
-                                    child: const Column(
-                                      children: [
-                                        Icon(Icons.account_circle,size: 35,),
-                                        Text('내정보 수정',style: TextStyle(fontSize: 16),)
-                                      ],
-                                    )),
+                                    onPressed: () {
+                                      Get.to(
+                                        MyinfoUpdate(),
+                                        arguments: result[0].id,
+                                      )!
+                                          .then((value) => loginHandler
+                                              .selectMyinfo(loginHandler
+                                                  .getStoredEmail()));
+                                      },
+                                      child: const Column(
+                                        children: [
+                                          Icon(Icons.account_circle,size: 35,),
+                                          Text('내정보 수정',style: TextStyle(fontSize: 16),)
+                                        ],
+                                      )),
+                                ),
                               ],
                             )
                           ],

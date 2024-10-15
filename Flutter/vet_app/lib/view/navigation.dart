@@ -15,6 +15,7 @@ import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
+import 'package:vet_app/vm/reservation_handler.dart';
 
 class Navigation extends StatelessWidget {
   Navigation({super.key});
@@ -27,6 +28,7 @@ class Navigation extends StatelessWidget {
   final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
   final RxBool shouldRefresh = false.obs;
 
+  final vmHnadler = Get.put(ReservationHandler());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +46,7 @@ class Navigation extends StatelessWidget {
         backgroundColor: Colors.grey.shade900,
         isVisible: true,
         onItemSelected: (index) {
-          if(index ==1){
+          if (index == 1) {
             favoriteHandler.searchbarController.clear();
             favoriteHandler.getAllClinic();
           }
@@ -74,9 +76,11 @@ class Navigation extends StatelessWidget {
         appBar: AppBar(
           title: const Text(
             '멍스파인더',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          backgroundColor: Colors.blue.shade400,
+          backgroundColor: Colors.green.shade400,
           foregroundColor: Colors.white,
           elevation: 0,
           actions: [
@@ -136,7 +140,7 @@ class Navigation extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       height: 150,
       decoration: BoxDecoration(
-        color: Colors.blue.shade100,
+        color: Colors.green.shade100,
         borderRadius: BorderRadius.circular(15),
       ),
       child: const Center(
@@ -274,7 +278,7 @@ class Navigation extends StatelessWidget {
             Icon(
               Icons.pets,
               size: 40,
-              color: Colors.blue.shade400,
+              color: Colors.green.shade400,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -283,7 +287,7 @@ class Navigation extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade700,
+                  color: Colors.green.shade700,
                 ),
               ),
             ),
@@ -319,6 +323,10 @@ class Navigation extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: Colors.white,
+          border: Border.all(
+            color: Colors.green.shade200,
+            width: 2,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.shade300,
@@ -330,17 +338,23 @@ class Navigation extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(15)),
-              child: Image.network(
-                'http://127.0.0.1:8000/pet/uploads/${pet.image}',
-                height: 120,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.error, size: 120),
+            Center(
+              child: ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(15)),
+                child: Image.network(
+                  'http://127.0.0.1:8000/pet/uploads/${pet.image}',
+                  height: 120,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.error, size: 120),
+                ),
               ),
+            ),
+            Container(
+              height: 2,
+              color: Colors.green.shade300,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -352,12 +366,6 @@ class Navigation extends StatelessWidget {
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    pet.speciesType,
-                    style: TextStyle(
-                      color: Colors.grey[600],
                     ),
                   ),
                   Text(
@@ -390,9 +398,9 @@ class Navigation extends StatelessWidget {
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: Colors.blue.shade50,
+          color: Colors.green.shade50,
           border: Border.all(
-            color: Colors.blue.shade200,
+            color: Colors.green.shade200,
             width: 2,
           ),
         ),
@@ -402,7 +410,7 @@ class Navigation extends StatelessWidget {
             Icon(
               Icons.add_circle_outline,
               size: 40,
-              color: Colors.blue,
+              color: Colors.green,
             ),
             SizedBox(height: 8),
             Text(
@@ -410,7 +418,7 @@ class Navigation extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue,
+                color: Colors.green,
               ),
             ),
           ],

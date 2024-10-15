@@ -39,32 +39,117 @@ class MyinfoUpdate extends StatelessWidget {
                             onTap: () => userHandler
                                 .getImageFromGalleryEdit(ImageSource.gallery),
                             child: userHandler.imageFile == null
-                                ? Image.network(
-                                    "http://127.0.0.1:8000/mypage/view/${result.image}",
-                                    width: 100,
-                                    height: 100,
+                                ? Stack(
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.4,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                3,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(60),
+                                          child: Image.network(
+                                            "http://127.0.0.1:8000/mypage/view/${result.image}",
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      ),
+                                      PositionedDirectional(
+                                        start:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        bottom:
+                                            MediaQuery.of(context).size.height *
+                                                0.001,
+                                        child:  Icon(
+                                          Icons.add_photo_alternate_outlined,
+                                          size: 45,
+                                          color: Theme.of(context).colorScheme.secondary,
+                                        ),
+                                      )
+                                    ],
                                   )
-                                : Image.file(
-                                    File(userHandler.imageFile!.path))),
-                        Text("ID : ${result.id}"),
-                        TextField(
-                          controller: nameController,
+                                : Stack(
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.4,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                3,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(60),
+                                          child: Image.file(
+                                            File(userHandler.imageFile!.path),
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      ),
+                                      PositionedDirectional(
+                                        start:
+                                            MediaQuery.of(context).size.width *
+                                                0.62,
+                                        bottom:
+                                            MediaQuery.of(context).size.height *
+                                                0.001,
+                                        child:  Icon(
+                                          Icons.add_photo_alternate_outlined,
+                                          size: 45,
+                                          color: Theme.of(context).colorScheme.secondary,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                  ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            "이메일 : ${result.id}",
+                            style: const TextStyle(fontSize: 22),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: TextField(
+                              controller: nameController,
+                              maxLength: 45,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20))),
+                            ),
+                          ),
                         ),
                         ElevatedButton(
-                            onPressed: () {
-                              if (nameController.text.trim().isEmpty) {
-                                errorSnackBar(
-                                    '경고', '이름을 입력하세요', SnackPosition.TOP);
+                          onPressed: () {
+                            if (nameController.text.trim().isEmpty) {
+                              errorSnackBar(
+                                  '경고', '이름을 입력하세요', SnackPosition.TOP);
+                            } else {
+                              if (userHandler.firstDisp == 0) {
+                                nameUpdateAction(userHandler, result.id!);
                               } else {
-                                if (userHandler.firstDisp == 0) {
-                                  nameUpdateAction(userHandler, result.id!);
-                                } else {
-                                  allUpdateAction(
-                                      userHandler, result.image, result.id!);
-                                }
+                                allUpdateAction(
+                                    userHandler, result.image, result.id!);
                               }
-                            },
-                            child: const Text('저장')),
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                              minimumSize: Size(
+                                  MediaQuery.of(context).size.width * 0.8,
+                                  MediaQuery.of(context).size.height * 0.055)),
+                          child: const Text(
+                            '저장',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ],
                     ),
                   );
