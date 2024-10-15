@@ -7,11 +7,11 @@ import 'package:vet_app/vm/reservation_handler.dart';
 class QueryReservation extends StatelessWidget {
   QueryReservation({super.key});
 
-  final ReservationHandler vmHnadler = Get.find();
+  final ReservationHandler vmHnadler = Get.put(ReservationHandler());
 
   @override
   Widget build(BuildContext context) {
-    final LoginHandler loginHandler = Get.find();
+    final LoginHandler loginHandler = Get.put(LoginHandler());
     return Scaffold(
       appBar: AppBar(
         title: const Text(

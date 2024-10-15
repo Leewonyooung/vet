@@ -11,167 +11,180 @@ class Mypage extends StatelessWidget {
   Widget build(BuildContext context) {
     final LoginHandler loginHandler = Get.put(LoginHandler());
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('마이페이지',style: TextStyle(fontSize: 26),),
+      appBar: AppBar(
+        title: const Text(
+          '마이페이지',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
-        body: loginHandler.isLoggedIn()?
-        GetBuilder<LoginHandler>(builder: (_) {
-          return FutureBuilder(
-              future: loginHandler.selectMyinfo(loginHandler.getStoredEmail()),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return  Center(
-                    child: Text('${snapshot.error}'),
-                  );
-                } else {
-                  return Obx(
-                    () {
+        backgroundColor: Colors.green.shade400,
+        elevation: 0,
+      ),
+      body: loginHandler.isLoggedIn()
+          ? GetBuilder<LoginHandler>(builder: (_) {
+              return FutureBuilder(
+                future:
+                    loginHandler.selectMyinfo(loginHandler.getStoredEmail()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('${snapshot.error}'));
+                  } else {
+                    return Obx(() {
                       final result = loginHandler.mypageUserInfo;
-                      return Center(
+                      return SingleChildScrollView(
                         child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image.network(
-                                    'http://127.0.0.1:8000/mypage/view/${result[0].image}',
-                                    width: MediaQuery.of(context).size.width/1.5,  
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width/1.15,
-                                height: MediaQuery.of(context).size.height/20,
-                                child: const Text(
-                                  '회원 정보',
-                                  style:TextStyle(
-                                    fontSize: 24,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              width: MediaQuery.of(context).size.width/1.1,
-                              height: MediaQuery.of(context).size.height/5,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Theme.of(context).colorScheme.onSecondary
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('이름: ${result[0].name}',
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      ),
-                                    ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        const Padding(
-                                          padding:  EdgeInsets.only(top:6.0),
-                                          child:  Text('이메일: ',
-                                            style:  TextStyle(
-                                            fontSize: 22,
-                                          ),),
-                                        ),
-                                        Text(result[0].id!,
-                                        style: const TextStyle(fontSize: 22),),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
+                            _buildProfileSection(context, result),
+                            _buildInfoSection(result),
                             const Divider(
-                              color: Colors.grey, // 선의 색상
-                              thickness: 1, // 선의 두께
-                              indent: 16, // 왼쪽 여백
-                              endIndent: 16,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    fixedSize: Size(
-                                      MediaQuery.of(context).size.width/3, 
-                                      MediaQuery.of(context).size.height/14
-                                    ),
-                                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer
-                                  ),
-                                    onPressed: (){
-                                      showDialog(loginHandler);
-                                    },
-                                    child: const Column(
-                                      children: [
-                                        Icon(Icons.key_off, size: 35,),
-                                        Text('로그아웃', style:  TextStyle(fontSize: 16),),
-                                      ],
-                                    )),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      fixedSize: Size(
-                                        MediaQuery.of(context).size.width/3, 
-                                        MediaQuery.of(context).size.height/14
-                                      ),
-                                      backgroundColor: Theme.of(context).colorScheme.secondaryContainer
-                                    ),
-                                    onPressed: () {
-                                      Get.to(
-                                        MyinfoUpdate(),
-                                        arguments: result[0].id,
-                                      )!
-                                          .then((value) => loginHandler
-                                              .selectMyinfo(loginHandler
-                                                  .getStoredEmail()));
-                                      },
-                                      child: const Column(
-                                        children: [
-                                          Icon(Icons.account_circle,size: 35,),
-                                          Text('내정보 수정',style: TextStyle(fontSize: 16),)
-                                        ],
-                                      )),
-                                ),
-                              ],
-                            )
+                                color: Colors.grey,
+                                thickness: 1,
+                                indent: 16,
+                                endIndent: 16),
+                            _buildActionButtons(context, loginHandler, result),
                           ],
                         ),
                       );
-                    },
-                  );
-                }
-              });
-        })
-        : const Center(child: Text('로그인이 필요합니다.'),)
-        );
+                    });
+                  }
+                },
+              );
+            })
+          : const Center(
+              child: Text('로그인이 필요합니다.', style: TextStyle(fontSize: 18)),
+            ),
+    );
   }
 
-  //ff
+  _buildProfileSection(BuildContext context, List result) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      color: Colors.green.shade50,
+      child: Center(
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 60,
+              backgroundImage: NetworkImage(
+                  'http://127.0.0.1:8000/mypage/view/${result[0].image}'),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              result[0].name,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildInfoSection(List result) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('회원 정보',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 16),
+          Card(
+            elevation: 4,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildInfoItem('이름', result[0].name),
+                  const SizedBox(height: 8),
+                  _buildInfoItem('이메일', result[0].id!),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildInfoItem(String label, String value) {
+    return Row(
+      children: [
+        Text('$label: ',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(value, style: const TextStyle(fontSize: 16)),
+      ],
+    );
+  }
+
+  _buildActionButtons(
+      BuildContext context, LoginHandler loginHandler, List result) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildActionButton(
+            icon: Icons.logout,
+            label: '로그아웃',
+            onPressed: () => showDialog(loginHandler),
+            color: Colors.red,
+          ),
+          _buildActionButton(
+            icon: Icons.edit,
+            label: '내정보 수정',
+            onPressed: () {
+              Get.to(MyinfoUpdate(), arguments: result[0].id)!.then(
+                (value) =>
+                    loginHandler.selectMyinfo(loginHandler.getStoredEmail()),
+              );
+            },
+            color: Colors.green,
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+    required Color color,
+  }) {
+    return ElevatedButton.icon(
+      icon: Icon(icon),
+      label: Text(label),
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+  }
+
   showDialog(LoginHandler loginHandler) {
     Get.defaultDialog(
       title: "로그아웃",
+      titleStyle: const TextStyle(fontWeight: FontWeight.bold),
       middleText: '로그아웃 하시겠습니까?',
-      onCancel: () => (),
-      onConfirm: ()async{ 
+      textConfirm: "확인",
+      textCancel: "취소",
+      confirmTextColor: Colors.white,
+      cancelTextColor: Colors.black,
+      buttonColor: Colors.lightGreen,
+      onConfirm: () async {
         await loginHandler.signOut();
-        Get.offAll(()=>Navigation());
-        }
+        Get.offAll(() => Navigation());
+      },
     );
   }
 }
