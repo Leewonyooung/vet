@@ -28,7 +28,7 @@ class ChatRoom extends StatelessWidget {
         title: const Text('상담'),
       ),
       body:vmHandler.rooms.isEmpty?
-            const Center(child: CircularProgressIndicator(),):
+            const Center(child: Text('상담하신 병원이 없습니다.'),):
             Obx(() => chatRoomList(context),)
     );
   }
@@ -76,44 +76,42 @@ class ChatRoom extends StatelessWidget {
                                   room.image,
                                   fit: BoxFit.cover,
                                 )),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width / 1.5,
-                                    child: Text(
-                                      overflow: TextOverflow.ellipsis,
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
                                       index < vmHandler.roomName.length ? vmHandler.roomName[index]
                                       :const Text(''),
-                                      style: const TextStyle(fontSize: 24),
+                                      style: const TextStyle(fontSize: 22),
                                     ),
-                                  ),
-                                  // 마지막 채팅 실패
-                                  // Row(
-                                  //   children: [
-                                  //     index <= vmHandler.lastChats.length-1 ? Text(vmHandler.lastChats[index].text): const Text('채팅이 없습니다.')
-                                  //   ],
-                                  // ),
-                                  // Container(
-                                  //   alignment: Alignment.bottomRight,
-                                  //   width:
-                                  //       MediaQuery.of(context).size.width / 1.5,
-                                  //   child: index <= vmHandler.lastChats.length-1 ?    
-                                  //   DateTime.now().difference(
-                                  //     DateTime.parse(vmHandler.lastChats[index].timestamp)) < 
-                                  //     const Duration(hours: 24)? 
-                                  //     Text(
-                                  //       vmHandler.lastChats[index].timestamp.substring(11, 16)
-                                  //     ): 
-                                  //     Text(
-                                  //         "${vmHandler.lastChats[index].timestamp.substring(5, 7)}월 ${vmHandler.lastChats[index].timestamp.substring(8, 10)}일"): 
-                                  //     const Text(''),
-                                 
-                                  // )
-                                ],
+                                    // 마지막 채팅 실패
+                                    // Row(
+                                    //   children: [
+                                    //     index <= vmHandler.lastChats.length-1 ? Text(vmHandler.lastChats[index].text): const Text('채팅이 없습니다.')
+                                    //   ],
+                                    // ),
+                                    // Container(
+                                    //   alignment: Alignment.bottomRight,
+                                    //   width:
+                                    //       MediaQuery.of(context).size.width / 1.5,
+                                    //   child: index <= vmHandler.lastChats.length-1 ?    
+                                    //   DateTime.now().difference(
+                                    //     DateTime.parse(vmHandler.lastChats[index].timestamp)) < 
+                                    //     const Duration(hours: 24)? 
+                                    //     Text(
+                                    //       vmHandler.lastChats[index].timestamp.substring(11, 16)
+                                    //     ): 
+                                    //     Text(
+                                    //         "${vmHandler.lastChats[index].timestamp.substring(5, 7)}월 ${vmHandler.lastChats[index].timestamp.substring(8, 10)}일"): 
+                                    //     const Text(''),
+                                   
+                                    // )
+                                  ],
+                                ),
                               ),
                             ),
                           ],
