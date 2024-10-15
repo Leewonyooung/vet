@@ -6,6 +6,7 @@ import 'package:vet_app/vm/reservation_handler.dart';
 
 class QueryReservation extends StatelessWidget {
   QueryReservation({super.key});
+
   final vmHnadler = Get.put(ReservationHandler());
 
   @override
@@ -19,7 +20,7 @@ class QueryReservation extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue.shade400,
+        backgroundColor: Colors.green.shade400,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

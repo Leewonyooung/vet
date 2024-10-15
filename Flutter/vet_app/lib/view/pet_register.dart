@@ -33,9 +33,10 @@ class PetRegister extends StatelessWidget {
           '반려동물 등록',
           style: TextStyle(
             color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.green.shade400,
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -225,8 +226,7 @@ class PetRegister extends StatelessWidget {
           }
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
+          backgroundColor: Colors.lightGreen.shade300,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

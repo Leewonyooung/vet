@@ -11,8 +11,10 @@ import 'package:vet_app/vm/reservation_handler.dart';
 
 class ClinicInfo extends StatelessWidget {
   ClinicInfo({super.key});
+
   final FavoriteHandler vmHandler = Get.find();
   final ChatsHandler chatsHandler = Get.find();
+
   @override
   Widget build(BuildContext context) {
     FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
@@ -22,8 +24,15 @@ class ClinicInfo extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('검색 결과'),
-        
+        title: const Text(
+          '병원 정보',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.green.shade400,
+        elevation: 0,
       ),
       body: GetBuilder<FavoriteHandler>(
         builder: (_) {
@@ -42,222 +51,16 @@ class ClinicInfo extends StatelessWidget {
                   reservationHandler
                       .reservationButtonMgt(value[0]); // 예약 가능여부 검색 : 예약버튼 활성화
                   return Obx(() {
-                    return Center(
+                    return SingleChildScrollView(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            result[0].name,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            width: (MediaQuery.of(context).size.width) * 0.7,
-                            height: MediaQuery.of(context).size.height * 0.35,
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              elevation: 4,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.network(
-                                        'http://127.0.0.1:8000/clinic/view/${result[0].image}',
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                const Text('Image'),
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.35 *
-                                                0.75,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.7 *
-                                                0.9,
-                                        fit: BoxFit.fitWidth,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          // 지도 보는 버튼
-                                          IconButton(
-                                              onPressed: () async {
-                                                await favoriteHandler
-                                                    .getClinicDetail();
-                                                await vmHandler
-                                                    .checkLocationPermission();
-                                                await favoriteHandler
-                                                    .maploading(
-                                                        favoriteHandler
-                                                            .clinicDetail[0]
-                                                            .latitude,
-                                                        favoriteHandler
-                                                            .clinicDetail[0]
-                                                            .longitude);
-                                                Get.to(() => ClinicLocation(),
-                                                    arguments: [result[0].id]);
-                                              },
-                                              icon: const Icon(
-                                                  Icons.pin_drop_outlined,
-                                                  size: 35)),
-
-                                          // 즐겨찾기 등록 버튼
-                                          IconButton(
-                                            onPressed: () async {
-                                              await favoriteHandler
-                                                  .favoriteIconValueMgt(
-                                                      favoriteHandler
-                                                          .getStoredEmail(),
-                                                      value[0]);
-                                              if (favoriteHandler
-                                                      .favoriteIconValue
-                                                      .value ==
-                                                  true) {
-                                                showSnackBar(
-                                                    '추가성공',
-                                                    '즐겨찾기에 등록되었습니다.',
-                                                    Colors.green);
-                                              } else {
-                                                showSnackBar(
-                                                    '삭제',
-                                                    '즐겨찾기가 삭제되었습니다.',
-                                                    Colors.red);
-                                              }
-                                            },
-                                            icon: favoriteHandler
-                                                    .favoriteIconValue.value
-                                                ? const Icon(
-                                                    Icons.favorite,
-                                                    color: Colors.red,
-                                                    size: 35,
-                                                  )
-                                                : const Icon(
-                                                    Icons
-                                                        .favorite_border_outlined,
-                                                    size: 35,
-                                                  ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.watch_later_outlined),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                      "${result[0].startTime}~${result[0].endTime}"),
-                                ),
-                                const Icon(Icons.pin_drop_outlined),
-                                Text(result[0].address.substring(0, 7))
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Text(
-                              result[0].introduction,
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                          ),
-
-                          /// 예약 버튼
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                chatsHandler.currentClinicId.value =
-                                    result[0].id;
-                                await chatsHandler.firstChatRoom(
-                                    result[0].id, result[0].image);
-                                await chatsHandler.makeChatRoom();
-                                await chatsHandler.queryChat();
-                                Get.to(() => ChatView(), arguments: [
-                                  favoriteHandler.clinicDetail[0].image,
-                                  favoriteHandler.clinicDetail[0].name,
-                                ]);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(
-                                      MediaQuery.of(context).size.width * 0.7,
-                                      50),
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 237, 220, 61),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20))),
-                              child: const Text(
-                                '상담하기',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                              visible: reservationHandler.resButtonValue.value,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    if (vmHandler.isLoggedIn() == false) {
-                                      Get.to(() => Login());
-                                    } else {
-                                      await petHandler.makeBorderlist();
-                                      Get.to(() => MakeReservation(),
-                                          arguments: [
-                                            reservationHandler
-                                                .canReservationClinic[0].id,
-                                            reservationHandler
-                                                .canReservationClinic[0].name,
-                                            reservationHandler
-                                                .canReservationClinic[0]
-                                                .latitude,
-                                            reservationHandler
-                                                .canReservationClinic[0]
-                                                .longitude,
-                                            reservationHandler
-                                                .canReservationClinic[0].time,
-                                            reservationHandler
-                                                .canReservationClinic[0].address
-                                          ]);
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize: Size(
-                                        MediaQuery.of(context).size.width * 0.7,
-                                        50),
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 237, 220, 61),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                  ),
-                                  child: const Text(
-                                    '예약하기',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ))
+                          _buildClinicImage(result[0]),
+                          _buildClinicInfo(
+                              result[0], favoriteHandler, value[0], context),
+                          _buildClinicDescription(result[0]),
+                          _buildActionButtons(result[0], favoriteHandler,
+                              reservationHandler, petHandler, context),
                         ],
                       ),
                     );
@@ -269,10 +72,221 @@ class ClinicInfo extends StatelessWidget {
     );
   }
 
+  _buildClinicImage(dynamic result) {
+    return SizedBox(
+      height: 250,
+      width: double.infinity,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+        child: Image.network(
+          'http://127.0.0.1:8000/clinic/view/${result.image}',
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) =>
+              const Icon(Icons.error, size: 100),
+        ),
+      ),
+    );
+  }
+
+  _buildClinicInfo(dynamic result, FavoriteHandler favoriteHandler,
+      String value, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  result.name,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: favoriteHandler.favoriteIconValue.value
+                    ? const Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                        size: 30,
+                      )
+                    : const Icon(
+                        Icons.favorite_border,
+                        size: 30,
+                      ),
+                onPressed: () async {
+                  await favoriteHandler.favoriteIconValueMgt(
+                      favoriteHandler.getStoredEmail(), value);
+                  if (favoriteHandler.favoriteIconValue.value) {
+                    showSnackBar(
+                      '추가성공',
+                      '즐겨찾기에 등록되었습니다.',
+                      Colors.green,
+                    );
+                  } else {
+                    showSnackBar(
+                      '삭제',
+                      '즐겨찾기가 삭제되었습니다.',
+                      Colors.red,
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              const Icon(Icons.access_time, size: 16, color: Colors.grey),
+              const SizedBox(width: 8),
+              Text("${result.startTime}~${result.endTime}",
+                  style: const TextStyle(color: Colors.grey)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              const Icon(Icons.location_on, size: 16, color: Colors.grey),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  result.address,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.map),
+            label: const Text("지도에서 보기"),
+            onPressed: () async {
+              await favoriteHandler.getClinicDetail();
+              await vmHandler.checkLocationPermission();
+              await favoriteHandler.maploading(
+                  favoriteHandler.clinicDetail[0].latitude,
+                  favoriteHandler.clinicDetail[0].longitude);
+              Get.to(() => ClinicLocation(), arguments: [result.id]);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.grey.shade200,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildClinicDescription(dynamic result) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "병원 소개",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            result.introduction,
+            style: const TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildActionButtons(
+      dynamic result,
+      FavoriteHandler favoriteHandler,
+      ReservationHandler reservationHandler,
+      PetHandler petHandler,
+      BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () async {
+              chatsHandler.currentClinicId.value = result.id;
+              await chatsHandler.firstChatRoom(result.id, result.image);
+              await chatsHandler.makeChatRoom();
+              await chatsHandler.queryChat();
+              Get.to(() => ChatView(), arguments: [
+                favoriteHandler.clinicDetail[0].image,
+                favoriteHandler.clinicDetail[0].name,
+              ]);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.lightGreen.shade300,
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text('상담하기', style: TextStyle(fontSize: 18)),
+          ),
+          const SizedBox(height: 16),
+          Visibility(
+            visible: reservationHandler.resButtonValue.value,
+            child: ElevatedButton(
+              onPressed: () async {
+                if (vmHandler.isLoggedIn() == false) {
+                  Get.to(() => Login());
+                } else {
+                  await petHandler.makeBorderlist();
+                  Get.to(() => MakeReservation(), arguments: [
+                    reservationHandler.canReservationClinic[0].id,
+                    reservationHandler.canReservationClinic[0].name,
+                    reservationHandler.canReservationClinic[0].latitude,
+                    reservationHandler.canReservationClinic[0].longitude,
+                    reservationHandler.canReservationClinic[0].time,
+                    reservationHandler.canReservationClinic[0].address
+                  ]);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber.shade300,
+                minimumSize: const Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+              child: const Text(
+                '예약하기',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   showSnackBar(String title, String message, Color color) {
-    Get.snackbar(title, message,
-        backgroundColor: color,
-        duration: const Duration(seconds: 2),
-        colorText: Colors.black);
+    Get.snackbar(
+      title,
+      message,
+      backgroundColor: color,
+      colorText: Colors.white,
+      duration: const Duration(seconds: 2),
+    );
   }
 }

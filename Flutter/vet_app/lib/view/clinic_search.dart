@@ -6,6 +6,7 @@ import 'package:vet_app/vm/favorite_handler.dart';
 
 class ClinicSearch extends StatelessWidget {
   ClinicSearch({super.key});
+
   final FavoriteHandler vmHandler = Get.find();
 
   @override

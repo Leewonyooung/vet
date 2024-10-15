@@ -28,7 +28,7 @@ class ChatRoom extends StatelessWidget {
           '채팅 상담',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.blue.shade400,
+        backgroundColor: Colors.green.shade400,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -38,7 +38,7 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  _buildEmptyState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +61,7 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
-  Widget _buildChatRoomList(BuildContext context) {
+  _buildChatRoomList(BuildContext context) {
     return ListView.builder(
       itemCount: vmHandler.rooms.length,
       itemBuilder: (context, index) {
@@ -71,7 +71,7 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
-  Widget _buildChatRoomItem(BuildContext context, Chatroom room, int index) {
+  _buildChatRoomItem(BuildContext context, Chatroom room, int index) {
     return GestureDetector(
       onTap: () async {
         vmHandler.currentClinicId.value = room.clinic;
