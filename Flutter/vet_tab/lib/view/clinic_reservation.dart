@@ -26,109 +26,35 @@ class ClinicReservation extends StatelessWidget {
                 return Obx(
                   () {
                     return Center(
-                      child: Column(
-                        children: [
-                          Column(
-                            children: [
-                              const Text('예약내역',style: TextStyle(
-                                fontSize: 60,
-                                fontWeight: FontWeight.bold
-                              ),),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width / 1.2,
-                                height: 50,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.black)),
-                                      width: 150,
-                                      height: 40,
-                                      child: const Text(
-                                        '  예약자',
-                                        style: TextStyle(fontSize: 30),
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.black)),
-                                      width: 150,
-                                      height: 40,
-                                      child: const Text(
-                                        '  종류',
-                                        style: TextStyle(fontSize: 30),
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.black)),
-                                      width: 150,
-                                      height: 40,
-                                      child: const Text(
-                                        '  품종',
-                                        style: TextStyle(fontSize: 30),
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.black)),
-                                      width: 150,
-                                      height: 40,
-                                      child: const Text(
-                                        '  특징',
-                                        style: TextStyle(fontSize: 30),
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.black)),
-                                      width: 150,
-                                      height: 40,
-                                      child: const Text(
-                                        '  증상',
-                                        style: TextStyle(fontSize: 30),
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.black)),
-                                      width: 250,
-                                      height: 40,
-                                      child: const Text(
-                                        '  예약시간',
-                                        style: TextStyle(fontSize: 30),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 1.2,
-                            height: MediaQuery.of(context).size.height / 1.6,
-                            child: ListView.builder(
-                              itemCount: vmHnadler.clinicreservations.length,
-                              itemBuilder: (context, index) {
-                                final clinic =
-                                    vmHnadler.clinicreservations[index];
-                                return Column(
-                                  children: [
-                                    Card(
-                                      child: Column(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top:50.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 1.3,
+                              height: MediaQuery.of(context).size.height / 1.6,
+                              child: ListView.builder(
+                                itemCount: vmHnadler.clinicreservations.length,
+                                itemBuilder: (context, index) {
+                                  final clinic =
+                                      vmHnadler.clinicreservations[index];
+                                  return Column(
+                                    children: [
+                                      Column(
                                         children: [
                                           Row(children: [
                                             Container(
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.black)),
-                                                width: 150,
-                                                height: 40,
-                                                child: Text(
-                                                  '  ${clinic.userName}',
-                                                  style: const TextStyle(
-                                                      fontSize: 30),
-                                                )),
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.black)),
+                                              width: 150,
+                                              height: 40,
+                                              child: Text(
+                                                '  ${clinic.userName}',
+                                                style: const TextStyle(
+                                                    fontSize: 30),
+                                              )),
                                             Container(
                                                 decoration: BoxDecoration(
                                                     border: Border.all(
@@ -187,13 +113,13 @@ class ClinicReservation extends StatelessWidget {
                                           ]),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                );
-                              },
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },

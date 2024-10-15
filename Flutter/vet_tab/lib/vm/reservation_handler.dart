@@ -90,7 +90,7 @@ class ReservationHandler extends ClinicHandler {
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];
     List<CurrentSituationClinic> returnData = [];
-
+    returnData.add(CurrentSituationClinic(userName: '예약자', petType: '종류', petCategory: '품종', petFeatures: '특징', symptoms: '증상', time: '예약시간'));
     for (int i = 0; i < results.length; i++) {
       String userName = results[i][0];
       String petType = results[i][1];

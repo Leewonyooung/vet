@@ -46,8 +46,8 @@ class ClinicHandler extends LoginHandler{
     List results = dataConvertedJSON['results'];
     List <Clinic> returnData = [];
     
-
-        for (int i = 0; i < results.length; i++) {
+    
+    for (int i = 0; i < results.length; i++) {
       String id= results[i][0];
       String  name= results[i][1];
       String password = results[i][2];

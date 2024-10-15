@@ -17,9 +17,8 @@ class ClinicInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
     ReservationHandler reservationHandler = Get.put(ReservationHandler());
-    PetHandler petHandler = Get.put(PetHandler());
+    PetHandler petHandler = Get.find();
     var value = Get.arguments ?? "__"; // clinicid = value
 
     return Scaffold(
@@ -45,7 +44,7 @@ class ClinicInfo extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error:${snapshot.error}'));
                 } else {
-                  favoriteHandler.searchFavoriteClinic(
+                  vmHandler.searchFavoriteClinic(
                       vmHandler.getStoredEmail(),
                       value[0]); // 즐겨찾기 여부 검색 : 즐겨찾기 버튼 관리
                   reservationHandler
@@ -57,9 +56,9 @@ class ClinicInfo extends StatelessWidget {
                         children: [
                           _buildClinicImage(result[0]),
                           _buildClinicInfo(
-                              result[0], favoriteHandler, value[0], context),
+                              result[0], vmHandler, value[0], context),
                           _buildClinicDescription(result[0]),
-                          _buildActionButtons(result[0], favoriteHandler,
+                          _buildActionButtons(result[0], vmHandler,
                               reservationHandler, petHandler, context),
                         ],
                       ),
