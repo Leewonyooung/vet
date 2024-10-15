@@ -7,16 +7,10 @@ import 'package:vet_app/vm/login_handler.dart';
 class Favorite extends StatelessWidget {
   Favorite({super.key});
   final FavoriteHandler favoriteHandler = Get.find();
+  final LoginHandler loginHandler = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    final LoginHandler loginHandler = Get.find();
-
-    // 로그인한 사용자의 ID(email)를 사용
-    String userId = loginHandler.getStoredEmail();
-
-    // 즐겨찾기 목록 불러오기 호출
-    favoriteHandler.getFavoriteClinics(userId);
 
     return Scaffold(
       appBar: AppBar(
@@ -31,11 +25,11 @@ class Favorite extends StatelessWidget {
         elevation: 0,
       ),
       body: GetBuilder<FavoriteHandler>(
-        builder: (controller) {
-          if (controller.favoriteClinics.isEmpty) {
+        builder: (_) {
+          if (favoriteHandler.favoriteClinics.isEmpty) {
             return _buildEmptyState();
           }
-          return _buildFavoriteList(controller, userId);
+          return _buildFavoriteList();
         },
       ),
     );
@@ -59,11 +53,11 @@ class Favorite extends StatelessWidget {
   }
 
   // 즐겨찾기 목록
-  _buildFavoriteList(FavoriteHandler controller, String userId) {
+  _buildFavoriteList() {
     return ListView.builder(
-      itemCount: controller.favoriteClinics.length,
+      itemCount: favoriteHandler.favoriteClinics.length,
       itemBuilder: (context, index) {
-        final clinic = controller.favoriteClinics[index];
+        final clinic = favoriteHandler.favoriteClinics[index];
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           elevation: 2,
@@ -114,7 +108,7 @@ class Favorite extends StatelessWidget {
                       Icons.delete,
                       color: Colors.red,
                     ),
-                    onPressed: () => _showDeleteConfirmation(userId, clinic.id),
+                    onPressed: () => _showDeleteConfirmation(loginHandler.box.read('userEmail'), clinic.id),
                   ),
                 ],
               ),

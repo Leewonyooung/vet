@@ -26,7 +26,6 @@ class Navigation extends StatelessWidget {
   final PetHandler petHandler = Get.put(PetHandler());
   final ChatsHandler chatsHandler = Get.put(ChatsHandler());
   final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
-  final RxBool shouldRefresh = false.obs;
 
   final vmHnadler = Get.put(ReservationHandler());
   @override
@@ -112,9 +111,7 @@ class Navigation extends StatelessWidget {
             ),
           ],
         ),
-        body: Obx(() {
-          shouldRefresh.value;
-          return SingleChildScrollView(
+          body:SingleChildScrollView(
             child: Column(
               children: [
                 const SizedBox(height: 30),
@@ -125,8 +122,8 @@ class Navigation extends StatelessWidget {
                 _buildPetSection(),
               ],
             ),
-          );
-        }),
+          )
+        
       ),
       ClinicSearch(),
       QueryReservation(),
@@ -253,7 +250,6 @@ class Navigation extends StatelessWidget {
           if (result == true) {
             String userId = loginHandler.getStoredEmail();
             await petHandler.fetchPets(userId);
-            shouldRefresh.toggle();
           }
         } else {
           Get.to(() => Login());
@@ -390,7 +386,6 @@ class Navigation extends StatelessWidget {
         if (result == true) {
           String userId = loginHandler.getStoredEmail();
           await petHandler.fetchPets(userId);
-          shouldRefresh.toggle();
         }
       },
       child: Container(

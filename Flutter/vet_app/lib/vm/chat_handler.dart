@@ -166,7 +166,7 @@ class ChatsHandler extends LoginHandler {
   firstChatRoom(id, image) async{
     final response = await http.get(Uri.parse('http://127.0.0.1:8000/clinic/view/$image'));
     final tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/temp_image.jpg';
+    final filePath = '${tempDir.path}/temp_image';
     final file = File(filePath);
     await file.writeAsBytes(response.bodyBytes);
     final firebaseStorage = FirebaseStorage.instance.ref().child("$image");

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vet_app/view/navigation.dart';
-import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 
 // 예약완료 페이지
@@ -167,9 +166,9 @@ class ReservationComplete extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         ElevatedButton.icon(
-          icon: const Icon(Icons.list),
-          label: const Text('예약내역'),
-          onPressed: () => Get.to(() => QueryReservation()),
+          icon: const Icon(Icons.home),
+          label: const Text('홈으로'),
+          onPressed: () => Get.to(() => Navigation()),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green.shade400,
             foregroundColor: Colors.white,
@@ -178,18 +177,7 @@ class ReservationComplete extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
         ),
-        ElevatedButton.icon(
-          icon: const Icon(Icons.home),
-          label: const Text('홈으로'),
-          onPressed: () => Get.to(() => Navigation()),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue.shade400,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        ),
+       
       ],
     );
   }

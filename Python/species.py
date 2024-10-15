@@ -38,7 +38,7 @@ async def get_species_types():
         conn.close()
 
 # 특정 종류의 세부 종류 조회 API (GET)
-@router.get("/categories")
+@router.post("/categories")
 async def get_species_categories():
     conn = connection()
     curs = conn.cursor()
@@ -54,6 +54,25 @@ async def get_species_categories():
         conn.close()
         print("Error:", e)
         return{"results" : "Error"}
+
+
+@router.get("/pet_categories")
+async def get_species_categories(type: str):
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            sql = "SELECT category FROM species WHERE type = %s"
+            cursor.execute(sql, (type,))
+            categories = cursor.fetchall()
+
+            if not categories:
+                raise HTTPException(status_code=404, detail="No categories found for this species type.")
+
+            return [category[0] for category in categories]
+    finally:
+        conn.close()
+
+
 
 # 새로운 종류 추가 API 
 @router.get("/add")

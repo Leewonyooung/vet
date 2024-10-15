@@ -9,7 +9,7 @@ import 'package:vet_app/vm/reservation_handler.dart';
 // 긴급 예약 확정페이지
 class MakeReservation extends StatelessWidget {
   MakeReservation({super.key});
-  final LoginHandler loginHandler = Get.put(LoginHandler());
+  final LoginHandler loginHandler = Get.find();
   final PetHandler petHandler = Get.find();
   final ReservationHandler reservationHandler = Get.put(ReservationHandler());
   final value = Get.arguments;
@@ -77,8 +77,7 @@ class MakeReservation extends StatelessWidget {
       onTap: () async {
         var result = await Get.to(() => PetRegister());
         if (result == true) {
-          String userId = loginHandler.getStoredEmail();
-          petHandler.fetchPets(userId);
+          petHandler.fetchPets(loginHandler.box.read('userEmail'));
         }
       },
       child: Card(
@@ -120,8 +119,7 @@ class MakeReservation extends StatelessWidget {
       return GestureDetector(
         onTap: () {
           petHandler.setborder(index);
-          String userId = loginHandler.getStoredEmail();
-          petHandler.fetchPets(userId);
+          petHandler.fetchPets(loginHandler.box.read('userEmail'));
           petHandler.currentPetID.value = petHandler.pets[index].id;
         },
         child: Card(
@@ -230,7 +228,6 @@ class MakeReservation extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            String userId = loginHandler.getStoredEmail();
             Get.offAll(() => ReservationComplete(), arguments: [
               value[0],
               value[1],
@@ -239,7 +236,7 @@ class MakeReservation extends StatelessWidget {
               value[4],
               value[5],
             ]);
-            reservationHandler.makeReservation(userId, value[0], value[4],
+            reservationHandler.makeReservation(loginHandler.box.read('userEmail'), value[0], value[4],
                 symptomsController.text, petHandler.currentPetID.value);
           },
           style: ElevatedButton.styleFrom(

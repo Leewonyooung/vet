@@ -10,9 +10,10 @@ class SpeciesHandler extends LoginHandler {
   final speciesCategories = <String>[].obs;
 
   @override
-  void onInit() {
+  void onInit() async{
     super.onInit();
-    loadSpeciesTypes();
+    await loadSpeciesTypes();
+    await loadSpeciesCategories('강아지');
   }
 
   loadSpeciesTypes() async {
@@ -31,8 +32,9 @@ class SpeciesHandler extends LoginHandler {
   }
 
   loadSpeciesCategories(String speciesType) async {
+
     var url =
-        Uri.parse('http://127.0.0.1:8000/species/categories?type=$speciesType');
+        Uri.parse('http://127.0.0.1:8000/species/pet_categories?type=$speciesType');
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {

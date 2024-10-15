@@ -9,11 +9,10 @@ class MyinfoUpdate extends StatelessWidget {
   MyinfoUpdate({super.key});
 
   final TextEditingController nameController = TextEditingController();
-  final LoginHandler loginHandler = Get.put(LoginHandler());
+  final LoginHandler loginHandler = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    final UserHandler userHandler = Get.put(UserHandler());
     var value = Get.arguments;
     return Scaffold(
       appBar: AppBar(
@@ -27,17 +26,17 @@ class MyinfoUpdate extends StatelessWidget {
         backgroundColor: Colors.green.shade400,
         elevation: 0,
       ),
-      body: GetBuilder<UserHandler>(
+      body: GetBuilder<LoginHandler>(
         builder: (_) {
           return FutureBuilder(
-            future: userHandler.selectMyinfo(value),
+            future: loginHandler.selectMyinfo(value),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text("${snapshot.error}"));
               } else {
-                final result = userHandler.mypageUserInfo[0];
+                final result = loginHandler.mypageUserInfo[0];
                 nameController.text = result.name;
                 return SingleChildScrollView(
                   child: Padding(
@@ -45,13 +44,13 @@ class MyinfoUpdate extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildProfileImage(context, userHandler, result),
+                        _buildProfileImage(context, loginHandler, result),
                         const SizedBox(height: 30),
                         _buildEmailInfo(result),
                         const SizedBox(height: 20),
                         _buildNameField(),
                         const SizedBox(height: 30),
-                        _buildSaveButton(context, userHandler, result),
+                        _buildSaveButton(context, loginHandler, result),
                       ],
                     ),
                   ),

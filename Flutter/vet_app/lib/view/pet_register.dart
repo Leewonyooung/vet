@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/pet.dart';
 import 'package:vet_app/vm/pet_handler.dart';
-import 'package:vet_app/vm/species_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
@@ -10,7 +9,6 @@ import 'dart:io';
 class PetRegister extends StatelessWidget {
   PetRegister({super.key});
 
-  final SpeciesHandler speciesHandler = Get.put(SpeciesHandler());
   final PetHandler petHandler = Get.find<PetHandler>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController idController = TextEditingController();
@@ -25,7 +23,7 @@ class PetRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 종 목록 불러오기
-    speciesHandler.loadSpeciesTypes();
+    petHandler.loadSpeciesTypes();
 
     return Scaffold(
       appBar: AppBar(
@@ -60,16 +58,16 @@ class PetRegister extends StatelessWidget {
             const SizedBox(height: 16),
             _buildDropdown(
               '종류',
-              speciesHandler.selectedSpeciesType,
-              speciesHandler.speciesTypes,
-              (newValue) => speciesHandler.setSpeciesType(newValue),
+              petHandler.selectedSpeciesType,
+              petHandler.speciesTypes,
+              (newValue) => petHandler.setSpeciesType(newValue),
             ),
             const SizedBox(height: 16),
             _buildDropdown(
               '세부 종류',
-              speciesHandler.selectedSpeciesCategory,
-              speciesHandler.speciesCategories,
-              (newValue) => speciesHandler.setSpeciesCategory(newValue),
+              petHandler.selectedSpeciesCategory,
+              petHandler.speciesCategories,
+              (newValue) => petHandler.setSpeciesCategory(newValue),
             ),
             const SizedBox(height: 16),
             _buildDatePicker(context),
@@ -246,8 +244,8 @@ class PetRegister extends StatelessWidget {
   _validateInputs() {
     if (nameController.text.trim().isEmpty ||
         idController.text.trim().isEmpty ||
-        speciesHandler.selectedSpeciesType.value == null ||
-        speciesHandler.selectedSpeciesCategory.value == null ||
+        petHandler.selectedSpeciesType.value == null ||
+        petHandler.selectedSpeciesCategory.value == null ||
         birthdayController.text.trim().isEmpty ||
         selectedGender.value.isEmpty) {
       Get.snackbar(
@@ -265,8 +263,8 @@ class PetRegister extends StatelessWidget {
       id: idController.text.trim(),
       userId: petHandler.box.read('userEmail') ?? '',
       name: nameController.text.trim(),
-      speciesType: speciesHandler.selectedSpeciesType.value!,
-      speciesCategory: speciesHandler.selectedSpeciesCategory.value!,
+      speciesType: petHandler.selectedSpeciesType.value!,
+      speciesCategory: petHandler.selectedSpeciesCategory.value!,
       birthday: birthdayController.text.trim(),
       features: featuresController.text.trim(),
       gender: selectedGender.value,
