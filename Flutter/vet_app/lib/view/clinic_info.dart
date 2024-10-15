@@ -31,7 +31,7 @@ class ClinicInfo extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.green.shade400,
         elevation: 0,
       ),
       body: GetBuilder<FavoriteHandler>(
@@ -196,12 +196,17 @@ class ClinicInfo extends StatelessWidget {
         children: [
           const Text(
             "병원 소개",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             result.introduction,
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(
+              fontSize: 16,
+            ),
           ),
         ],
       ),
@@ -230,7 +235,7 @@ class ClinicInfo extends StatelessWidget {
               ]);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade200,
+              backgroundColor: Colors.green.shade200,
               minimumSize: const Size(double.infinity, 50),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
@@ -257,7 +262,7 @@ class ClinicInfo extends StatelessWidget {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green.shade200,
+                backgroundColor: Colors.amber.shade300,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),

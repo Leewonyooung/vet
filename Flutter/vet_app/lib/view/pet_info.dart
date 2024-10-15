@@ -24,7 +24,7 @@ class PetInfo extends StatelessWidget {
           );
         }),
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.green.shade400,
         actions: [
           // 수정 버튼
           IconButton(

@@ -20,7 +20,7 @@ class QueryReservation extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue.shade400,
+        backgroundColor: Colors.green.shade400,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

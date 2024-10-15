@@ -35,7 +35,7 @@ class PetRegister extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.green.shade400,
         elevation: 0,
       ),
       body: SingleChildScrollView(

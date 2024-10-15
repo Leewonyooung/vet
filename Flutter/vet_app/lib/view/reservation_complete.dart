@@ -23,7 +23,7 @@ class ReservationComplete extends StatelessWidget {
           '예약',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.blue.shade400,
+        backgroundColor: Colors.green.shade400,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

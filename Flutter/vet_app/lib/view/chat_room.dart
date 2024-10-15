@@ -28,7 +28,7 @@ class ChatRoom extends StatelessWidget {
           '채팅 상담',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.blue.shade400,
+        backgroundColor: Colors.green.shade400,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

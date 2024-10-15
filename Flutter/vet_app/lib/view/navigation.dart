@@ -44,7 +44,7 @@ class Navigation extends StatelessWidget {
         backgroundColor: Colors.grey.shade900,
         isVisible: true,
         onItemSelected: (index) {
-          if(index ==1){
+          if (index == 1) {
             favoriteHandler.searchbarController.clear();
             favoriteHandler.getAllClinic();
           }
@@ -76,7 +76,7 @@ class Navigation extends StatelessWidget {
             '멍스파인더',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          backgroundColor: Colors.blue.shade400,
+          backgroundColor: Colors.green.shade400,
           foregroundColor: Colors.white,
           elevation: 0,
           actions: [
@@ -136,7 +136,7 @@ class Navigation extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       height: 150,
       decoration: BoxDecoration(
-        color: Colors.blue.shade100,
+        color: Colors.green.shade100,
         borderRadius: BorderRadius.circular(15),
       ),
       child: const Center(
@@ -274,7 +274,7 @@ class Navigation extends StatelessWidget {
             Icon(
               Icons.pets,
               size: 40,
-              color: Colors.blue.shade400,
+              color: Colors.green.shade400,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -283,7 +283,7 @@ class Navigation extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade700,
+                  color: Colors.green.shade700,
                 ),
               ),
             ),
@@ -390,9 +390,9 @@ class Navigation extends StatelessWidget {
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: Colors.blue.shade50,
+          color: Colors.green.shade50,
           border: Border.all(
-            color: Colors.blue.shade200,
+            color: Colors.green.shade200,
             width: 2,
           ),
         ),
@@ -402,7 +402,7 @@ class Navigation extends StatelessWidget {
             Icon(
               Icons.add_circle_outline,
               size: 40,
-              color: Colors.blue,
+              color: Colors.green,
             ),
             SizedBox(height: 8),
             Text(
@@ -410,7 +410,7 @@ class Navigation extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue,
+                color: Colors.green,
               ),
             ),
           ],
