@@ -6,6 +6,7 @@ import 'package:vet_app/vm/reservation_handler.dart';
 
 class QueryReservation extends StatelessWidget {
   QueryReservation({super.key});
+
   final vmHnadler = Get.put(ReservationHandler());
 
   @override

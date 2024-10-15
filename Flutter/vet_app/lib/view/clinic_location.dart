@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,7 +17,7 @@ class ClinicLocation extends StatelessWidget {
     final Completer<GoogleMapController> mapController =
         Completer<GoogleMapController>();
     final result = vmHandler.clinicDetail[0];
-    
+
     // 0=병원id
 
     return Scaffold(
@@ -80,12 +79,12 @@ class ClinicLocation extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: Column(
                             children: [
-                              const Text('대중교통 정보만 지원합니다.',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17
-                              ),
+                              const Text(
+                                '대중교통 정보만 지원합니다.',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17),
                               ),
                               Card(
                                 child: Row(
@@ -109,10 +108,12 @@ class ClinicLocation extends StatelessWidget {
                                             maxLines: 1,
                                           ),
                                           //병원 끝나는시간
-                                          Text(vmHandler.workText.value,
-                                          style: TextStyle(
-                                            color: vmHandler.workColor.value
-                                          ),),
+                                          Text(
+                                            vmHandler.workText.value,
+                                            style: TextStyle(
+                                                color:
+                                                    vmHandler.workColor.value),
+                                          ),
                                           Text("${result.endTime} 영업종료"),
                                           Text(
                                               "거리 : ${vmHandler.distanceText}"),

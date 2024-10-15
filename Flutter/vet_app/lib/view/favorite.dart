@@ -23,6 +23,7 @@ class Favorite extends StatelessWidget {
         title: const Text(
           '찜한 병원 목록',
           style: TextStyle(
+            fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
