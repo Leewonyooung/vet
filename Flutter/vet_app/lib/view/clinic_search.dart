@@ -20,6 +20,7 @@ class ClinicSearch extends StatelessWidget {
         ),
         controller: vmHandler.searchbarController,
         onChanged: (value) {
+          vmHandler.searchbarController.text = value;
           if (value.isNotEmpty) {
             vmHandler.searchbarClinic();
           } else {
@@ -44,7 +45,9 @@ class ClinicSearch extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final clinic = vmHandler.clinicSearch;
                           return GestureDetector(
-                            onTap: () {
+                            onTap: () async{
+                              await vmHandler.resetTextfield();
+                              await vmHandler.getAllClinic();
                               vmHandler.updateCurrentIndex(
                                   clinic[index].id);
                               vmHandler.searchbarController.clear();

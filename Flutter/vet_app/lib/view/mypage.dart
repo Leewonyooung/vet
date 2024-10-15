@@ -118,8 +118,8 @@ class Mypage extends StatelessWidget {
                                     },
                                     child: const Column(
                                       children: [
-                                        Icon(Icons.pets, size: 35,),
-                                        Text('로그아웃', style:  TextStyle(fontSize: 16),)
+                                        Icon(Icons.key_off, size: 35,),
+                                        Text('로그아웃', style:  TextStyle(fontSize: 16),),
                                       ],
                                     )),
                                 ElevatedButton(

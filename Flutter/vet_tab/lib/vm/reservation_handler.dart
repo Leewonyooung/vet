@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:get/state_manager.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_tab/model/available_clinic.dart';
+import 'package:vet_tab/model/current_situation_clinic.dart';
 import 'package:vet_tab/model/reservation.dart';
 import 'package:vet_tab/vm/clinic_handler.dart';
 
@@ -9,6 +11,13 @@ class ReservationHandler extends ClinicHandler {
   final reservations = <Reservation>[].obs;
   final availableclinic = <AvailableClinic>[].obs;
   String reservationTime = "";
+  final clinicreservations = <CurrentSituationClinic>[].obs;
+  String resuserid = "";
+  @override
+  void onInit() async {
+    super.onInit();
+      boxread();  
+    }
 
   // 예약된 리스트
   getReservation() async {
@@ -47,9 +56,8 @@ class ReservationHandler extends ClinicHandler {
           longitude: longitude,
           address: address,
           image: image,
-          time: time)
-          );
-          availableclinic.value = returnData;
+          time: time));
+      availableclinic.value = returnData;
     }
   }
 
@@ -73,4 +81,38 @@ class ReservationHandler extends ClinicHandler {
     return DateTime(
         currentTime.year, currentTime.month, currentTime.day, hour, minute);
   }
+
+  // 병원 예약 현황
+  currentReservationClinic() async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/reservation/select_reservation_clinic?clinic_id=$resuserid');
+    var response = await http.get(url);
+    clinicSearch.clear();
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    List results = dataConvertedJSON['results'];
+    List<CurrentSituationClinic> returnData = [];
+
+    for (int i = 0; i < results.length; i++) {
+      String userName = results[i][0];
+      String petType = results[i][1];
+      String petCategory = results[i][2];
+      String petFeatures = results[i][3];
+      String symptoms = results[i][4];
+      String time = results[i][5];
+
+      returnData.add(CurrentSituationClinic(
+          userName: userName,
+          petType: petType,
+          petCategory: petCategory,
+          petFeatures: petFeatures,
+          symptoms: symptoms,
+          time: time));
+      clinicreservations.value = returnData;
+    }
+  }
+
+boxread(){
+  resuserid = box.read('id')??"";
+}
+
 }

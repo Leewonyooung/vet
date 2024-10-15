@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_tab/view/chat_room_view.dart';
+import 'package:vet_tab/view/clinic_reservation.dart';
 import 'package:vet_tab/view/mgt_home.dart';
 import 'package:vet_tab/view/mgt_species_add.dart';
 import 'package:vet_tab/vm/tab_vm.dart';
@@ -38,6 +39,11 @@ class RailHome extends StatelessWidget {
                     selectedIcon: Icon(Icons.favorite),
                     label: Text('Favorites'),
                   ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.calendar_month),
+                    selectedIcon: Icon(Icons.calendar_month),
+                    label: Text('Reservation'),
+                  ),
                 ],
               ),
             Expanded(
@@ -58,6 +64,8 @@ class RailHome extends StatelessWidget {
         return const MgtHome();
       case 2:
         return const MgtSpeciesAdd();
+      case 3:
+        return ClinicReservation();
       default:
         return Container();
     }
