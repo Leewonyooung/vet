@@ -44,7 +44,8 @@ class MgtClinicList extends StatelessWidget {
                             itemBuilder: (context, index) {
                               final clinic = clinicHandler.clinicSearch;
                               return GestureDetector(
-                                onTap: () {
+                                onTap: () async{
+                                  await clinicHandler.getClinicDetail(clinic[index].id);
                                   clinicHandler
                                       .updateCurrentIndex(clinic[index].id);
                                   Get.to(() => MgtClinicEdit(), arguments: [

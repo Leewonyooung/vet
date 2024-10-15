@@ -256,6 +256,48 @@ async def update(
     introduction: str=None, 
     address: str=None, 
     phone: str=None, 
+):
+    conn = connect()
+    curs = conn.cursor()
+
+    try:
+        sql = """
+        UPDATE clinic
+        SET name = %s,
+        password = %s,
+        latitude = %s,
+        longitude = %s,
+        starttime = %s,
+        endtime = %s,
+        introduction = %s,
+        address = %s,
+        phone = %s,
+        WHERE id = %s
+        """
+        curs.execute(sql, (name, password, latitude, longitude, starttime, endtime, introduction, address, phone, id))
+        conn.commit()
+        conn.close
+        return {'results': 'OK'} 
+    
+    except Exception as e:
+        conn.close()
+        print("Error :", e)
+        return {'result': 'Error'}    
+    
+# edit clinic information to DB (안창빈)
+
+@router.get("/update_all")
+async def update(
+    id: str=None, 
+    name: str=None, 
+    password: str=None, 
+    latitude: str=None, 
+    longitude: str=None, 
+    starttime: str=None, 
+    endtime: str=None, 
+    introduction: str=None, 
+    address: str=None, 
+    phone: str=None, 
     image: str=None,
 ):
     conn = connect()
@@ -284,7 +326,7 @@ async def update(
     except Exception as e:
         conn.close()
         print("Error :", e)
-        return {'result': 'Error'}    
+        return {'result': 'Error'}   
     
 
 

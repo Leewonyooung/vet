@@ -2,7 +2,7 @@
 author: changbin an
 Description: db for the user account
 Fixed: 07/Oct/2024
-Usage: store user acoount information
+Usage: store user(include clinic) acoount information
 """
 
 from fastapi import APIRouter 

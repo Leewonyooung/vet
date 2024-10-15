@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vet_tab/view/mgt_clinic_map.dart';
-import 'package:vet_tab/vm/chat_handler.dart';
 import 'package:vet_tab/vm/clinic_handler.dart';
 
 class MgtClinicAdd extends StatelessWidget {
@@ -91,15 +90,14 @@ class MgtClinicAdd extends StatelessWidget {
                                   child: SizedBox(
                                     width: 100,
                                     child: Obx(() {
+                                      stimeController.text = clinicHandler.startOpTime.value;
                                       return TextField(
                                         onTap: () async {
                                           await clinicHandler.opDateSelection(
                                               context, true);
                                         },
                                         readOnly: true,
-                                        controller: stimeController
-                                          ..text =
-                                              clinicHandler.startOpTime.value,
+                                        controller: stimeController,
                                         decoration: const InputDecoration(
                                             labelText: '영업시작'),
                                       );
@@ -319,7 +317,7 @@ class MgtClinicAdd extends StatelessWidget {
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 0, 50, 0),
                                   child: SizedBox(
-                                    width: 80,
+                                    width: 130,
                                     child: TextField(
                                       style: const TextStyle(fontSize: 15),
                                       readOnly: true,
@@ -341,7 +339,7 @@ class MgtClinicAdd extends StatelessWidget {
                                 ),
                                 const Text('경도 : '),
                                 SizedBox(
-                                  width: 80,
+                                  width: 130,
                                   child: TextField(
                                     style: const TextStyle(fontSize: 15),
                                     readOnly: true,

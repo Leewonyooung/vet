@@ -18,10 +18,13 @@ class MgtClinicEdit extends StatelessWidget {
   final TextEditingController introController = TextEditingController();
   final TextEditingController stimeController = TextEditingController();
   final TextEditingController etimeController = TextEditingController();
+  final clinicHandler = Get.put(ClinicHandler());
 
   @override
   Widget build(BuildContext context) {
-    final clinicHandler = Get.put(ClinicHandler());
+  var value = Get.arguments ?? "__"; // clinicid = value
+  clinicEditInitialInsert(value[0]);
+    
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: Scaffold(
@@ -38,7 +41,7 @@ class MgtClinicEdit extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_ios)),
         ),
         body: GetBuilder<ClinicHandler>(
-          builder: (controller) {
+          builder: (_) {
             return SingleChildScrollView(
               child: Center(
                 child: Column(
@@ -55,10 +58,13 @@ class MgtClinicEdit extends StatelessWidget {
                                 height: 300,
                                 color: Colors.grey,
                                 child: Center(
-                                  child: controller.imageFile == null
-                                      ? const Text('이미지가 선택되지 않았습니다')
+                                  child: clinicHandler.imageFile == null
+                                      ? 
+                                      Image.network(
+                                      "http://127.0.0.1:8000/clinic/view/${clinicHandler.clinicDetail[0].image}")
+
                                       : Image.file(
-                                          File(controller.imageFile!.path)),
+                                    File(clinicHandler.imageFile!.path)),
                                 ),
                               ),
                             ),
@@ -66,7 +72,7 @@ class MgtClinicEdit extends StatelessWidget {
                               padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                               child: ElevatedButton(
                                   onPressed: () {
-                                    clinicHandler.getImageFromGallery(
+                                    clinicHandler.getImageFromGalleryEdit(
                                         ImageSource.gallery);
                                   },
                                   child: const Text('이미지 가져오기')),
@@ -89,38 +95,51 @@ class MgtClinicEdit extends StatelessWidget {
                                       const EdgeInsets.fromLTRB(20, 50, 0, 20),
                                   child: SizedBox(
                                     width: 100,
-                                    child: TextField(
-                                      onTap: () {
-                                        clinicHandler.opDateSelection(context, true);
-                                      },
-                                      readOnly: true,
-                                      controller: stimeController,
-                                      decoration: const InputDecoration(
-                                          labelText: '영업시작'),
-                                    ),
+                                    child: Obx(() {
+                                      // stimeController.text = clinicHandler.startOpTime.value;
+                                      return TextField(
+                                        onTap: () async {
+                                          await clinicHandler.opDateSelection(
+                                              context, true);
+                                        },
+                                        readOnly: true,
+                                        controller: stimeController..text = clinicHandler.startOpTime.value,
+                                        decoration: const InputDecoration(
+                                            labelText: '영업시작'),
+                                      );
+                                    }),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
-                                  child: Text('~',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 50, 20, 0),
+                                  child: Text(
+                                    '~',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 50, 0, 20),
-                                  child: GestureDetector(
-                                    onTap:() {
-                                      clinicHandler.opDateSelection(context, false);
-                                    },
-                                    child: SizedBox(
+                                  child: SizedBox(
                                       width: 100,
-                                      child: TextField(
-                                        readOnly: true,
-                                        controller: etimeController,
-                                        decoration: const InputDecoration(
-                                            labelText: '영업종료'),
-                                      ),
-                                    ),
-                                  ),
+                                      child: Obx(() {
+                                        etimeController.text =
+                                            clinicHandler.endOpTime.value;
+                                        return TextField(
+                                          onTap: () async {
+                                            await clinicHandler.opDateSelection(
+                                                context, false);
+                                          },
+                                          readOnly: true,
+                                          controller: etimeController
+                                            ..text =
+                                                clinicHandler.endOpTime.value,
+                                          decoration: const InputDecoration(
+                                              labelText: '영업종료'),
+                                        );
+                                      })),
                                 ),
                               ],
                             ),
@@ -149,6 +168,7 @@ class MgtClinicEdit extends StatelessWidget {
                                   child: SizedBox(
                                     width: 400,
                                     child: TextField(
+                                      readOnly: true,
                                       controller: idController,
                                       decoration: const InputDecoration(
                                           labelText: '아이디를 입력해주세요'),
@@ -181,8 +201,9 @@ class MgtClinicEdit extends StatelessWidget {
                                         suffixIcon: IconButton(
                                             onPressed: () {
                                               passwordController.clear();
-                                              passwordController.text = clinicHandler
-                                                  .randomPasswordNumberClinic();
+                                              passwordController.text =
+                                                  clinicHandler
+                                                      .randomPasswordNumberClinic();
                                             },
                                             icon:
                                                 const Icon(Icons.add_outlined)),
@@ -264,19 +285,29 @@ class MgtClinicEdit extends StatelessWidget {
                                         labelText: '주소를 입력해주세요',
                                         suffixIcon: IconButton(
                                             onPressed: () {
-                                              clinicHandler.updateAddress(addressController.text);
-                                              Get.to(()=> MgtClinicMap(), arguments:
-                                              addressController.text.trim().isNotEmpty
-                                              ? addressController.text
-                                              : " ")?.then((value) {
-                                                if(value != null){
-                                                  updateClinicAddressData(value['address'], value['lat'], value['long']);
-                                                }
-                                              },);
-                                            }, 
-                                            icon: const Icon(Icons.search)
-                                            ),
-                                          ),
+                                              clinicHandler.updateAddress(
+                                                  addressController.text);
+                                              Get.to(() => MgtClinicMap(),
+                                                      arguments:
+                                                          addressController.text
+                                                                  .trim()
+                                                                  .isNotEmpty
+                                                              ? addressController
+                                                                  .text
+                                                              : " ")
+                                                  ?.then(
+                                                (value) {
+                                                  if (value != null) {
+                                                    updateClinicAddressData(
+                                                        value['address'],
+                                                        value['lat'],
+                                                        value['long']);
+                                                  }
+                                                },
+                                              );
+                                            },
+                                            icon: const Icon(Icons.search)),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -293,7 +324,7 @@ class MgtClinicEdit extends StatelessWidget {
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 0, 50, 0),
                                   child: SizedBox(
-                                    width: 80,
+                                    width: 130,
                                     child: TextField(
                                       style: const TextStyle(fontSize: 15),
                                       readOnly: true,
@@ -315,7 +346,7 @@ class MgtClinicEdit extends StatelessWidget {
                                 ),
                                 const Text('경도 : '),
                                 SizedBox(
-                                  width: 80,
+                                  width: 130,
                                   child: TextField(
                                     style: const TextStyle(fontSize: 15),
                                     readOnly: true,
@@ -392,19 +423,25 @@ class MgtClinicEdit extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10)),
                             ),
                             onPressed: () {
-                              clinicHandler.getClinicInsert(
-                                idController.text, 
-                                nameController.text, 
-                                passwordController.text, 
-                                double.parse(latController.text), 
-                                double.parse(longController.text), 
-                                stimeController.text, 
-                                etimeController.text, 
-                                introController.text, 
-                                addressController.text, 
-                                telController.text, 
-                                clinicHandler.filename,
-                              );
+                              if (idController.text.trim().isEmpty ||
+                                  nameController.text.trim().isEmpty ||
+                                  passwordController.text.trim().isEmpty ||
+                                  latController.text.trim().isEmpty ||
+                                  longController.text.trim().isEmpty ||
+                                  stimeController.text.trim().isEmpty ||
+                                  etimeController.text.trim().isEmpty ||
+                                  introController.text.trim().isEmpty ||
+                                  addressController.text.trim().isEmpty ||
+                                  telController.text.trim().isEmpty ||
+                                  clinicHandler.imageFile == null ) {
+                                errorDialogClinicAdd();
+                              } else {
+                                if (clinicHandler.firstDisp == 0) {
+                                  clinicEdit();
+                                } else {
+                                  clinicEditAll();
+                                }
+                              }
                             },
                             child: const Text(
                               '추가하기',
@@ -427,5 +464,82 @@ class MgtClinicEdit extends StatelessWidget {
     addressController.text = address.toString();
     latController.text = lat.toString();
     longController.text = long.toString();
+  }
+
+    // errorDialog when any of the textfield from the page are empty (안창빈)
+  errorDialogClinicAdd() async {
+    await Get.defaultDialog(
+      title: 'error',
+      content: const Text('빈칸이 있는지 확인해주세요'),
+      textCancel: '확인',
+      barrierDismissible: true,
+    );
+  }
+
+  //add clinic information (안창빈)
+  clincAdd() async {
+    await clinicHandler.uploadImage();
+    clinicHandler.getClinicInsert(
+      idController.text,
+      nameController.text,
+      passwordController.text,
+      double.parse(latController.text),
+      double.parse(longController.text),
+      stimeController.text,
+      etimeController.text,
+      introController.text,
+      addressController.text,
+      telController.text,
+      clinicHandler.filename,
+    );
+  }
+  //edit clinic information (안창빈)
+clinicEdit()async{
+    await clinicHandler.getClinicUpdate(
+      idController.text,
+      nameController.text,
+      passwordController.text,
+      double.parse(latController.text),
+      double.parse(longController.text),
+      stimeController.text,
+      etimeController.text,
+      introController.text,
+      addressController.text,
+      telController.text,
+    );
+}
+  //add clinic information include image (안창빈)
+clinicEditAll() async{
+    await clinicHandler.deleteClinicImage(clinicHandler.clinicDetail[0].image);
+    await clinicHandler.uploadImage();
+    await clinicHandler.getClinicUpdateAll(
+      idController.text,
+      nameController.text,
+      passwordController.text,
+      double.parse(latController.text),
+      double.parse(longController.text),
+      stimeController.text,
+      etimeController.text,
+      introController.text,
+      addressController.text,
+      telController.text,
+      clinicHandler.filename,
+    );
+}
+
+  /// input initial value to the clinic edit page
+  clinicEditInitialInsert(String id)async{
+    final result = clinicHandler.clinicDetail;
+
+      idController.text = result[0].id; 
+      nameController.text = result[0].name;
+      passwordController.text = result[0].password; 
+      latController.text = result[0].latitude.toString();
+      longController.text = result[0].longitude.toString(); 
+      introController.text = result[0].introduction; 
+      addressController.text = result[0].address; 
+      telController.text = result[0].phone; 
+      clinicHandler.updateInitialClinicTimeEdit(result[0].startTime, result[0].endTime);
+      print(result[0].image);
   }
 }//END

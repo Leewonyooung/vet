@@ -18,6 +18,7 @@ class ClinicHandler extends LoginHandler{
   var endOpTime = ''.obs;
   DateTime selectedDate = DateTime.now();
   RxString selected = ''.obs;
+  
 
     getUserId() async {
     // api를 통해 userID가져옴
@@ -112,12 +113,45 @@ class ClinicHandler extends LoginHandler{
 
   // update clinic (안창빈)
 
-  getClinicUpdate() async {
-    var url = Uri.parse("http://127.0.0.1:8000/clinic/update?");
+  getClinicUpdate(
+      String id,
+      String name,
+      String password,
+      double latitude,
+      double longitude,
+      String stime,
+      String etime,
+      String introduction,
+      String address,
+      String phone,
+  ) async {
+    var url = Uri.parse("http://127.0.0.1:8000/clinic/update?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&starttime=$stime&endtime=$etime&introduction=$introduction&address=$address&phone=$phone");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var results = dataConvertedJSON['results'];
     return results;
+  }
+
+
+  getClinicUpdateAll(
+      String id,
+      String name,
+      String password,
+      double latitude,
+      double longitude,
+      String stime,
+      String etime,
+      String introduction,
+      String address,
+      String phone,
+      String image
+  ) async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/clinic/update_all?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&starttime=$stime&endtime=$etime&introduction=$introduction&address=$address&phone=$phone&image=$image');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['result'];
+    return result;
   }
 
   // insert clinic (안창빈)
@@ -185,5 +219,12 @@ class ClinicHandler extends LoginHandler{
       barrierDismissible: true,
     );
   }
+
+  updateInitialClinicTimeEdit(String starttime,String endtime){
+    startOpTime.value = starttime;
+    endOpTime.value = endtime;
+  }
+
+
 
 }

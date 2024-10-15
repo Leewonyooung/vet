@@ -11,8 +11,10 @@ class ImageHandler extends TabVm {
 
   getImageFromGallery(ImageSource imageSource)async{
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
+    if (pickedFile != null){
     imageFile = XFile(pickedFile!.path);
     update();
+    }
   }
 
     uploadImage() async {
@@ -45,7 +47,17 @@ class ImageHandler extends TabVm {
       firstDisp++;
       update();
     }
+}
+
+  deleteClinicImage(String clinicImage) async {
+    var url = Uri.parse('http://127.0.0.1:8000/clinic/deleteFile/$clinicImage');
+    var response = await http.delete(url);
+    if (response.statusCode == 200) {
+      return 'ok';
+    } else {
+      // print('error');
+    }
+  }
+}
 
 
-}
-}
