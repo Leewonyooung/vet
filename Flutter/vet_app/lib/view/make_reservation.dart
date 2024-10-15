@@ -242,8 +242,13 @@ class MakeReservation extends StatelessWidget {
             reservationHandler.makeReservation(userId, value[0], value[4],
                 symptomsController.text, petHandler.currentPetID.value);
           },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-          child: const Text('확정', style: TextStyle(color: Colors.white)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.lightGreen,
+          ),
+          child: const Text(
+            '확정',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );
