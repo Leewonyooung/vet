@@ -45,6 +45,7 @@ class ImageHandler extends GetxController {
 
   // 업로드된 이미지 삭제
   deleteUserImage(String userimage) async {
+    if(userimage != 'usericon.jpg'){
     var url = Uri.parse('http://127.0.0.1:8000/mypage/deleteFile/$userimage');
     var response = await http.delete(url);
     if (response.statusCode == 200) {
@@ -52,5 +53,6 @@ class ImageHandler extends GetxController {
     } else {
       // print('error');
     }
+  }
   }
 }

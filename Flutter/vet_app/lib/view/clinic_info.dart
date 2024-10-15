@@ -50,6 +50,7 @@ class ClinicInfo extends StatelessWidget {
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Container(
                             alignment: Alignment.center,

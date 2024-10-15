@@ -80,7 +80,7 @@ class ClinicLocation extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: Column(
                             children: [
-                              const Text('대중교통 정보만 지원합니다.',
+                              const Text('대중교통 정보만 제공합니다.',
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
