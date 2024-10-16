@@ -31,6 +31,14 @@ class ChatsHandler extends LoginHandler {
     await getAllData();
   }
 
+  checkLength()async{
+    if(rooms.length< roomName.length){
+      roomName.clear();
+      getAllData();
+    }
+    update();
+  }
+
   chatsClear() async {
     rooms.clear();
     chats.clear();
@@ -81,6 +89,7 @@ class ChatsHandler extends LoginHandler {
   }
 
   getAllData() async {
+    
     await makeChatRoom();
     await queryLastChat();
     await getlastName();
@@ -113,32 +122,16 @@ class ChatsHandler extends LoginHandler {
   }
 
   queryLastChat() async {
-    // List<Chats> returnResult=[];
-    // FirebaseFirestore.instance.collection("chat").where('user',isEqualTo: box.read('userEmail')).snapshots().listen((parent) {for(var parentdoc in parent.docs){
-    //   _rooms
-    //       .doc(parentdoc.id)
-    //       .collection('chats')
-    //       .orderBy('timestamp', descending: true)
-    //       .limit(1)
-    //       .snapshots().listen((sub) {
-    //         for(var subdoc in sub.docs){
-    //           var chat = subdoc.data();
-    //           returnResult.add(Chats(
-    //             reciever: chat['reciever'],
-    //             sender: chat['sender'],
-    //             text: chat['text'],
-    //             timestamp: chat['timestamp']));
-    //         }
-    //         lastChats.value = returnResult;
-    //       },);
-    // }});
-    List<Chats> returnResult = [];
     result.clear();
+    lastChats.isNotEmpty?lastChats.clear():lastChats;
+    List<Chats> returnResult = [];
+
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
         .collection("chat")
         .where('user', isEqualTo: box.read('userEmail'))
         .get();
+
     var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
     for (int i = 0; i < tempresult.length; i++) {
       Chatroom chatroom = Chatroom(
@@ -159,15 +152,16 @@ class ChatsHandler extends LoginHandler {
           for (int i = 0; i < event.docs.length; i++) {
             var chat = event.docs[i].data();
             returnResult.add(Chats(
-                reciever: chat['reciever'],
-                sender: chat['sender'],
-                text: chat['text'],
-                timestamp: chat['timestamp']));
+                reciever: chat['reciever']??' ',
+                sender: chat['sender']??' ',
+                text: chat['text']??' ',
+                timestamp: chat['timestamp']??' '));
           }
           lastChats.value = returnResult;
         },
       );
     }
+    update();
   }
 
   firstChatRoom(id, image) async {
@@ -180,14 +174,18 @@ class ChatsHandler extends LoginHandler {
     final firebaseStorage = FirebaseStorage.instance.ref().child("$image");
     await firebaseStorage.putFile(file);
     String downloadURL = await firebaseStorage.getDownloadURL();
-    _rooms
-          .doc("${id}_${box.read('userEmail')}")
-          // .collection('chats')
-          .set({
-        'clinic': id,
-        'image': downloadURL,
-        'user': box.read('userEmail'),
-      });
+      _rooms
+        .doc("${id}_${box.read('userEmail')}")
+        // .collection('chats')
+        .set({
+      'clinic': id,
+      'image': downloadURL,
+      'user': box.read('userEmail'),
+    });
+    roomName.clear();
+    getAllData();
+    
+    update();
     return downloadURL;
   }
 
