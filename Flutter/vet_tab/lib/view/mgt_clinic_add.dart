@@ -81,6 +81,7 @@ class MgtClinicAdd extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blueGrey,
+            foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -221,6 +222,7 @@ class MgtClinicAdd extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blueGrey,
+        foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),

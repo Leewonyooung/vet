@@ -154,5 +154,6 @@ class ReservationHandler extends ClinicHandler {
     } else {
       resButtonValue.value = false;
     }
+    update();
   }
 }
