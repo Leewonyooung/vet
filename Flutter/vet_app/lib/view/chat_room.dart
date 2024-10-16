@@ -36,8 +36,8 @@ class ChatRoom extends StatelessWidget {
           ? _buildEmptyState()
           : FutureBuilder(
               future: vmHandler.checkLength(),
-              builder: (context, snapshot) => 
-               Obx(() => _buildChatRoomList(context))),
+              builder: (context, snapshot) =>
+                  Obx(() => _buildChatRoomList(context))),
     );
   }
 
@@ -76,7 +76,7 @@ class ChatRoom extends StatelessWidget {
 
   _buildChatRoomItem(BuildContext context, Chatroom room, int index) {
     return Obx(
-      () =>GestureDetector(
+      () => GestureDetector(
         onTap: () async {
           vmHandler.currentClinicId.value = room.clinic;
           await vmHandler.getStatus();
@@ -85,9 +85,11 @@ class ChatRoom extends StatelessWidget {
               arguments: [room.image, vmHandler.roomName[index]]);
         },
         child: Card(
+          color: Colors.white,
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(

@@ -61,6 +61,7 @@ class Reservation extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final clinic = vmHnadler.availableclinic[index];
                         return Card(
+                          color: Colors.white,
                           elevation: 4,
                           margin: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 8),
