@@ -19,7 +19,6 @@ class ChatsHandler extends LoginHandler {
   final lastChats = <Chats>[].obs;
   final status = false.obs;
   final roomName = [].obs;
-  Stream<QuerySnapshot> testsnapshot =  FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: 'adfki125').snapshots();
   List<Chatroom> result = [];
   ScrollController listViewContoller = ScrollController();
 
@@ -173,6 +172,14 @@ class ChatsHandler extends LoginHandler {
     await firebaseStorage.putFile(file);
     String downloadURL = await firebaseStorage.getDownloadURL();
     return downloadURL;
+  //  _rooms
+  //       .doc("${id}_${box.read('userEmail')}")
+  //       // .collection('chats')
+  //       .set({
+  //     'clinic': id,
+  //     'image': downloadURL,
+  //     'user': box.read('userEmail'),
+  //   });
   }
 
   makeChatRoom() async {
