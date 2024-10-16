@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vet_app/model/clinic.dart';
 import 'package:vet_app/view/chat_view.dart';
 import 'package:vet_app/view/clinic_location.dart';
 import 'package:vet_app/view/login.dart';
@@ -35,44 +36,32 @@ class ClinicInfo extends StatelessWidget {
       ),
       body: GetBuilder<FavoriteHandler>(
         builder: (_) {
-          return FutureBuilder(
-          future: vmHandler.getClinicDetail(),
-          builder: (context, snapshot) {
-            final result = vmHandler.clinicDetail;
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error:${snapshot.error}'));
-            } else {
-              vmHandler.searchFavoriteClinic(
-                  vmHandler.getStoredEmail(),
-                  value[0]); // 즐겨찾기 여부 검색 : 즐겨찾기 버튼 관리
-              reservationHandler
-                  .reservationButtonMgt(value[0]); // 예약 가능여부 검색 : 예약버튼 활성화
-              return Obx(() {
-                return SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildClinicImage(result[0]),
-                      _buildClinicInfo(
-                          result[0], vmHandler, value[0], context),
-                      _buildClinicDescription(result[0]),
-                      _buildActionButtons(result[0], vmHandler,
-                          reservationHandler, petHandler, context),
-                    ],
-                  ),
-                );
-              });
+          final result = vmHandler.clinicDetail[0];
+          vmHandler.searchFavoriteClinic(vmHandler.getStoredEmail(),value[0]); // 즐겨찾기 여부 검색 : 즐겨찾기 버튼 관리
+          reservationHandler.reservationButtonMgt(value[0]); // 예약 가능여부 검색 : 예약버튼 활성화
+            return Obx(() {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildClinicImage(result),
+                    _buildClinicInfo(
+                        result, vmHandler, value[0], context),
+                    _buildClinicDescription(result),
+                    _buildActionButtons(result, vmHandler,
+                        reservationHandler, petHandler, context),
+                  ],
+                ),
+              );
             }
-          });
-        },
-      ),
+          );
+        }
+      )
     );
   }
 
   // 이미지
-  _buildClinicImage(dynamic result) {
+  _buildClinicImage(Clinic result) {
     return SizedBox(
       height: 250,
       width: double.infinity,
@@ -92,7 +81,7 @@ class ClinicInfo extends StatelessWidget {
   }
 
   // 정보
-  _buildClinicInfo(dynamic result, FavoriteHandler favoriteHandler,
+  _buildClinicInfo(Clinic result, FavoriteHandler favoriteHandler,
       String value, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -191,7 +180,7 @@ class ClinicInfo extends StatelessWidget {
 
 
   // introduction
-  _buildClinicDescription(dynamic result) {
+  _buildClinicDescription(Clinic result) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -217,7 +206,7 @@ class ClinicInfo extends StatelessWidget {
   }
 
   _buildActionButtons(
-      dynamic result,
+      Clinic result,
       FavoriteHandler favoriteHandler,
       ReservationHandler reservationHandler,
       PetHandler petHandler,
@@ -233,10 +222,10 @@ class ClinicInfo extends StatelessWidget {
               }else{
               chatsHandler.currentClinicId.value = result.id;
               await chatsHandler.makeChatRoom();
-              await chatsHandler.firstChatRoom(result.id, result.image);
+              var tempPath = await chatsHandler.firstChatRoom(result.id, result.image);
               await chatsHandler.queryChat();
               Get.to(() => ChatView(), arguments: [
-                favoriteHandler.clinicDetail[0].image,
+                tempPath,
                 favoriteHandler.clinicDetail[0].name,
               ]);}
             },
