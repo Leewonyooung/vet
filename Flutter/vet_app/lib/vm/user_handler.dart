@@ -10,15 +10,9 @@ class UserHandler extends LocationHandler {
   var mypageUserInfo = <UserData>[].obs; // mypage 화면 데이터
   String nameController = ""; // 유저 이름 수정 텍스트필드
 
-  getUserId() async {
-    // api를 통해 userID가져옴
-    await box.read('userEmail');
-  }
-
 // 신정섭
 // 유저 정보 가져오는 쿼리 - mypage
   selectMyinfo(String userid) async {
-    await getUserId();
     var url =
         Uri.parse('http://127.0.0.1:8000/mypage/select_mypage?id=$userid');
     var response = await http.get(url);
