@@ -45,7 +45,7 @@ class SpeciesHandler extends LoginHandler {
     } catch (e) {
       return false;
     }
-    selectedSpeciesCategory.value = null;
+    // selectedSpeciesCategory.value = null;
   }
 
   setSpeciesType(String? type) {
