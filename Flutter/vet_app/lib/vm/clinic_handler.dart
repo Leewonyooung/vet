@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/clinic.dart';
 import 'package:http/http.dart' as http;
-import 'package:vet_app/vm/treatment_handler.dart';
+import 'package:vet_app/vm/login_handler.dart';
 
-class ClinicHandler extends TreatmentHandler {
+class ClinicHandler extends LoginHandler {
   var clinicSearch = <Clinic>[].obs;
   var clinicDetail = <Clinic>[].obs;
   TextEditingController searchbarController = TextEditingController();
@@ -17,7 +17,6 @@ class ClinicHandler extends TreatmentHandler {
   void onInit() async {
     super.onInit();
     await getAllClinic();
-    // await checkLocationPermission();
   }
 
   @override
