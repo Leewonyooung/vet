@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,445 +19,245 @@ class MgtClinicAdd extends StatelessWidget {
   final TextEditingController stimeController = TextEditingController();
   final TextEditingController etimeController = TextEditingController();
   final clinicHandler = Get.put(ClinicHandler());
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            '병원 추가',
-            style: TextStyle(fontSize: 30),
-          ),
-          leading: IconButton(
-              onPressed: () {
-                clinicHandler.imageFile = null;
-                Get.back();
-              },
-              icon: const Icon(Icons.arrow_back_ios)),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          '병원 추가',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        body: GetBuilder<ClinicHandler>(
-          builder: (_) {
-            return SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Container(
-                                width: 400,
-                                height: 300,
-                                color: Colors.grey,
-                                child: Center(
-                                  child: clinicHandler.imageFile == null
-                                      ? const Text('이미지가 선택되지 않았습니다')
-                                      : Image.file(
-                                          File(clinicHandler.imageFile!.path)),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    clinicHandler.getImageFromGallery(
-                                        ImageSource.gallery);
-                                  },
-                                  child: const Text('이미지 가져오기')),
-                            ),
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
-                                  child: SizedBox(
-                                      width: 100,
-                                      child: Text(
-                                        '영업시간 : ',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      )),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 50, 0, 20),
-                                  child: SizedBox(
-                                    width: 100,
-                                    child: Obx(() {
-                                      stimeController.text =
-                                          clinicHandler.startOpTime.value;
-                                      return TextField(
-                                        onTap: () async {
-                                          await clinicHandler.opDateSelection(
-                                              context, true);
-                                        },
-                                        readOnly: true,
-                                        controller: stimeController,
-                                        decoration: const InputDecoration(
-                                            labelText: '영업시작'),
-                                      );
-                                    }),
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 50, 20, 0),
-                                  child: Text(
-                                    '~',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 50, 0, 20),
-                                  child: SizedBox(
-                                      width: 100,
-                                      child: Obx(() {
-                                        etimeController.text =
-                                            clinicHandler.endOpTime.value;
-                                        return TextField(
-                                          onTap: () async {
-                                            await clinicHandler.opDateSelection(
-                                                context, false);
-                                          },
-                                          readOnly: true,
-                                          controller: etimeController
-                                            ..text =
-                                                clinicHandler.endOpTime.value,
-                                          decoration: const InputDecoration(
-                                              labelText: '영업종료'),
-                                        );
-                                      })),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(100, 50, 0, 20),
-                                  child: SizedBox(
-                                      width: 100,
-                                      child: Text(
-                                        '아이디 : ',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      )),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 50, 0, 20),
-                                  child: SizedBox(
-                                    width: 400,
-                                    child: TextField(
-                                      controller: idController,
-                                      decoration: const InputDecoration(
-                                          labelText: '아이디를 입력해주세요'),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(100, 0, 0, 20),
-                                  child: SizedBox(
-                                      width: 100,
-                                      child: Text('비밀번호 : ',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold))),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 0, 0, 20),
-                                  child: SizedBox(
-                                    width: 400,
-                                    child: TextField(
-                                      readOnly: true,
-                                      controller: passwordController,
-                                      decoration: InputDecoration(
-                                        labelText: '비밀번호를 입력해주세요',
-                                        suffixIcon: IconButton(
-                                            onPressed: () {
-                                              passwordController.clear();
-                                              passwordController.text =
-                                                  clinicHandler
-                                                      .randomPasswordNumberClinic();
-                                            },
-                                            icon:
-                                                const Icon(Icons.add_outlined)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(100, 0, 0, 20),
-                                  child: SizedBox(
-                                      width: 100,
-                                      child: Text('병원이름 : ',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold))),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 0, 0, 20),
-                                  child: SizedBox(
-                                    width: 400,
-                                    child: TextField(
-                                      controller: nameController,
-                                      decoration: const InputDecoration(
-                                          labelText: '병원이름을 입력해주세요'),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(100, 0, 0, 20),
-                                  child: SizedBox(
-                                      width: 100,
-                                      child: Text('전화번호 : ',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold))),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 0, 0, 20),
-                                  child: SizedBox(
-                                    width: 400,
-                                    child: TextField(
-                                      controller: telController,
-                                      decoration: const InputDecoration(
-                                          labelText: '전화번호를 입력해주세요'),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(100, 0, 0, 20),
-                                  child: SizedBox(
-                                      width: 100,
-                                      child: Text('주소 : ',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold))),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                  child: SizedBox(
-                                    width: 400,
-                                    child: TextField(
-                                      controller: addressController,
-                                      decoration: InputDecoration(
-                                        labelText: '주소를 입력해주세요',
-                                        suffixIcon: IconButton(
-                                            onPressed: () {
-                                              clinicHandler.updateAddress(
-                                                  addressController.text);
-                                              Get.to(() => const MgtClinicMap(),
-                                                      arguments:
-                                                          addressController.text
-                                                                  .trim()
-                                                                  .isNotEmpty
-                                                              ? addressController
-                                                                  .text
-                                                              : " ")
-                                                  ?.then(
-                                                (value) {
-                                                  if (value != null) {
-                                                    updateClinicAddressData(
-                                                        value['address'],
-                                                        value['lat'],
-                                                        value['long']);
-                                                  }
-                                                },
-                                              );
-                                            },
-                                            icon: const Icon(Icons.search)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(220, 0, 0, 0),
-                                  child: Text('위도 : '),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 50, 0),
-                                  child: SizedBox(
-                                    width: 130,
-                                    child: TextField(
-                                      style: const TextStyle(fontSize: 15),
-                                      readOnly: true,
-                                      controller: latController,
-                                      decoration: const InputDecoration(
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Text('경도 : '),
-                                SizedBox(
-                                  width: 130,
-                                  child: TextField(
-                                    style: const TextStyle(fontSize: 15),
-                                    readOnly: true,
-                                    controller: longController,
-                                    decoration: const InputDecoration(
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255)),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
-                                  child: SizedBox(
-                                      width: 100,
-                                      child: Text('설명 : ',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold))),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                  child: SizedBox(
-                                    width: 400,
-                                    child: SizedBox(
-                                      height: 200,
-                                      child: TextField(
-                                        maxLength: 150,
-                                        expands: true,
-                                        style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis),
-                                        maxLines: null,
-                                        keyboardType: TextInputType.multiline,
-                                        controller: introController,
-                                        textAlignVertical:
-                                            TextAlignVertical.top,
-                                        decoration: const InputDecoration(
-                                          hintText: '설명을 입력하세요',
-                                          border: OutlineInputBorder(),
-                                          contentPadding: EdgeInsets.symmetric(
-                                              vertical: 10.0, horizontal: 10.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: SizedBox(
-                        width: 170,
-                        height: 70,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: BeveledRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                            onPressed: () {
-                              if (idController.text.trim().isEmpty ||
-                                  nameController.text.trim().isEmpty ||
-                                  passwordController.text.trim().isEmpty ||
-                                  latController.text.trim().isEmpty ||
-                                  longController.text.trim().isEmpty ||
-                                  stimeController.text.trim().isEmpty ||
-                                  etimeController.text.trim().isEmpty ||
-                                  introController.text.trim().isEmpty ||
-                                  addressController.text.trim().isEmpty ||
-                                  telController.text.trim().isEmpty ||
-                                  clinicHandler.imageFile == null) {
-                                errorDialogClinicAdd();
-                              } else {
-                                clincAdd();
-                              }
-                            },
-                            child: const Text(
-                              '추가하기',
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
-                            )),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.blueGrey,
+        leading: IconButton(
+          onPressed: () {
+            clinicHandler.imageFile = null;
+            Get.back();
           },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
+      ),
+      body: GetBuilder<ClinicHandler>(
+        builder: (_) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(30.0),
+            child: Center(
+              child: Column(
+                children: [
+                  _buildImageSection(),
+                  const SizedBox(height: 30),
+                  _buildOperatingTimeSection(context),
+                  const SizedBox(height: 30),
+                  _buildClinicInfoSection(),
+                  const SizedBox(height: 50),
+                  _buildAddButton(),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildImageSection() {
+    return Column(
+      children: [
+        Container(
+          width: 400,
+          height: 300,
+          color: Colors.grey[300],
+          child: Center(
+            child: clinicHandler.imageFile == null
+                ? const Text('이미지가 선택되지 않았습니다')
+                : Image.file(File(clinicHandler.imageFile!.path)),
+          ),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            clinicHandler.getImageFromGallery(ImageSource.gallery);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueGrey,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: const Text('이미지 가져오기'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOperatingTimeSection(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildTimeTextField('영업시작', stimeController, true, context),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            '~',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        _buildTimeTextField('영업종료', etimeController, false, context),
+      ],
+    );
+  }
+
+  Widget _buildTimeTextField(String label, TextEditingController controller,
+      bool isStart, BuildContext context) {
+    return SizedBox(
+      width: 150,
+      child: Obx(() {
+        controller.text = isStart
+            ? clinicHandler.startOpTime.value
+            : clinicHandler.endOpTime.value;
+        return TextField(
+          onTap: () async {
+            await clinicHandler.opDateSelection(context, isStart);
+          },
+          readOnly: true,
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: label,
+            border: const OutlineInputBorder(),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildClinicInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTextField('아이디', '아이디를 입력해주세요', idController),
+        _buildTextField('비밀번호', '비밀번호를 입력해주세요', passwordController,
+            isReadOnly: true,
+            suffixIcon: IconButton(
+              onPressed: () {
+                passwordController.clear();
+                passwordController.text =
+                    clinicHandler.randomPasswordNumberClinic();
+              },
+              icon: const Icon(Icons.add_outlined),
+            )),
+        _buildTextField('병원이름', '병원이름을 입력해주세요', nameController),
+        _buildTextField('전화번호', '전화번호를 입력해주세요', telController),
+        _buildAddressSection(),
+        _buildTextField('설명', '설명을 입력하세요', introController, maxLines: 4),
+      ],
+    );
+  }
+
+  Widget _buildTextField(
+      String label, String hint, TextEditingController controller,
+      {bool isReadOnly = false, int maxLines = 1, Widget? suffixIcon}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: TextField(
+        controller: controller,
+        readOnly: isReadOnly,
+        maxLines: maxLines,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          border: const OutlineInputBorder(),
+          suffixIcon: suffixIcon,
         ),
       ),
     );
   }
-  //Function
 
-  // input the address lat and long data which were inputed from mgt_clinic_map apge (안창빈)
+  Widget _buildAddressSection() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildTextField('주소', '주소를 입력해주세요', addressController,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  clinicHandler.updateAddress(addressController.text);
+                  Get.to(() => const MgtClinicMap(),
+                          arguments: addressController.text)
+                      ?.then((value) {
+                    if (value != null) {
+                      updateClinicAddressData(
+                          value['address'], value['lat'], value['long']);
+                    }
+                  });
+                },
+                icon: const Icon(Icons.search),
+              )),
+        ),
+        const SizedBox(width: 20),
+        _buildCoordinateFields('위도', latController),
+        const SizedBox(width: 10),
+        _buildCoordinateFields('경도', longController),
+      ],
+    );
+  }
+
+  Widget _buildCoordinateFields(
+      String label, TextEditingController controller) {
+    return SizedBox(
+      width: 100,
+      child: TextField(
+        controller: controller,
+        readOnly: true,
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blueGrey,
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      onPressed: () {
+        if (idController.text.trim().isEmpty ||
+            nameController.text.trim().isEmpty ||
+            passwordController.text.trim().isEmpty ||
+            latController.text.trim().isEmpty ||
+            longController.text.trim().isEmpty ||
+            stimeController.text.trim().isEmpty ||
+            etimeController.text.trim().isEmpty ||
+            introController.text.trim().isEmpty ||
+            addressController.text.trim().isEmpty ||
+            telController.text.trim().isEmpty ||
+            clinicHandler.imageFile == null) {
+          errorDialogClinicAdd();
+        } else {
+          clincAdd();
+        }
+      },
+      child: const Text(
+        '추가하기',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  // Function
+
   updateClinicAddressData(String address, double lat, double long) {
     addressController.text = address.toString();
     latController.text = lat.toString();
     longController.text = long.toString();
   }
 
-  // errorDialog when any of the textfield from the page are empty (안창빈)
   errorDialogClinicAdd() async {
     await Get.defaultDialog(
       title: 'error',
@@ -468,7 +267,6 @@ class MgtClinicAdd extends StatelessWidget {
     );
   }
 
-  //add clinic information (안창빈)
   clincAdd() async {
     await clinicHandler.uploadImage();
     clinicHandler.getClinicInsert(
@@ -485,4 +283,4 @@ class MgtClinicAdd extends StatelessWidget {
       clinicHandler.filename,
     );
   }
-}//END
+}

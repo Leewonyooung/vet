@@ -10,43 +10,60 @@ class MgtHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('개발자 페이지'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          '개발자 페이지',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        body: Center(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.blueGrey,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      Get.to(() => MgtClinicAdd());
-                    },
-                    child: const Text('새로운 병원 추가')),
+              _buildElevatedButton(
+                '새로운 병원 추가',
+                () => Get.to(() => MgtClinicAdd()),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      Get.to(() => MgtClinicList());
-                    },
-                    child: const Text('병원 정보 변경')),
+              const SizedBox(height: 16),
+              _buildElevatedButton(
+                '병원 정보 변경',
+                () => Get.to(() => MgtClinicList()),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      speciesHandler.speciesController.clear();
-                      speciesHandler.speciesInsertDialog();
-                    },
-                    child: const Text('견종 추가하기')),
+              const SizedBox(height: 16),
+              _buildElevatedButton(
+                '견종 추가하기',
+                () {
+                  speciesHandler.speciesController.clear();
+                  speciesHandler.speciesInsertDialog();
+                },
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildElevatedButton(String text, VoidCallback onPressed) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blueGrey,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
     );
