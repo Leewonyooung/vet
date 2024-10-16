@@ -34,29 +34,27 @@ class ClinicInfo extends StatelessWidget {
         backgroundColor: Colors.green.shade400,
         elevation: 0,
       ),
-      body: GetBuilder<FavoriteHandler>(
-        builder: (_) {
-          final result = vmHandler.clinicDetail[0];
-          vmHandler.searchFavoriteClinic(vmHandler.getStoredEmail(),value[0]); // 즐겨찾기 여부 검색 : 즐겨찾기 버튼 관리
-          reservationHandler.reservationButtonMgt(value[0]); // 예약 가능여부 검색 : 예약버튼 활성화
-            return Obx(() {
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildClinicImage(result),
-                    _buildClinicInfo(
-                        result, vmHandler, value[0], context),
-                    _buildClinicDescription(result),
-                    _buildActionButtons(result, vmHandler,
-                        reservationHandler, petHandler, context),
-                  ],
-                ),
-              );
-            }
+      body: GetBuilder<FavoriteHandler>(builder: (_) {
+        final result = vmHandler.clinicDetail[0];
+        vmHandler.searchFavoriteClinic(
+            vmHandler.getStoredEmail(), value[0]); // 즐겨찾기 여부 검색 : 즐겨찾기 버튼 관리
+        reservationHandler
+            .reservationButtonMgt(value[0]); // 예약 가능여부 검색 : 예약버튼 활성화
+        return Obx(() {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildClinicImage(result),
+                _buildClinicInfo(result, vmHandler, value[0], context),
+                _buildClinicDescription(result),
+                _buildActionButtons(
+                    result, vmHandler, reservationHandler, petHandler, context),
+              ],
+            ),
           );
-        }
-      )
+        });
+      }),
     );
   }
 
@@ -81,8 +79,8 @@ class ClinicInfo extends StatelessWidget {
   }
 
   // 정보
-  _buildClinicInfo(Clinic result, FavoriteHandler favoriteHandler,
-      String value, BuildContext context) {
+  _buildClinicInfo(Clinic result, FavoriteHandler favoriteHandler, String value,
+      BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -178,7 +176,6 @@ class ClinicInfo extends StatelessWidget {
     );
   }
 
-
   // introduction
   _buildClinicDescription(Clinic result) {
     return Padding(
@@ -217,17 +214,19 @@ class ClinicInfo extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () async {
-              if(chatsHandler.isLoggedIn() ==false){
-                Get.to(()=>Login());
-              }else{
-              chatsHandler.currentClinicId.value = result.id;
-              await chatsHandler.makeChatRoom();
-              var tempPath = await chatsHandler.firstChatRoom(result.id, result.image);
-              await chatsHandler.queryChat();
-              Get.to(() => ChatView(), arguments: [
-                tempPath,
-                favoriteHandler.clinicDetail[0].name,
-              ]);}
+              if (chatsHandler.isLoggedIn() == false) {
+                Get.to(() => Login());
+              } else {
+                chatsHandler.currentClinicId.value = result.id;
+                await chatsHandler.makeChatRoom();
+                var tempPath =
+                    await chatsHandler.firstChatRoom(result.id, result.image);
+                await chatsHandler.queryChat();
+                Get.to(() => ChatView(), arguments: [
+                  tempPath,
+                  favoriteHandler.clinicDetail[0].name,
+                ]);
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.lightGreen.shade300,

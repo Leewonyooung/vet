@@ -55,7 +55,12 @@ class Mypage extends StatelessWidget {
               );
             })
           : const Center(
-              child: Text('로그인이 필요합니다.', style: TextStyle(fontSize: 18)),
+              child: Text(
+                '로그인이 필요합니다.',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
             ),
     );
   }
@@ -75,7 +80,10 @@ class Mypage extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               result[0].name,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -89,13 +97,19 @@ class Mypage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('회원 정보',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const Text(
+            '회원 정보',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 16),
           Card(
             elevation: 4,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -116,9 +130,19 @@ class Mypage extends StatelessWidget {
   _buildInfoItem(String label, String value) {
     return Row(
       children: [
-        Text('$label: ',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        Text(value, style: const TextStyle(fontSize: 16)),
+        Text(
+          '$label: ',
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+          ),
+        ),
       ],
     );
   }
@@ -166,7 +190,9 @@ class Mypage extends StatelessWidget {
         backgroundColor: color,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
     );
   }
@@ -174,7 +200,9 @@ class Mypage extends StatelessWidget {
   showDialog(LoginHandler loginHandler) {
     Get.defaultDialog(
       title: "로그아웃",
-      titleStyle: const TextStyle(fontWeight: FontWeight.bold),
+      titleStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
       middleText: '로그아웃 하시겠습니까?',
       textConfirm: "확인",
       textCancel: "취소",

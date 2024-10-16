@@ -11,7 +11,6 @@ class Favorite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -41,11 +40,18 @@ class Favorite extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.favorite_border, size: 80, color: Colors.grey[400]),
+          Icon(
+            Icons.favorite_border,
+            size: 80,
+            color: Colors.grey[400],
+          ),
           const SizedBox(height: 16),
           Text(
             '즐겨찾기 목록이 비어있습니다.',
-            style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey[600],
+            ),
           ),
         ],
       ),
@@ -108,7 +114,8 @@ class Favorite extends StatelessWidget {
                       Icons.delete,
                       color: Colors.red,
                     ),
-                    onPressed: () => _showDeleteConfirmation(loginHandler.box.read('userEmail'), clinic.id),
+                    onPressed: () => _showDeleteConfirmation(
+                        loginHandler.box.read('userEmail'), clinic.id),
                   ),
                 ],
               ),

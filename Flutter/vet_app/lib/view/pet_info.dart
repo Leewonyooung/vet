@@ -31,12 +31,18 @@ class PetInfo extends StatelessWidget {
         actions: [
           // 수정 버튼
           IconButton(
-            icon: const Icon(Icons.edit, color: Colors.white),
+            icon: const Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
             onPressed: () => _editPet(context),
           ),
           // 삭제 버튼
           IconButton(
-            icon: const Icon(Icons.delete, color: Colors.white),
+            icon: const Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
             onPressed: () => _deletePet(context),
           ),
         ],
@@ -104,17 +110,41 @@ class PetInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInfoTile('이름', updatedPet.name, Icons.pets),
-          _buildInfoTile('ID', updatedPet.id, Icons.tag),
-          _buildInfoTile('종류', updatedPet.speciesType, Icons.category),
-          _buildInfoTile('세부 종류', updatedPet.speciesCategory, Icons.details),
+          _buildInfoTile(
+            '이름',
+            updatedPet.name,
+            Icons.pets,
+          ),
+          _buildInfoTile(
+            'ID',
+            updatedPet.id,
+            Icons.tag,
+          ),
+          _buildInfoTile(
+            '종류',
+            updatedPet.speciesType,
+            Icons.category,
+          ),
+          _buildInfoTile(
+            '세부 종류',
+            updatedPet.speciesCategory,
+            Icons.details,
+          ),
           _buildInfoTile(
             '성별',
             updatedPet.gender,
             updatedPet.gender == '수컷' ? Icons.male : Icons.female,
           ),
-          _buildInfoTile('특징', updatedPet.features, Icons.description),
-          _buildInfoTile('생일', updatedPet.birthday, Icons.cake),
+          _buildInfoTile(
+            '특징',
+            updatedPet.features,
+            Icons.description,
+          ),
+          _buildInfoTile(
+            '생일',
+            updatedPet.birthday,
+            Icons.cake,
+          ),
         ],
       ),
     );

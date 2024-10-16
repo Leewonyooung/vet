@@ -219,7 +219,10 @@ class PetRegister extends StatelessWidget {
             if (success) {
               Get.back(result: true);
             } else {
-              Get.snackbar('오류', '반려동물 등록에 실패했습니다.');
+              Get.snackbar(
+                '오류',
+                '반려동물 등록에 실패했습니다.',
+              );
             }
           }
         },
