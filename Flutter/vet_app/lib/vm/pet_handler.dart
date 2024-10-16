@@ -19,7 +19,7 @@ class PetHandler extends SpeciesHandler {
     await fetchPets(box.read('userEmail'));
     // makeBorderlist();
   }
-
+  
   makeBorderlist() {
     if (borderList.length >= pets.length) {
       borderList.clear();

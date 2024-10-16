@@ -179,7 +179,7 @@ async def all_clinic():
 
 # insert new clinic information to DB (안창빈)
 
-@router.post("/insert")
+@router.get("/insert")
 async def insert(
     id: str=None, 
     name: str=None, 
@@ -210,7 +210,7 @@ async def insert(
     
 # edit clinic information to DB (안창빈)
 
-@router.post("/update")
+@router.get("/update")
 async def update(
     id: str=None, 
     name: str=None, 
@@ -233,11 +233,11 @@ async def update(
         password = %s,
         latitude = %s,
         longitude = %s,
-        starttime = %s,
-        endtime = %s,
+        start_time = %s,
+        end_time = %s,
         introduction = %s,
         address = %s,
-        phone = %s,
+        phone = %s
         WHERE id = %s
         """
         curs.execute(sql, (name, password, latitude, longitude, starttime, endtime, introduction, address, phone, id))

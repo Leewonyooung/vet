@@ -22,10 +22,10 @@ class Navigation extends StatelessWidget {
 
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
-  final LoginHandler loginHandler = Get.put(LoginHandler());
-  final PetHandler petHandler = Get.put(PetHandler());
+  final LoginHandler loginHandler = Get.put(LoginHandler(), permanent: true);
+  final PetHandler petHandler = Get.put(PetHandler(), permanent: true);
   final ChatsHandler chatsHandler = Get.put(ChatsHandler());
-  final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler());
+  final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler(), permanent: true);
 
   final vmHnadler = Get.put(ReservationHandler());
   @override

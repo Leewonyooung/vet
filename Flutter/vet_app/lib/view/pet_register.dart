@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/pet.dart';
+import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +10,7 @@ import 'dart:io';
 class PetRegister extends StatelessWidget {
   PetRegister({super.key});
 
-  final PetHandler petHandler = Get.find<PetHandler>();
+  final PetHandler petHandler = Get.put(PetHandler());
   final TextEditingController nameController = TextEditingController();
   final TextEditingController idController = TextEditingController();
   final TextEditingController birthdayController = TextEditingController();

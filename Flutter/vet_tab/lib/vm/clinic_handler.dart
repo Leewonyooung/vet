@@ -155,6 +155,7 @@ class ClinicHandler extends LocationHandler{
       textConfirm: '확인',
       onConfirm: () {
         Get.back();
+        Get.back();
       },
       barrierDismissible: true,
     );

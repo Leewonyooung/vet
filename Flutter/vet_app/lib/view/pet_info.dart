@@ -7,7 +7,7 @@ import 'package:vet_app/vm/pet_handler.dart';
 
 class PetInfo extends StatelessWidget {
   final Pet pet;
-  final PetHandler petHandler = Get.find<PetHandler>();
+  final PetHandler petHandler = Get.find();
 
   PetInfo({super.key, required this.pet});
 
@@ -222,7 +222,7 @@ class PetInfo extends StatelessWidget {
               final success = await petHandler.deletePet(pet.id);
               if (success) {
                 Get.back();
-                Get.offAll(() => Navigation());
+                Get.to(() => Navigation());
               } else {
                 Get.snackbar(
                   '오류',

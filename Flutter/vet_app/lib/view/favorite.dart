@@ -60,70 +60,73 @@ class Favorite extends StatelessWidget {
 
   // 즐겨찾기 목록
   _buildFavoriteList() {
-    return ListView.builder(
-      itemCount: favoriteHandler.favoriteClinics.length,
-      itemBuilder: (context, index) {
-        final clinic = favoriteHandler.favoriteClinics[index];
-        return Card(
-          color: Colors.white,
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: InkWell(
-            onTap: () async {
-              await favoriteHandler.updateCurrentIndex(clinic.id);
-              Get.to(() => ClinicInfo(), arguments: [clinic.id]);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildClinicImage(clinic),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          clinic.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+    return FutureBuilder(
+      future: favoriteHandler.getFavoriteClinics(Get.find<LoginHandler>().box.read('userEmail')),
+      builder: (context, snapshot) =>  ListView.builder(
+        itemCount: favoriteHandler.favoriteClinics.length,
+        itemBuilder: (context, index) {
+          final clinic = favoriteHandler.favoriteClinics[index];
+          return Card(
+            color: Colors.white,
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: InkWell(
+              onTap: () async {
+                await favoriteHandler.updateCurrentIndex(clinic.id);
+                Get.to(() => ClinicInfo(), arguments: [clinic.id]);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _buildClinicImage(clinic),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            clinic.name,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          clinic.address,
-                          style: TextStyle(
-                            color: Colors.grey[600],
+                          const SizedBox(height: 4),
+                          Text(
+                            clinic.address,
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '전화: ${clinic.phone}',
-                          style: TextStyle(
-                            color: Colors.grey[600],
+                          const SizedBox(height: 4),
+                          Text(
+                            '전화: ${clinic.phone}',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                      onPressed: () => _showDeleteConfirmation(
+                          loginHandler.box.read('userEmail'), clinic.id),
                     ),
-                    onPressed: () => _showDeleteConfirmation(
-                        loginHandler.box.read('userEmail'), clinic.id),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

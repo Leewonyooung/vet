@@ -242,8 +242,7 @@ class MgtClinicEdit extends StatelessWidget {
             etimeController.text.trim().isEmpty ||
             introController.text.trim().isEmpty ||
             addressController.text.trim().isEmpty ||
-            telController.text.trim().isEmpty ||
-            clinicHandler.imageFile == null) {
+            telController.text.trim().isEmpty) {
           errorDialogClinicAdd();
         } else {
           if (clinicHandler.firstDisp == 0) {
