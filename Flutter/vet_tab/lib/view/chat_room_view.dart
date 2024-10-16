@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:vet_tab/model/chatroom.dart';
 import 'package:vet_tab/model/chats.dart';
 import 'package:vet_tab/vm/chat_handler.dart';
+import 'package:vet_tab/vm/login_handler.dart';
 
 class ChatRoomView extends StatelessWidget {
   ChatRoomView({super.key});
@@ -46,7 +47,7 @@ class ChatRoomView extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          flex: 3,
+          flex: 4,
           child: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -138,17 +139,17 @@ class ChatRoomView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
+          // decoration: BoxDecoration(
+          //   color: Colors.white,
+          //   boxShadow: [
+          //     BoxShadow(
+          //       color: Colors.grey.withOpacity(0.3),
+          //       spreadRadius: 2,
+          //       blurRadius: 5,
+          //       offset: const Offset(0, 3),
+          //     ),
+          //   ],
+          // ),
           child: Text(
             chatsHandler.currentUserName.value,
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -190,8 +191,7 @@ class ChatRoomView extends StatelessWidget {
         }
 
         // 일반 메시지일 경우
-        bool isSender = chat.sender == 'adfki125';
-
+        bool isSender = chat.sender == Get.find<LoginHandler>().box.read('id');
         return Align(
           alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
@@ -257,7 +257,7 @@ class ChatRoomView extends StatelessWidget {
 
     Chats newChat = Chats(
       reciever: chatsHandler.currentUserId.value,
-      sender: 'adfki125',
+      sender: Get.find<LoginHandler>().box.read('id'),
       text: chatController.text.trim(),
       timestamp: DateTime.now().toString(),
     );
