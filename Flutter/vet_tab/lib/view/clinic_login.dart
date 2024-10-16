@@ -138,7 +138,7 @@ class ClinicLogin extends StatelessWidget {
   loginDialog() {
     Get.defaultDialog(
       title: '환영합니다',
-      content: const Text('로그인을 성공하셨습니다'),
+      content: const Text('로그인에 성공하였습니다'),
       barrierDismissible: false,
       textConfirm: '확인',
       onConfirm: () {

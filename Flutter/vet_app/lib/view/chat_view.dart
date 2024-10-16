@@ -30,36 +30,36 @@ class ChatView extends StatelessWidget {
           toolbarHeight: 75,
           title: Row(
             children: [
-              Column(
-                children: [
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundImage: NetworkImage(temp[0]),
-                  ),
-                ],
+              CircleAvatar(
+                radius: 25,
+                backgroundImage: NetworkImage(temp[0]),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    temp[1],
-                    overflow: TextOverflow.clip,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
+              const SizedBox(width: 12), // 사진과 병원 이름 사이의 간격 조정
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      temp[1],
+                      overflow: TextOverflow.ellipsis, // 이름이 너무 길 경우 줄임표 처리
+                      maxLines: 1,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                  Obx(() => Text(
-                        vmHandler.status.value ? '진료 중' : '진료 종료',
-                        style: TextStyle(
-                          color: vmHandler.status.value
-                              ? Colors.green[400]
-                              : Colors.red[400],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      )),
-                ],
+                    Obx(() => Text(
+                          vmHandler.status.value ? '진료 중' : '진료 종료',
+                          style: TextStyle(
+                            color: vmHandler.status.value
+                                ? Colors.green[400]
+                                : Colors.red[400],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        )),
+                  ],
+                ),
               ),
             ],
           ),
@@ -176,6 +176,8 @@ class ChatView extends StatelessWidget {
               children: [
                 Text(
                   temp[1],
+                  overflow: TextOverflow.ellipsis, // 이름이 길 경우 줄임표 처리
+                  maxLines: 1,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -252,9 +254,9 @@ class ChatView extends StatelessWidget {
       text: chatController.text.trim(),
       timestamp: DateTime.now().toString(),
     );
-    if (chatController.text != "" && chatController.text.isNotEmpty) {
+    if (chatController.text.isNotEmpty) {
       await vmHandler.addChat(inputchat);
     }
-    chatController.text = '';
+    chatController.clear();
   }
 }
