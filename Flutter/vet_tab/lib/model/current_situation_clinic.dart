@@ -6,12 +6,11 @@ class CurrentSituationClinic {
   String symptoms;
   String time;
 
-  CurrentSituationClinic({
-    required this.userName,
-    required this.petType,
-    required this.petCategory,
-    required this.petFeatures,
-    required this.symptoms,
-    required this.time
-  });
+  CurrentSituationClinic(
+      {required this.userName,
+      required this.petType,
+      required this.petCategory,
+      required this.petFeatures,
+      required this.symptoms,
+      required this.time});
 }

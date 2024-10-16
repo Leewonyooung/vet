@@ -10,40 +10,40 @@ class RailHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body:Obx(()=> Row(
+        body: Obx(
+      () => Row(
         children: [
           NavigationRail(
-                backgroundColor: const Color.fromRGBO(241, 239, 239, 1.0),
-                selectedIndex: controller.currentScreenIndex.value,
-                onDestinationSelected: (int index) {
-                controller.tabController.index = index;
-                },
-                labelType: NavigationRailLabelType.selected,
-                destinations: const [
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home),
-                    selectedIcon: Icon(Icons.home_filled),
-                    label: Text('Home'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.calendar_month),
-                    selectedIcon: Icon(Icons.calendar_month),
-                    label: Text('Reservation'),
-                  ),
-                ],
+            backgroundColor: const Color.fromRGBO(241, 239, 239, 1.0),
+            selectedIndex: controller.currentScreenIndex.value,
+            onDestinationSelected: (int index) {
+              controller.tabController.index = index;
+            },
+            labelType: NavigationRailLabelType.selected,
+            destinations: const [
+              NavigationRailDestination(
+                icon: Icon(Icons.home),
+                selectedIcon: Icon(Icons.home_filled),
+                label: Text('Home'),
               ),
-            Expanded(
-              child: Center(
-                child: _buildSelectedScreen(controller.currentScreenIndex.value),
+              NavigationRailDestination(
+                icon: Icon(Icons.calendar_month),
+                selectedIcon: Icon(Icons.calendar_month),
+                label: Text('Reservation'),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Center(
+              child: _buildSelectedScreen(controller.currentScreenIndex.value),
             ),
           ),
         ],
       ),
-      )
-    );
+    ));
   }
+
   Widget _buildSelectedScreen(int selectedIndex) {
     switch (selectedIndex) {
       case 0:
