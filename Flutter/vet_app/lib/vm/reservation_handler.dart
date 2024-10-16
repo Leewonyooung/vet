@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:vet_app/vm/login_handler.dart';
 
 class ReservationHandler extends ClinicHandler {
-  final reservations = <Reservation>[].obs;  // 예약하기 
+  final reservations = <Reservation>[].obs; // 예약하기
   final searchreservation = <SearchReservations>[].obs; // 예약내역 리스트
   final availableclinic = <AvailableClinic>[].obs; // 예약가능한 빠른병원 찾기 리스트
   String reservationTime = "";
@@ -31,21 +31,20 @@ class ReservationHandler extends ClinicHandler {
     List results = dataConvertedJSON['results'];
     List<SearchReservations> returnData = [];
     for (int i = 0; i < results.length; i++) {
-
-    returnData.add(SearchReservations(
-      clinicId: results[i][0], 
-      clinicName: results[i][1], 
-      latitude: results[i][2], 
-      longitude: results[i][3], 
-      time: results[i][4], 
-      address: results[i][5]));
+      returnData.add(SearchReservations(
+          clinicId: results[i][0],
+          clinicName: results[i][1],
+          latitude: results[i][2],
+          longitude: results[i][3],
+          time: results[i][4],
+          address: results[i][5]));
     }
     searchreservation.value = returnData;
   }
 
   // make_reservation에서 사용할 예약 insert
-  makeReservation(
-      String userId, String clinicId, String time, String symptoms, String petId) async {
+  makeReservation(String userId, String clinicId, String time, String symptoms,
+      String petId) async {
     var url = Uri.parse(
         'http://127.0.0.1:8000/reservation/insert_reservation?user_id=$userId&clinic_id=$clinicId&time=$time&symptoms=$symptoms&pet_id=$petId');
     var response = await http.get(url);
@@ -62,7 +61,11 @@ class ReservationHandler extends ClinicHandler {
       String petId = results[i][0];
 
       returnData.add(Reservation(
-          userId: userId, clinicId: clinicId, time: time, symptoms: symptoms, petId: petId));
+          userId: userId,
+          clinicId: clinicId,
+          time: time,
+          symptoms: symptoms,
+          petId: petId));
       reservations.value = returnData;
     }
   }

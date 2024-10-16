@@ -20,7 +20,7 @@ class ClinicHandler extends LoginHandler {
   }
 
   @override
-  void onClose()async{
+  void onClose() async {
     resetTextfield();
     super.onClose();
   }
@@ -46,7 +46,7 @@ class ClinicHandler extends LoginHandler {
       double latitude = results[i][3];
       double longitude = results[i][4];
       String startTime = results[i][5] ?? '';
-      String endTime = results[i][6]   ??  '';
+      String endTime = results[i][6] ?? '';
       String? introduction = results[i][7] ?? '소개 없음';
       String? address = results[i][8] ?? '주소 없음';
       String? phone = results[i][9] ?? '전화번호 없음';
@@ -69,8 +69,9 @@ class ClinicHandler extends LoginHandler {
   }
 
 //  // 병원 상세 정보
-  getClinicDetail()async{
-    var url = Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$currentIndex');
+  getClinicDetail() async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/clinic/detail_clinic?id=$currentIndex');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'][0];
@@ -89,9 +90,11 @@ class ClinicHandler extends LoginHandler {
     String? image = results[10];
     DateTime time1 = parseTime(startTime);
     DateTime time2 = parseTime(endTime);
-    DateTime resetTime1 = DateTime(time1.year, time1.month, time1.day, time1.hour, time1.minute);
-    DateTime resetTime2 = DateTime(time2.year, time2.month, time2.day, time2.hour, time2.minute);
-     returnData.add(Clinic(
+    DateTime resetTime1 =
+        DateTime(time1.year, time1.month, time1.day, time1.hour, time1.minute);
+    DateTime resetTime2 =
+        DateTime(time2.year, time2.month, time2.day, time2.hour, time2.minute);
+    returnData.add(Clinic(
         id: id,
         name: name,
         password: password,
@@ -105,10 +108,11 @@ class ClinicHandler extends LoginHandler {
         image: image!));
     clinicDetail.value = returnData;
 
-    if(DateTime.now().hour >resetTime1.hour && DateTime.now().hour < resetTime2.hour){
-      workText.value=  '영업중';
+    if (DateTime.now().hour > resetTime1.hour &&
+        DateTime.now().hour < resetTime2.hour) {
+      workText.value = '영업중';
       workColor.value = Colors.green;
-    }else{
+    } else {
       workText.value = '영업종료';
       workColor.value = Colors.red;
     }
@@ -161,8 +165,7 @@ class ClinicHandler extends LoginHandler {
     }
   }
 
-
-DateTime parseTime(String timeStr) {
+  DateTime parseTime(String timeStr) {
     bool isPM = timeStr.contains("오후"); //오전 오후 구분
     timeStr = timeStr.replaceRange(0, 2, ''); //
     List<String> timeParts = timeStr.split(":");
@@ -178,8 +181,7 @@ DateTime parseTime(String timeStr) {
     return DateTime(now.year, now.month, now.day, hour, minute);
   }
 
-
-  resetTextfield(){
+  resetTextfield() {
     searchbarController.clear();
     update();
   }
