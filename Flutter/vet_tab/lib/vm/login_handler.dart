@@ -3,13 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:vet_tab/model/clinic_login.dart';
 import 'package:vet_tab/view/mgt_home.dart';
-import 'package:vet_tab/vm/location_handler.dart';
+import 'package:vet_tab/vm/image_handler.dart';
 
-class LoginHandler extends LocationHandler {
+class LoginHandler extends ImageHandler {
   final box = GetStorage();
   var isObscured = true.obs;
 

@@ -7,9 +7,9 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:vet_tab/model/clinic.dart';
 import 'package:vet_tab/vm/image_handler.dart';
-import 'package:vet_tab/vm/login_handler.dart';
+import 'package:vet_tab/vm/location_handler.dart';
 
-class ClinicHandler extends LoginHandler {
+class ClinicHandler extends LocationHandler {
   ImageHandler imageHandler = ImageHandler();
   String searchkeyward = "";
   var clinicSearch = <Clinic>[].obs;
@@ -18,12 +18,6 @@ class ClinicHandler extends LoginHandler {
   var endOpTime = ''.obs;
   DateTime selectedDate = DateTime.now();
   RxString selected = ''.obs;
-
-  getUserId() async {
-    // api를 통해 userID가져옴
-    await box.write('userId', '1234');
-  }
-
   RxString currentIndex = ''.obs;
 
   @override

@@ -5,9 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:vet_tab/vm/image_handler.dart';
+import 'package:vet_tab/vm/login_handler.dart';
 
-class LocationHandler extends ImageHandler {
+class LocationHandler extends LoginHandler {
   Completer<GoogleMapController> mapController = Completer();
   var selectedPosition = const LatLng(0.0, 0.0).obs;
   var lat = 0.0.obs;
