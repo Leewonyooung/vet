@@ -35,7 +35,7 @@ class ClinicSearch extends StatelessWidget {
           backgroundColor: WidgetStateProperty.all(
             Colors.grey[200],
           ),
-          elevation: WidgetStateProperty.all(0),
+          elevation: WidgetStateProperty.all(4),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
