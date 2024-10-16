@@ -113,7 +113,7 @@ class ChatRoom extends StatelessWidget {
                   children: [
                     Text(
                       index < vmHandler.roomName.length
-                          ? vmHandler.roomName[index]
+                          ? vmHandler.roomName[index].toString()
                           : '',
                       style: const TextStyle(
                         fontSize: 18,

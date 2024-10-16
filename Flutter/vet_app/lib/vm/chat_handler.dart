@@ -83,7 +83,7 @@ class ChatsHandler extends LoginHandler {
 
   getClinicName(String name) async{
      var url = Uri.parse(
-          'http://127.0.0.1:8000/clinic/getclinicname?name=$name');
+          'http://127.0.0.1:8000/clinic/get_clinic_name?name=$name');
       var response = await http.get(url);
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     currentClinicId.value = dataConvertedJSON['results'][0];
@@ -205,7 +205,7 @@ class ChatsHandler extends LoginHandler {
           'http://127.0.0.1:8000/clinic/select_clinic_name?name=${idList[i]}');
       var response = await http.get(url);
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      roomName.obs.value.add(dataConvertedJSON['results'][0].toString());
+      roomName.obs.value.add(dataConvertedJSON['results'][0][0]);
     }
   }
 
