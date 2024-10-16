@@ -101,4 +101,11 @@ class LoginHandler extends ImageHandler {
     List<String> passwordClinicShuffle = passwordClinic.split('')..shuffle();
     return passwordClinicShuffle.join('');
   }
+
+
+
+  logout()async{
+    Get.back();
+    box.write('id', "");
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_tab/view/chat_room_view.dart';
 import 'package:vet_tab/view/clinic_reservation.dart';
+import 'package:vet_tab/vm/login_handler.dart';
 import 'package:vet_tab/vm/tab_vm.dart';
 
 class RailHome extends StatelessWidget {
@@ -21,6 +22,11 @@ class RailHome extends StatelessWidget {
         foregroundColor: Colors.white,
         backgroundColor: Colors.blueGrey,
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            LoginHandler().logout();
+          },
+          icon: Icon(Icons.key_off)),
       ),
       body: Obx(
         () => Row(
