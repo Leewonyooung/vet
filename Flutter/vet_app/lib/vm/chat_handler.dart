@@ -180,15 +180,15 @@ class ChatsHandler extends LoginHandler {
     final firebaseStorage = FirebaseStorage.instance.ref().child("$image");
     await firebaseStorage.putFile(file);
     String downloadURL = await firebaseStorage.getDownloadURL();
+    _rooms
+          .doc("${id}_${box.read('userEmail')}")
+          // .collection('chats')
+          .set({
+        'clinic': id,
+        'image': downloadURL,
+        'user': box.read('userEmail'),
+      });
     return downloadURL;
-    //  _rooms
-    //       .doc("${id}_${box.read('userEmail')}")
-    //       // .collection('chats')
-    //       .set({
-    //     'clinic': id,
-    //     'image': downloadURL,
-    //     'user': box.read('userEmail'),
-    //   });
   }
 
   makeChatRoom() async {
