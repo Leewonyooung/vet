@@ -46,8 +46,9 @@ class MgtClinicList extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 final clinic = clinicHandler.clinicSearch;
                                 return GestureDetector(
-                                  onTap: () async{
-                                    await clinicHandler.getClinicDetail(clinic[index].id);
+                                  onTap: () async {
+                                    await clinicHandler
+                                        .getClinicDetail(clinic[index].id);
                                     clinicHandler
                                         .updateCurrentIndex(clinic[index].id);
                                     Get.to(() => MgtClinicEdit(), arguments: [
@@ -77,11 +78,13 @@ class MgtClinicList extends StatelessWidget {
                                               children: [
                                                 Text(
                                                   clinic[index].name,
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                                 Text(
                                                   clinic[index].address,
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 )
                                               ],
                                             ),

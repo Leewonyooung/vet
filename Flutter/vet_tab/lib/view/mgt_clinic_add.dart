@@ -90,7 +90,8 @@ class MgtClinicAdd extends StatelessWidget {
                                   child: SizedBox(
                                     width: 100,
                                     child: Obx(() {
-                                      stimeController.text = clinicHandler.startOpTime.value;
+                                      stimeController.text =
+                                          clinicHandler.startOpTime.value;
                                       return TextField(
                                         onTap: () async {
                                           await clinicHandler.opDateSelection(
@@ -426,7 +427,7 @@ class MgtClinicAdd extends StatelessWidget {
                                   introController.text.trim().isEmpty ||
                                   addressController.text.trim().isEmpty ||
                                   telController.text.trim().isEmpty ||
-                                  clinicHandler.imageFile == null ) {
+                                  clinicHandler.imageFile == null) {
                                 errorDialogClinicAdd();
                               } else {
                                 clincAdd();

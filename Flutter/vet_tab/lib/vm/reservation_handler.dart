@@ -15,7 +15,6 @@ class ReservationHandler extends ClinicHandler {
   String resuserid = "";
   LoginHandler loginHandler = Get.find();
 
-
   // 예약된 리스트
   getReservation() async {
     var url = Uri.parse('http://127.0.0.1:8000/'); //미완성
@@ -84,13 +83,19 @@ class ReservationHandler extends ClinicHandler {
     await storeuser();
     await adjustedTime();
     var url = Uri.parse(
-        'http://127.0.0.1:8000/reservation/select_reservation_clinic?clinic_id=$resuserid&time=${reservationTime.substring(0,8)}');
+        'http://127.0.0.1:8000/reservation/select_reservation_clinic?clinic_id=$resuserid&time=${reservationTime.substring(0, 8)}');
     var response = await http.get(url);
     clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];
     List<CurrentSituationClinic> returnData = [];
-    returnData.add(CurrentSituationClinic(userName: '예약자', petType: '종류', petCategory: '품종', petFeatures: '특징', symptoms: '증상', time: '예약시간'));
+    returnData.add(CurrentSituationClinic(
+        userName: '예약자',
+        petType: '종류',
+        petCategory: '품종',
+        petFeatures: '특징',
+        symptoms: '증상',
+        time: '예약시간'));
     for (int i = 0; i < results.length; i++) {
       String userName = results[i][0];
       String petType = results[i][1];
@@ -110,9 +115,8 @@ class ReservationHandler extends ClinicHandler {
     }
   }
 
-  storeuser(){
+  storeuser() {
     resuserid = loginHandler.box.read('id') ?? 'cmzmnvj274';
     update();
   }
-
 }

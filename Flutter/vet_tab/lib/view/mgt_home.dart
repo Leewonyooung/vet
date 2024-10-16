@@ -9,7 +9,6 @@ class MgtHome extends StatelessWidget {
   final speciesHandler = Get.put(SpeciesHandler());
 
   @override
-
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(30.0),
@@ -41,8 +40,8 @@ class MgtHome extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                     onPressed: () {
-                    speciesHandler.speciesController.clear();
-                    speciesHandler.speciesInsertDialog();
+                      speciesHandler.speciesController.clear();
+                      speciesHandler.speciesInsertDialog();
                     },
                     child: const Text('견종 추가하기')),
               ),

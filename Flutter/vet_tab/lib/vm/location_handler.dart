@@ -5,9 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:vet_tab/vm/image_handler.dart';
+import 'package:vet_tab/vm/login_handler.dart';
 
-class LocationHandler extends ImageHandler {
+class LocationHandler extends LoginHandler {
   Completer<GoogleMapController> mapController = Completer();
   var selectedPosition = const LatLng(0.0, 0.0).obs;
   var lat = 0.0.obs;
@@ -28,10 +28,10 @@ class LocationHandler extends ImageHandler {
         String? locationType =
             await dataConvertedJSON['results'][0]['geometry']['location_type'];
         if (locationType == "ROOFTOP") {
-          lat.value = await dataConvertedJSON['results'][0]['geometry']['location']
-              ['lat'];
-          long.value = await dataConvertedJSON['results'][0]['geometry']['location']
-              ['lng'];
+          lat.value = await dataConvertedJSON['results'][0]['geometry']
+              ['location']['lat'];
+          long.value = await dataConvertedJSON['results'][0]['geometry']
+              ['location']['lng'];
         } else {
           getCurrentLocation();
           errorDialogMap();
@@ -72,13 +72,13 @@ class LocationHandler extends ImageHandler {
 
   //Get address, lat, long, by longpress the googlemap (안창빈)
   longPressGoogleMap(LatLng location) async {
-    selectedPosition.value = location; 
+    selectedPosition.value = location;
     lat.value = location.latitude;
     long.value = location.longitude;
     await fetchAddressFromLatLng(location.latitude, location.longitude);
   }
 
-  // get the longpressed loaction address by using lat and long extracted from longpressGoogleMap function 
+  // get the longpressed loaction address by using lat and long extracted from longpressGoogleMap function
   fetchAddressFromLatLng(double lat, double long) async {
     var url = Uri.parse(
         "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$long&language=ko&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
@@ -121,20 +121,17 @@ class LocationHandler extends ImageHandler {
 
   // update map camera programmatically (안창빈)
   updateMapCameraPro() async {
-    if(mapController.isCompleted){
+    if (mapController.isCompleted) {
       final GoogleMapController controller = await mapController.future;
       controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
         target: LatLng(lat.value, long.value),
-        zoom: 18, 
+        zoom: 18,
       )));
-      
-    }else{
-    }
+    } else {}
   }
 
   //updateAddress from clinic_map to clinic_add (안창빈)
   updateAddress(String updateAddress) {
     clinicAddress = updateAddress;
-    }
-
+  }
 }

@@ -70,7 +70,10 @@ class ReservationComplete extends StatelessWidget {
               const SizedBox(height: 30),
               const Text(
                 '찾아오시는 길',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 10),
               Text(
@@ -93,7 +96,9 @@ class ReservationComplete extends StatelessWidget {
   _buildInfoCard(List<dynamic> value) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -101,14 +106,25 @@ class ReservationComplete extends StatelessWidget {
           children: [
             Text(
               "${value[1]}",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             Row(
               children: [
-                const Icon(Icons.calendar_today, color: Colors.green),
+                const Icon(
+                  Icons.calendar_today,
+                  color: Colors.green,
+                ),
                 const SizedBox(width: 10),
-                Text('일정: ${value[4]}', style: const TextStyle(fontSize: 16)),
+                Text(
+                  '일정: ${value[4]}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
               ],
             ),
           ],
@@ -145,9 +161,17 @@ class ReservationComplete extends StatelessWidget {
           markers: {
             Marker(
               icon: BitmapDescriptor.defaultMarker,
-              infoWindow: InfoWindow(title: value[1], snippet: value[1]),
-              markerId: MarkerId(value[1]),
-              position: LatLng(value[2], value[3]),
+              infoWindow: InfoWindow(
+                title: value[1],
+                snippet: value[1],
+              ),
+              markerId: MarkerId(
+                value[1],
+              ),
+              position: LatLng(
+                value[2],
+                value[3],
+              ),
             ),
           },
           myLocationButtonEnabled: false,
@@ -173,11 +197,11 @@ class ReservationComplete extends StatelessWidget {
             backgroundColor: Colors.green.shade400,
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         ),
-       
       ],
     );
   }

@@ -22,9 +22,9 @@ class MgtClinicEdit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  var value = Get.arguments ?? "__"; // clinicid = value
-  clinicEditInitialInsert(value[0]);
-    
+    var value = Get.arguments ?? "__"; // clinicid = value
+    clinicEditInitialInsert(value[0]);
+
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: Scaffold(
@@ -59,12 +59,10 @@ class MgtClinicEdit extends StatelessWidget {
                                 color: Colors.grey,
                                 child: Center(
                                   child: clinicHandler.imageFile == null
-                                      ? 
-                                      Image.network(
-                                      "http://127.0.0.1:8000/clinic/view/${clinicHandler.clinicDetail[0].image}")
-
+                                      ? Image.network(
+                                          "http://127.0.0.1:8000/clinic/view/${clinicHandler.clinicDetail[0].image}")
                                       : Image.file(
-                                    File(clinicHandler.imageFile!.path)),
+                                          File(clinicHandler.imageFile!.path)),
                                 ),
                               ),
                             ),
@@ -103,7 +101,9 @@ class MgtClinicEdit extends StatelessWidget {
                                               context, true);
                                         },
                                         readOnly: true,
-                                        controller: stimeController..text = clinicHandler.startOpTime.value,
+                                        controller: stimeController
+                                          ..text =
+                                              clinicHandler.startOpTime.value,
                                         decoration: const InputDecoration(
                                             labelText: '영업시작'),
                                       );
@@ -287,7 +287,7 @@ class MgtClinicEdit extends StatelessWidget {
                                             onPressed: () {
                                               clinicHandler.updateAddress(
                                                   addressController.text);
-                                              Get.to(() => MgtClinicMap(),
+                                              Get.to(() => const MgtClinicMap(),
                                                       arguments:
                                                           addressController.text
                                                                   .trim()
@@ -433,7 +433,7 @@ class MgtClinicEdit extends StatelessWidget {
                                   introController.text.trim().isEmpty ||
                                   addressController.text.trim().isEmpty ||
                                   telController.text.trim().isEmpty ||
-                                  clinicHandler.imageFile == null ) {
+                                  clinicHandler.imageFile == null) {
                                 errorDialogClinicAdd();
                               } else {
                                 if (clinicHandler.firstDisp == 0) {
@@ -463,14 +463,14 @@ class MgtClinicEdit extends StatelessWidget {
   }
   //Function
 
-   // input the address lat and long data which were inputed from mgt_clinic_map apge (안창빈)
-  updateClinicAddressData(String address,double lat,double long){
+  // input the address lat and long data which were inputed from mgt_clinic_map apge (안창빈)
+  updateClinicAddressData(String address, double lat, double long) {
     addressController.text = address.toString();
     latController.text = lat.toString();
     longController.text = long.toString();
   }
 
-    // errorDialog when any of the textfield from the page are empty (안창빈)
+  // errorDialog when any of the textfield from the page are empty (안창빈)
   errorDialogClinicAdd() async {
     await Get.defaultDialog(
       title: 'error',
@@ -481,7 +481,7 @@ class MgtClinicEdit extends StatelessWidget {
   }
 
   //edit clinic information (안창빈)
-clinicEdit()async{
+  clinicEdit() async {
     await clinicHandler.getClinicUpdate(
       idController.text,
       nameController.text,
@@ -494,9 +494,10 @@ clinicEdit()async{
       addressController.text,
       telController.text,
     );
-}
+  }
+
   //add clinic information include image (안창빈)
-clinicEditAll() async{
+  clinicEditAll() async {
     await clinicHandler.deleteClinicImage(clinicHandler.clinicDetail[0].image);
     await clinicHandler.uploadImage();
     await clinicHandler.getClinicUpdateAll(
@@ -512,20 +513,21 @@ clinicEditAll() async{
       telController.text,
       clinicHandler.filename,
     );
-}
+  }
 
   /// input initial value to the clinic edit page
-  clinicEditInitialInsert(String id)async{
+  clinicEditInitialInsert(String id) async {
     final result = clinicHandler.clinicDetail;
 
-      idController.text = result[0].id; 
-      nameController.text = result[0].name;
-      passwordController.text = result[0].password; 
-      latController.text = result[0].latitude.toString();
-      longController.text = result[0].longitude.toString(); 
-      introController.text = result[0].introduction; 
-      addressController.text = result[0].address; 
-      telController.text = result[0].phone; 
-      clinicHandler.updateInitialClinicTimeEdit(result[0].startTime, result[0].endTime);
+    idController.text = result[0].id;
+    nameController.text = result[0].name;
+    passwordController.text = result[0].password;
+    latController.text = result[0].latitude.toString();
+    longController.text = result[0].longitude.toString();
+    introController.text = result[0].introduction;
+    addressController.text = result[0].address;
+    telController.text = result[0].phone;
+    clinicHandler.updateInitialClinicTimeEdit(
+        result[0].startTime, result[0].endTime);
   }
 }//END

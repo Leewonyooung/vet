@@ -72,46 +72,46 @@ class Navigation extends StatelessWidget {
   List<Widget> _screens() {
     return [
       Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            '멍스파인더',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          appBar: AppBar(
+            title: const Text(
+              '멍스파인더',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            backgroundColor: Colors.green.shade400,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.favorite,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (loginHandler.isLoggedIn()) {
+                    Get.to(() => Favorite());
+                  } else {
+                    Get.to(() => Login());
+                  }
+                },
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (loginHandler.isLoggedIn()) {
+                    Get.to(() => const Mypage());
+                  } else {
+                    Get.to(() => Login());
+                  }
+                },
+              ),
+            ],
           ),
-          backgroundColor: Colors.green.shade400,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.favorite,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                if (loginHandler.isLoggedIn()) {
-                  Get.to(() => Favorite());
-                } else {
-                  Get.to(() => Login());
-                }
-              },
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.person,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                if (loginHandler.isLoggedIn()) {
-                  Get.to(() => const Mypage());
-                } else {
-                  Get.to(() => Login());
-                }
-              },
-            ),
-          ],
-        ),
-          body:SingleChildScrollView(
+          body: SingleChildScrollView(
             child: Column(
               children: [
                 const SizedBox(height: 30),
@@ -122,9 +122,7 @@ class Navigation extends StatelessWidget {
                 _buildPetSection(),
               ],
             ),
-          )
-        
-      ),
+          )),
       ClinicSearch(),
       QueryReservation(),
       ChatRoom(),
@@ -343,8 +341,10 @@ class Navigation extends StatelessWidget {
                   height: 120,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.error, size: 120),
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.error,
+                    size: 120,
+                  ),
                 ),
               ),
             ),

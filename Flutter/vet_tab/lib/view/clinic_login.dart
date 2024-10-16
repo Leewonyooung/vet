@@ -18,51 +18,53 @@ class ClinicLogin extends StatelessWidget {
         ),
         body: GetBuilder<LoginHandler>(
           builder: (controller) {
-            return Obx((){ 
-            return SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 300, 0, 50),
-                      child: GestureDetector(
-                        onTap: () {
-                          loginHandler.mgtLogin();
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+            return Obx(() {
+              return SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 300, 0, 50),
+                        child: GestureDetector(
+                          onTap: () {
+                            loginHandler.mgtLogin();
+                          },
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(
+                                fontSize: 60, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: 500,
-                        child: TextField(
-                          controller: idController,
-                          decoration: const InputDecoration(
-                            labelText: '아이디를 입력하세요',
-                            border: OutlineInputBorder()
-                            ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: 500,
+                          child: TextField(
+                            controller: idController,
+                            decoration: const InputDecoration(
+                                labelText: '아이디를 입력하세요',
+                                border: OutlineInputBorder()),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: 500,
-                        child: TextField(
-                          controller: passwordController,
-                          obscureText: loginHandler.isObscured.value,
-                          decoration: InputDecoration(
-                            labelText: '비밀번호를 입력하세요',
-                            border: const OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                loginHandler.togglePasswordVisibility();
-                              }, 
-                              icon: Icon(loginHandler.isObscured.value ? Icons.visibility_off : Icons.visibility),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: 500,
+                          child: TextField(
+                            controller: passwordController,
+                            obscureText: loginHandler.isObscured.value,
+                            decoration: InputDecoration(
+                              labelText: '비밀번호를 입력하세요',
+                              border: const OutlineInputBorder(),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  loginHandler.togglePasswordVisibility();
+                                },
+                                icon: Icon(loginHandler.isObscured.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
                               ),
                             ),
                           ),

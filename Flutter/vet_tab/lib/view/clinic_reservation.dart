@@ -27,7 +27,7 @@ class ClinicReservation extends StatelessWidget {
                   () {
                     return Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(top:50.0),
+                        padding: const EdgeInsets.only(top: 50.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -45,16 +45,16 @@ class ClinicReservation extends StatelessWidget {
                                         children: [
                                           Row(children: [
                                             Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: Colors.black)),
-                                              width: 150,
-                                              height: 40,
-                                              child: Text(
-                                                '  ${clinic.userName}',
-                                                style: const TextStyle(
-                                                    fontSize: 30),
-                                              )),
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.black)),
+                                                width: 150,
+                                                height: 40,
+                                                child: Text(
+                                                  '  ${clinic.userName}',
+                                                  style: const TextStyle(
+                                                      fontSize: 30),
+                                                )),
                                             Container(
                                                 decoration: BoxDecoration(
                                                     border: Border.all(
@@ -63,8 +63,8 @@ class ClinicReservation extends StatelessWidget {
                                                 height: 40,
                                                 child: Text(
                                                   '  ${clinic.petType}',
-                                                  style:
-                                                      const TextStyle(fontSize: 30),
+                                                  style: const TextStyle(
+                                                      fontSize: 30),
                                                 )),
                                             Container(
                                                 decoration: BoxDecoration(
@@ -74,8 +74,8 @@ class ClinicReservation extends StatelessWidget {
                                                 height: 40,
                                                 child: Text(
                                                   ' ${clinic.petCategory}',
-                                                  style:
-                                                      const TextStyle(fontSize: 30),
+                                                  style: const TextStyle(
+                                                      fontSize: 30),
                                                 )),
                                             Container(
                                                 decoration: BoxDecoration(
@@ -85,8 +85,8 @@ class ClinicReservation extends StatelessWidget {
                                                 height: 40,
                                                 child: Text(
                                                   '  ${clinic.petFeatures}',
-                                                  style:
-                                                      const TextStyle(fontSize: 30),
+                                                  style: const TextStyle(
+                                                      fontSize: 30),
                                                 )),
                                             Container(
                                                 decoration: BoxDecoration(
@@ -96,8 +96,8 @@ class ClinicReservation extends StatelessWidget {
                                                 height: 40,
                                                 child: Text(
                                                   '  ${clinic.symptoms}',
-                                                  style:
-                                                      const TextStyle(fontSize: 30),
+                                                  style: const TextStyle(
+                                                      fontSize: 30),
                                                 )),
                                             Container(
                                                 decoration: BoxDecoration(
@@ -107,8 +107,8 @@ class ClinicReservation extends StatelessWidget {
                                                 height: 40,
                                                 child: Text(
                                                   '  ${clinic.time}',
-                                                  style:
-                                                      const TextStyle(fontSize: 30),
+                                                  style: const TextStyle(
+                                                      fontSize: 30),
                                                 )),
                                           ]),
                                         ],

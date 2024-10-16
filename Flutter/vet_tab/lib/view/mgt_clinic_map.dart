@@ -77,7 +77,8 @@ class MgtClinicMap extends StatelessWidget {
                                 border: const OutlineInputBorder(),
                                 suffixIcon: IconButton(
                                     onPressed: () {
-                                      clinicHandler.updateAddress(searchController.text);
+                                      clinicHandler
+                                          .updateAddress(searchController.text);
                                       clinicHandler.getSearchLocationFromMap(
                                           searchController.text);
                                     },
@@ -86,25 +87,22 @@ class MgtClinicMap extends StatelessWidget {
                             ),
                           )),
                       Positioned(
-                          bottom: MediaQuery.sizeOf(context).height * 0.1,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
+                        bottom: MediaQuery.sizeOf(context).height * 0.1,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
-                              foregroundColor: Colors.black
-                            ),
-                            onPressed: () {
-                              clinicHandler.mapController = Completer();
-                              Get.back(
-                                result: {
-                                  'address' : clinicHandler.clinicAddress,
-                                  'lat' : clinicHandler.lat.value,
-                                  'long' : clinicHandler.long.value,
-                                }
-                              );
-                            }, 
-                            child: const Text("주소 확정"),
-                            ),
-                          ),
+                              foregroundColor: Colors.black),
+                          onPressed: () {
+                            clinicHandler.mapController = Completer();
+                            Get.back(result: {
+                              'address': clinicHandler.clinicAddress,
+                              'lat': clinicHandler.lat.value,
+                              'long': clinicHandler.long.value,
+                            });
+                          },
+                          child: const Text("주소 확정"),
+                        ),
+                      ),
                     ]);
                   },
                 );

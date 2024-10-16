@@ -103,7 +103,9 @@ class MyinfoUpdate extends StatelessWidget {
   _buildEmailInfo(dynamic result) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -133,7 +135,9 @@ class MyinfoUpdate extends StatelessWidget {
       maxLength: 45,
       decoration: InputDecoration(
         labelText: '이름',
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
@@ -152,7 +156,11 @@ class MyinfoUpdate extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           if (nameController.text.trim().isEmpty) {
-            errorSnackBar('경고', '이름을 입력하세요', SnackPosition.TOP);
+            errorSnackBar(
+              '경고',
+              '이름을 입력하세요',
+              SnackPosition.TOP,
+            );
           } else {
             if (userHandler.firstDisp == 0) {
               nameUpdateAction(userHandler, result.id!);
@@ -164,8 +172,9 @@ class MyinfoUpdate extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.lightGreen.shade300,
           padding: const EdgeInsets.symmetric(vertical: 15),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         child: const Text(
           '저장',
@@ -185,7 +194,11 @@ class MyinfoUpdate extends StatelessWidget {
     if (updateResult == 'ok') {
       okShowDialog();
     } else {
-      errorSnackBar('경고', '수정에 실패했습니다.', SnackPosition.BOTTOM);
+      errorSnackBar(
+        '경고',
+        '수정에 실패했습니다.',
+        SnackPosition.BOTTOM,
+      );
     }
   }
 
@@ -198,7 +211,11 @@ class MyinfoUpdate extends StatelessWidget {
     if (updateResult == 'ok') {
       okShowDialog();
     } else {
-      errorSnackBar('경고', '수정에 실패했습니다', SnackPosition.BOTTOM);
+      errorSnackBar(
+        '경고',
+        '수정에 실패했습니다',
+        SnackPosition.BOTTOM,
+      );
     }
   }
 
@@ -209,11 +226,12 @@ class MyinfoUpdate extends StatelessWidget {
       middleText: '수정이 완료되었습니다.',
       actions: [
         ElevatedButton(
-            onPressed: () {
-              Get.back();
-              Get.back();
-            },
-            child: const Text('확인')),
+          onPressed: () {
+            Get.back();
+            Get.back();
+          },
+          child: const Text('확인'),
+        ),
       ],
     );
   }
@@ -221,10 +239,13 @@ class MyinfoUpdate extends StatelessWidget {
   // error 스낵바
   // 제목, 메세지, 스낵포지션
   errorSnackBar(String title, String message, SnackPosition position) {
-    Get.snackbar(title, message,
-        backgroundColor: Colors.red,
-        colorText: Colors.black,
-        duration: const Duration(seconds: 2),
-        snackPosition: position);
+    Get.snackbar(
+      title,
+      message,
+      backgroundColor: Colors.red,
+      colorText: Colors.black,
+      duration: const Duration(seconds: 2),
+      snackPosition: position,
+    );
   }
 }

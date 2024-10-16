@@ -25,54 +25,58 @@ class ChatsHandler extends ClinicHandler {
 
   final CollectionReference _rooms =
       FirebaseFirestore.instance.collection('chat');
-      
+
   // @override
   // void onInit() async {
   //   super.onInit();
   //   await getAllData();
   // }
-  getAllData() async{
+  getAllData() async {
     await makeChatRoom();
     await queryLastChat();
     await queryChat();
     await getlastName();
   }
-  setcurrentRoomImage(String path){
+
+  setcurrentRoomImage(String path) {
     currentRoomImage.value = path;
     update();
   }
-  setcurrentUserId(userId){
+
+  setcurrentUserId(userId) {
     currentUserId.value = userId;
-    update(); 
+    update();
   }
-  setCurrentUserName(String id) async{
+
+  setCurrentUserName(String id) async {
     currentUserName.value = id;
     update();
   }
-  
-  setcurrentClinicName(String id)async{
-     var url = Uri.parse(
-          'http://127.0.0.1:8000/clinic/select_clinic_name?name=$id');
-      var response = await http.get(url);
-      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      roomName.obs.value.add(dataConvertedJSON['results'][0].toString());
+
+  setcurrentClinicName(String id) async {
+    var url =
+        Uri.parse('http://127.0.0.1:8000/clinic/select_clinic_name?name=$id');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    roomName.obs.value.add(dataConvertedJSON['results'][0].toString());
     currentClinicName.value = id;
     update();
   }
 
-  showChat() async{
-    chatShow.value=true;
+  showChat() async {
+    chatShow.value = true;
     update();
   }
 
-  queryChat() async{
-     _rooms
-        .doc("${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
+  queryChat() async {
+    _rooms
+        .doc(
+            "${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
         .collection('chats')
         .orderBy('timestamp', descending: false)
         .snapshots()
         .listen(
-      (event) async{
+      (event) async {
         chats.value = event.docs
             .map(
               (doc) => Chats.fromMap(doc.data(), doc.id),
@@ -84,12 +88,15 @@ class ChatsHandler extends ClinicHandler {
   }
 
   queryLastChat() async {
-    List<Chats> returnResult=[];
-    if(result.isNotEmpty){
+    List<Chats> returnResult = [];
+    if (result.isNotEmpty) {
       result.clear();
     }
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await FirebaseFirestore.instance.collection("chat").where('clinic',isEqualTo: Get.find<LoginHandler>().box.read('id')).get();
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection("chat")
+        .where('clinic', isEqualTo: Get.find<LoginHandler>().box.read('id'))
+        .get();
     var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
     for (int i = 0; i < tempresult.length; i++) {
       Chatroom chatroom = Chatroom(
@@ -107,7 +114,7 @@ class ChatsHandler extends ClinicHandler {
           .snapshots()
           .listen(
         (event) {
-           for (int i = 0; i < event.docs.length; i++) {
+          for (int i = 0; i < event.docs.length; i++) {
             var chat = event.docs[i].data();
             returnResult.add(Chats(
                 reciever: chat['reciever'],
@@ -122,7 +129,10 @@ class ChatsHandler extends ClinicHandler {
   }
 
   makeChatRoom() async {
-    _rooms.where('clinic', isEqualTo: Get.find<LoginHandler>().box.read('id')). snapshots().listen((event) {
+    _rooms
+        .where('clinic', isEqualTo: Get.find<LoginHandler>().box.read('id'))
+        .snapshots()
+        .listen((event) {
       rooms.value = event.docs
           .map(
             (doc) => Chatroom(
@@ -137,7 +147,7 @@ class ChatsHandler extends ClinicHandler {
   getlastName() async {
     List idList = [];
     for (int i = 0; i < result.length; i++) {
-      if(idList.contains(result[i]) == false){
+      if (idList.contains(result[i]) == false) {
         idList.add(result[i].user);
       }
     }
@@ -150,33 +160,39 @@ class ChatsHandler extends ClinicHandler {
     }
   }
 
-  isToday() async{
+  isToday() async {
     bool istoday = true;
-    chats[chats.length-1].timestamp.toString().substring(0,10) == DateTime.now().toString().substring(0,10)?
-    istoday : istoday = false;
+    chats[chats.length - 1].timestamp.toString().substring(0, 10) ==
+            DateTime.now().toString().substring(0, 10)
+        ? istoday
+        : istoday = false;
     return istoday;
   }
 
-  checkToday(Chats chat){
-    return chat.text.length==17 && chat.text.substring(0,3) == "set" &&chat.text.substring(13,17) =="time";
+  checkToday(Chats chat) {
+    return chat.text.length == 17 &&
+        chat.text.substring(0, 3) == "set" &&
+        chat.text.substring(13, 17) == "time";
   }
 
-  addChat(Chats chat) async{
+  addChat(Chats chat) async {
     bool istoday = await isToday();
-    if(!istoday){
+    if (!istoday) {
       await _rooms
-        .doc("${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
-        .collection('chats')
-        .add({
-      'reciever': chat.reciever,
-      'sender': chat.sender,
-      'text': "set${DateTime.now().toString().substring(0,10)}time",
-      'timestamp': DateTime.now().toString(),
-    });
+          .doc(
+              "${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
+          .collection('chats')
+          .add({
+        'reciever': chat.reciever,
+        'sender': chat.sender,
+        'text': "set${DateTime.now().toString().substring(0, 10)}time",
+        'timestamp': DateTime.now().toString(),
+      });
     }
 
     _rooms
-        .doc("${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
+        .doc(
+            "${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
         .collection('chats')
         .add({
       'reciever': chat.reciever,

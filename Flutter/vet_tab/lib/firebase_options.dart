@@ -58,7 +58,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1049745979759',
     projectId: 'veterinarian-32471',
     storageBucket: 'veterinarian-32471.appspot.com',
-    iosClientId: '1049745979759-5r0485pohe4tk9u1gli3v5cmlc3490nd.apps.googleusercontent.com',
+    iosClientId:
+        '1049745979759-5r0485pohe4tk9u1gli3v5cmlc3490nd.apps.googleusercontent.com',
     iosBundleId: 'com.example.vetTab',
   );
 }
