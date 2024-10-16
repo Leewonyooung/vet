@@ -65,6 +65,7 @@ class Favorite extends StatelessWidget {
       itemBuilder: (context, index) {
         final clinic = favoriteHandler.favoriteClinics[index];
         return Card(
+          color: Colors.white,
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           elevation: 2,
           shape:
