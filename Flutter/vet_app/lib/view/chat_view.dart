@@ -30,16 +30,20 @@ class ChatView extends StatelessWidget {
           toolbarHeight: 75,
           title: Row(
             children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage(temp[0]),
+              Column(
+                children: [
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundImage: NetworkImage(temp[0]),
+                  ),
+                ],
               ),
-              const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     temp[1],
+                    overflow: TextOverflow.clip,
                     style: const TextStyle(
                       fontSize: 18,
                       color: Colors.black,
