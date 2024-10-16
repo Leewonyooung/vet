@@ -30,41 +30,6 @@ def connect():
     return conn
 
 
-@router.get("/")
-async def select():
-    conn = connect()
-    curs = conn.cursor()
-    try:
-        sql = 'select * from clinic'
-        curs.execute(sql)
-        rows= curs.fetchall()
-        conn.close()
-        result = [{'id' : row[0], 'name' : row[1], 'password' : row[2], 'latitude' : row[3], 'longitude' : row[4], 'start_time': row[5], 'end_time': row[6], 'introduction': row[7], 'address': row[8], 'phone': row[9], 'image': row[10]} for row in rows]
-        print(f"병원 검색 \n{result}")
-        return{'results': result}
-    except Exception as e:
-        conn.close()
-        print("Error:", e)
-        return{"results" : "Error"}
-
-
-@router.get("/chatimage")
-async def select(id : str):
-    conn = connect()
-    curs = conn.cursor()
-    try:
-        sql = 'select image from clinic where id = %s'
-        curs.execute(sql,(id))
-        rows = curs.fetchall()
-        rows = rows[0]
-        conn.close()
-        return{'results': rows}
-    except Exception as e:
-        conn.close()
-        print("Error:", e)
-        return{"results" : "Error"}
-
-
 @router.get("/delete")
 async def delete(id : str = None):
     conn = connect()
@@ -132,41 +97,21 @@ async def all_clinic(name:str):
         curs.execute(sql,(name))
         rows = curs.fetchall()
         conn.close()
-        return {'results' : rows[0]}
+        return {'results' : rows}
     except Exception as e:
         conn.close()
         print("Error :",e)
         return {"result" : "Error"}
 
-"""
-author: 이원영
-Fixed: 2024/10/7
-Usage: 채팅창 보여줄때 id > name
-"""
-@router.get('/getusername')
-async def get_user_name(id:str):
-    # name= ['adfki125', 'adkljzci9786']
-    try:
-        conn = connect()
-        curs = conn.cursor()
-        sql = "select name from user where id = %s"
-        curs.execute(sql,(id))
-        rows = curs.fetchall()
-        conn.close()
-        return {'results' : rows[0]}
-    except Exception as e:
-        conn.close()
-        print("Error :",e)
-        return {"result" : "Error"}
+
 
 """
 author: 이원영
 Fixed: 2024/10/7
 Usage: 채팅창 보여줄때 name > id
 """
-@router.get('/getclinicname')
+@router.get('/get_clinic_name')
 async def get_user_name(name:str):
-    # name= ['adfki125', 'adkljzci9786']
     try:
         conn = connect()
         curs = conn.cursor()
@@ -234,7 +179,7 @@ async def all_clinic():
 
 # insert new clinic information to DB (안창빈)
 
-@router.get("/insert")
+@router.post("/insert")
 async def insert(
     id: str=None, 
     name: str=None, 
@@ -265,7 +210,7 @@ async def insert(
     
 # edit clinic information to DB (안창빈)
 
-@router.get("/update")
+@router.post("/update")
 async def update(
     id: str=None, 
     name: str=None, 
@@ -307,7 +252,7 @@ async def update(
     
 # edit clinic information to DB (안창빈)
 
-@router.get("/update_all")
+@router.post("/update_all")
 async def update(
     id: str=None, 
     name: str=None, 

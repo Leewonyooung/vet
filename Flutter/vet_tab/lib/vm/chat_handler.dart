@@ -152,8 +152,8 @@ class ChatsHandler extends ClinicHandler {
       }
     }
     for (int i = 0; i < idList.length; i++) {
-      var url =
-          Uri.parse('http://127.0.0.1:8000/clinic/getusername?id=${idList[i]}');
+      var url = Uri.parse(
+          'http://127.0.0.1:8000/user/get_user_name?id=${idList[i]}');
       var response = await http.get(url);
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       roomName.obs.value.add(dataConvertedJSON['results'][0].toString());

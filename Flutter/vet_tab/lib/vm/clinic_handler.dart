@@ -9,7 +9,7 @@ import 'package:vet_tab/model/clinic.dart';
 import 'package:vet_tab/vm/image_handler.dart';
 import 'package:vet_tab/vm/location_handler.dart';
 
-class ClinicHandler extends LocationHandler {
+class ClinicHandler extends LocationHandler{
   ImageHandler imageHandler = ImageHandler();
   String searchkeyward = "";
   var clinicSearch = <Clinic>[].obs;

@@ -217,7 +217,7 @@ class ChatsHandler extends LoginHandler {
           'http://127.0.0.1:8000/clinic/select_clinic_name?name=${idList[i]}');
       var response = await http.get(url);
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      roomName.obs.value.add(dataConvertedJSON['results'][0].toString());
+      roomName.obs.value.add(dataConvertedJSON['results'][0][0]);
     }
   }
 
