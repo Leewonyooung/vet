@@ -191,9 +191,7 @@ class ChatRoomView extends StatelessWidget {
         }
 
         // 일반 메시지일 경우
-        print(Get.find<LoginHandler>().box.read('id'));
         bool isSender = chat.sender == Get.find<LoginHandler>().box.read('id');
-
         return Align(
           alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
