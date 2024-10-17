@@ -127,27 +127,32 @@ class ChatRoom extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      // 마지막 채팅 실패
-                      // Row(
-                      //   children: [
-                      //     index <= vmHandler.lastChats.length-1 ? Text(vmHandler.lastChats[index].text): const Text('채팅이 없습니다.')
-                      //   ],
-                      // ),
-                      // Container(
-                      //   alignment: Alignment.bottomRight,
-                      //   width:
-                      //       MediaQuery.of(context).size.width / 1.5,
-                      //   child: index <= vmHandler.lastChats.length-1 ?
-                      //   DateTime.now().difference(
-                      //     DateTime.parse(vmHandler.lastChats[index].timestamp)) <
-                      //     const Duration(hours: 24)?
-                      //     Text(
-                      //       vmHandler.lastChats[index].timestamp.substring(11, 16)
-                      //     ):
-                      //     Text(
-                      //         "${vmHandler.lastChats[index].timestamp.substring(5, 7)}월 ${vmHandler.lastChats[index].timestamp.substring(8, 10)}일"):
-                      //     const Text(''),
-                      // )
+                      // 마지막 채팅 실패 해결
+                      Row(
+                        children: [
+                          Expanded( // Expanded로 감싸서 공간 제약을 줌
+                            child: index <= vmHandler.lastChats.length - 1
+                                ? Text(
+                                    vmHandler.lastChats[index].text,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : const Text('채팅이 없습니다.'),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        child: index <= vmHandler.lastChats.length - 1
+                            ? DateTime.now().difference(
+                                        DateTime.parse(vmHandler.lastChats[index].timestamp)) <
+                                    const Duration(hours: 24)
+                                ? Text(
+                                    vmHandler.lastChats[index].timestamp.substring(11, 16))
+                                : Text(
+                                    "${vmHandler.lastChats[index].timestamp.substring(5, 7)}월 ${vmHandler.lastChats[index].timestamp.substring(8, 10)}일")
+                            : const Text(''),
+                      )
                     ],
                   ),
                 ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class ChatsHandler extends ClinicHandler {
   final roomName = [].obs;
   RxBool chatShow = false.obs;
   RxString currentRoomImage = "".obs;
+  Timer? _timer;
 
   List<Chatroom> result = [];
   ScrollController listViewContoller = ScrollController();
@@ -26,16 +28,29 @@ class ChatsHandler extends ClinicHandler {
   final CollectionReference _rooms =
       FirebaseFirestore.instance.collection('chat');
 
-  // @override
-  // void onInit() async {
-  //   super.onInit();
-  //   await getAllData();
-  // }
+  @override
+  void onInit() async {
+    super.onInit();
+    startTimer();
+  }
+   void startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      queryLastChat(); // 1초마다 실행할 함수
+    });
+  }
+
+  @override
+  void onClose() {
+    _timer?.cancel(); // 타이머 종료
+    super.onClose();
+  }
+
   getAllData() async {
     await makeChatRoom();
     await queryLastChat();
     await queryChat();
     await getlastName();
+    update();
   }
 
   setcurrentRoomImage(String path) {
@@ -92,6 +107,9 @@ class ChatsHandler extends ClinicHandler {
     if (result.isNotEmpty) {
       result.clear();
     }
+    if(returnResult.isNotEmpty){
+      returnResult.clear();
+    }
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
         .collection("chat")
@@ -126,6 +144,7 @@ class ChatsHandler extends ClinicHandler {
         },
       );
     }
+    update();
   }
 
   makeChatRoom() async {

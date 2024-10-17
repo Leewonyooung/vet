@@ -93,13 +93,14 @@ class ChatRoomView extends StatelessWidget {
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         subtitle: index < chatsHandler.lastChats.length
-                            ? Text(
-                                chatsHandler.lastChats[index].text,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.grey),
-                              )
+                            ? Obx(() => Text(
+                                  chatsHandler.lastChats[index].text,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.grey),
+                                ),
+                            )
                             : const Text('채팅이 없습니다.',
                                 style: TextStyle(
                                     fontSize: 14, color: Colors.grey)),
@@ -127,7 +128,7 @@ class ChatRoomView extends StatelessWidget {
         Expanded(
           flex: 5,
           child: chatsHandler.chatShow.value
-              ? chatDetail(context)
+              ? chatDetail(context, )
               : const Center(child: Text('채팅을 선택하세요')),
         ),
       ],

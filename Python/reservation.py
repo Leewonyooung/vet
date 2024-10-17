@@ -65,6 +65,7 @@ async def select_reservation(clinic_id: str, time: str):
     time1 =f'{time}%'
     curs.execute(sql, (clinic_id, time1))
     rows= curs.fetchall()
+    print(rows)
     conn.commit()
     conn.close()
 
