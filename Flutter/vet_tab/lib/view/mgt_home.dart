@@ -11,13 +11,14 @@ class MgtHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
-          '개발자 페이지',
+          '관리자 페이지',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        foregroundColor: Colors.white,
         backgroundColor: Colors.blueGrey,
+        foregroundColor: Colors.white,
       ),
       body: Center(
         child: Padding(

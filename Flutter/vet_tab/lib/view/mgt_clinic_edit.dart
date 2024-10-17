@@ -26,6 +26,7 @@ class MgtClinicEdit extends StatelessWidget {
     clinicEditInitialInsert(value[0]);
 
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
           '병원 정보 변경',
@@ -247,10 +248,8 @@ class MgtClinicEdit extends StatelessWidget {
         } else {
           if (clinicHandler.firstDisp == 0) {
             clinicEdit();
-            Get.back();
           } else {
             clinicEditAll();
-            Get.back();
           }
         }
       },

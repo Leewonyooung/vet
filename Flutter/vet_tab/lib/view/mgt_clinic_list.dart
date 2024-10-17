@@ -12,6 +12,7 @@ class MgtClinicList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
           '검색',
@@ -70,6 +71,7 @@ class MgtClinicList extends StatelessWidget {
                                 ]);
                               },
                               child: Card(
+                                color: Colors.white,
                                 margin: const EdgeInsets.symmetric(
                                     vertical: 8.0, horizontal: 16.0),
                                 elevation: 3,

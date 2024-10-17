@@ -9,7 +9,7 @@ import 'package:vet_tab/model/clinic.dart';
 import 'package:vet_tab/vm/image_handler.dart';
 import 'package:vet_tab/vm/location_handler.dart';
 
-class ClinicHandler extends LocationHandler{
+class ClinicHandler extends LocationHandler {
   ImageHandler imageHandler = ImageHandler();
   String searchkeyward = "";
   var clinicSearch = <Clinic>[].obs;
@@ -233,6 +233,7 @@ class ClinicHandler extends LocationHandler{
       content: const Text('병원 정보가 변경되었습니다'),
       textConfirm: '확인',
       onConfirm: () {
+        Get.back();
         Get.back();
       },
       barrierDismissible: true,

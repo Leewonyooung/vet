@@ -14,6 +14,7 @@ class MgtClinicMap extends StatelessWidget {
     final TextEditingController searchController = TextEditingController();
 
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
           '주소 찾기',

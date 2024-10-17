@@ -10,17 +10,6 @@ class ClinicReservation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      // appBar: AppBar(
-      //   title: const Text(
-      //     'Chat Room',
-      //     style: TextStyle(
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
-      //   backgroundColor: Colors.blueGrey,
-      //   foregroundColor: Colors.white,
-      //   automaticallyImplyLeading: false, // 뒤로가기 버튼 제거
-      // ),
       body: GetBuilder<ReservationHandler>(
         builder: (_) {
           return FutureBuilder(
@@ -48,43 +37,67 @@ class ClinicReservation extends StatelessWidget {
                   () {
                     return Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          height: MediaQuery.of(context).size.height / 1.4,
-                          child: ListView.builder(
-                            itemCount: vmHandler.clinicreservations.length,
-                            itemBuilder: (context, index) {
-                              final clinic =
-                                  vmHandler.clinicreservations[index];
-                              return Card(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 12.0),
-                                elevation: 3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      _buildInfoColumn(
-                                          '환자 이름', clinic.userName),
-                                      _buildInfoColumn('동물 종류', clinic.petType),
-                                      _buildInfoColumn(
-                                          '동물 카테고리', clinic.petCategory),
-                                      _buildInfoColumn(
-                                          '특징', clinic.petFeatures),
-                                      _buildInfoColumn('증상', clinic.symptoms),
-                                      _buildInfoColumn('예약 시간', clinic.time),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 제목 행
+                            Container(
+                              color: Colors.blueGrey[50],
+                              padding: const EdgeInsets.all(8.0),
+                              child: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _HeaderCell('환자 이름'),
+                                  _HeaderCell('동물 종류'),
+                                  _HeaderCell('동물 카테고리'),
+                                  _HeaderCell('특징'),
+                                  _HeaderCell('증상'),
+                                  _HeaderCell('예약 시간'),
+                                ],
+                              ),
+                            ),
+                            const Divider(
+                              height: 1,
+                              color: Colors.blueGrey,
+                            ),
+                            const SizedBox(height: 10),
+                            // 데이터 리스트
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: vmHandler.clinicreservations.length,
+                                itemBuilder: (context, index) {
+                                  final clinic =
+                                      vmHandler.clinicreservations[index];
+                                  return Card(
+                                    color: Colors.white,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 4.0),
+                                    elevation: 4,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          _buildInfoCell(clinic.userName),
+                                          _buildInfoCell(clinic.petType),
+                                          _buildInfoCell(clinic.petCategory),
+                                          _buildInfoCell(clinic.petFeatures),
+                                          _buildInfoCell(clinic.symptoms),
+                                          _buildInfoCell(clinic.time),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -98,27 +111,42 @@ class ClinicReservation extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoColumn(String title, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
+  Widget _buildInfoCell(String value) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: Text(
+          value,
+          textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 14,
+            color: Colors.black87,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HeaderCell extends StatelessWidget {
+  final String title;
+  const _HeaderCell(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.blueGrey,
           ),
         ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.black87,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

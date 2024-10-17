@@ -23,10 +23,10 @@ class RailHome extends StatelessWidget {
         backgroundColor: Colors.blueGrey,
         automaticallyImplyLeading: false,
         leading: IconButton(
-          onPressed: () {
-            LoginHandler().logout();
-          },
-          icon: Icon(Icons.key_off)),
+            onPressed: () {
+              LoginHandler().logout();
+            },
+            icon: const Icon(Icons.key_off)),
       ),
       body: Obx(
         () => Row(
