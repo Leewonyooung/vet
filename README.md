@@ -141,7 +141,7 @@
   
   View
   -  이원영 : 채팅 방, 채팅 목록, 스플래시, persitent_nav_bar를 통한 탭바 페이지, 컨트롤러를 통한 페이지 상태 관리 
-  -  신정섭 : //
+  -  신정섭 : 병원 검색 페이지, 병원 상세 페이지,  google map을 활용한 지도페이지, 마이페이지
   -  안창빈 : //
   -  이종남 : //
   -  정정영 : //
@@ -149,7 +149,7 @@
   View Model
   -  이원영 :
      GetXController 설계, 모듈화 및 분리 앱, 태블릿 ChatsController 
-  -  신정섭 : //
+  -  신정섭 : app locationController
   -  안창빈 : //
   -  이종남 : //
   -  정정영 : //
