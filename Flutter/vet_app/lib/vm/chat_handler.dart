@@ -181,50 +181,6 @@ class ChatsHandler extends LoginHandler {
     update();
   }
 
-
-  // queryLastChat() async {
-  //   result.clear();
-  //   lastChats.isNotEmpty?lastChats.clear():lastChats;
-  //   List<Chats> returnResult = [];
-
-  //   QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-  //       .instance
-  //       .collection("chat")
-  //       .where('user', isEqualTo: box.read('userEmail'))
-  //       .get();
-
-  //   var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
-  //   for (int i = 0; i < tempresult.length; i++) {
-  //     Chatroom chatroom = Chatroom(
-  //         clinic: tempresult[i]['clinic'],
-  //         user: tempresult[i]['user'],
-  //         image: tempresult[i]['image']);
-  //     result.add(chatroom);
-  //   }
-  //   for (int i = 0; i < result.length; i++) {
-  //     _rooms
-  //         .doc("${result[i].clinic}_${box.read('userEmail')}")
-  //         .collection('chats')
-  //         .orderBy('timestamp', descending: true)
-  //         .limit(1)
-  //         .snapshots()
-  //         .listen(
-  //       (event) {
-  //         for (int i = 0; i < event.docs.length; i++) {
-  //           var chat = event.docs[i].data();
-  //           returnResult.add(Chats(
-  //               reciever: chat['reciever']??' ',
-  //               sender: chat['sender']??' ',
-  //               text: chat['text']??' ',
-  //               timestamp: chat['timestamp']??' '));
-  //         }
-  //         lastChats.value = returnResult;
-  //       },
-  //     );
-  //   }
-  //   update();
-  // }
-
   firstChatRoom(id, image) async {
     final response =
         await http.get(Uri.parse('http://127.0.0.1:8000/clinic/view/$image'));
