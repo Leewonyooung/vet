@@ -1,9 +1,9 @@
 # 멍스파인더
 
 
-## ERR
-<img width="1315" alt="멍스파인더_EER" src="https://github.com/user-attachments/assets/3c225f33-d59e-43ce-b0dd-17165ce3c49d">
-<img width="1315" alt="멍스파인더_EER" src="https://github.com/user-attachments/assets/5ec636f5-4d60-4289-b04b-2f264eed2424">
+## EER
+<img width="1083" alt="mysql_EER" src="https://github.com/user-attachments/assets/50eea10b-75c9-44f9-856b-beb5e81e48a1">
+<img width="1269" alt="chat_EER" src="https://github.com/user-attachments/assets/943ea205-2f4a-4658-8e7e-19c528a78efb">
 
 ## ⚙ Organization
 
@@ -15,6 +15,14 @@
 |    팀원   | <center> 이종남  </center> | 
 |    팀원   | <center> 정정영  </center> |
 
+
+## 디자인 패턴(MVVM)
+
+<img width="366" alt="all_tree" src="https://github.com/user-attachments/assets/565f5711-48a1-4c6f-8452-47120bbc0664">
+
+
+## API
+<img width="1184" alt="스크린샷 2024-10-17 오후 7 01 35" src="https://github.com/user-attachments/assets/59229efc-8a30-4089-b98e-f454e83d7850">
 
 ### Packages / 사용한 패키지
 
@@ -68,8 +76,10 @@
 ### 멍스파인더 코딩
 
 ```
-//
+반려동물 커뮤니티 앱들은 몇몇 존재했지만 반려동물 병워과 연결되는 앱은 없는걸로 보여서 개발해보기로 결정했다.
+계획과 변동 된 점 : 진료를 받고 후기를 작성하고 별점주기, 병원 별 치료가능한 시술 목록 및 시술 단가는 빼기로 결정
 ```
+
 
 ### 데모 시연
 
@@ -78,12 +88,15 @@
 ## Progress
 
 ~ 10.02. 
+
   주제선정 및 프로젝트 구상
 
-10.03. ~ 10.04.
+  10.03. ~ 10.04.
+
   프로젝트 EER 구상 및 역할 분담 및 기획 발표
 
-10.07 ~ 10.08.
+  10.07 ~ 10.08.
+
   진행중 EER 수정, 부족한 기능 추가
   사용할 패키지 취합
   채팅구현을 위한 firebase 연동 완료
@@ -94,12 +107,24 @@
   
 
  10.10 ~ 10.11.
-   채팅 전반적인 구현 완료 (채티방에서 마지막 채팅을 보여주는 것은 되나 realtime 연동이 안됨)
-   유저 별 반려동물 등록 구현
-   예약 기능 구현
-   병원 관리자 페이지 구현중~
+
+ 
+  채팅 전반적인 구현 완료 (채티방에서 마지막 채팅을 보여주는 것은 되나 realtime 연동이 안됨)
+  유저 별 반려동물 등록 구현
+  예약 기능 구현
+  병원 관리자 페이지 구현중~
    
+  10.14 ~ 10.15.
   
+  채팅방에 마지막 채팅 보여주기 기능 에러 발견하여 수정
+  관리자 페이지 완료
+  핸들러 분리 후 충돌 수정
+  앱 UI수정
+
+  10.16 ~ 10.17.
+
+  최종 코드 확인 및 코드 리뷰
+  발표 준비 및 document 작업
 
 
 ## Contribution
@@ -108,21 +133,22 @@
   - ..
  
   Python
-  -  이원영 : //
+  -  이원영 : 라우터 설계
   -  신정섭 : //
   -  안창빈 : //
   -  이종남 : //
   -  정정영 : //
   
   View
-  -  이원영 : //
+  -  이원영 : 채팅 방, 채팅 목록, 스플래시, persitent_nav_bar를 통한 탭바 페이지, 컨트롤러를 통한 페이지 상태 관리 
   -  신정섭 : //
   -  안창빈 : //
   -  이종남 : //
   -  정정영 : //
 
   View Model
-  -  이원영 : //
+  -  이원영 :
+     GetXController 설계, 모듈화 및 분리 앱, 태블릿 ChatsController 
   -  신정섭 : //
   -  안창빈 : //
   -  이종남 : //
