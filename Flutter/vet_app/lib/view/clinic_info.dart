@@ -69,7 +69,7 @@ class ClinicInfo extends StatelessWidget {
           bottomRight: Radius.circular(30),
         ),
         child: Image.network(
-          'http://127.0.0.1:8000/clinic/view/${result.image}',
+          '${vmHandler.server}/clinic/view/${result.image}',
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) =>
               const Icon(Icons.error, size: 100),

@@ -32,7 +32,7 @@ class ClinicHandler extends LoginHandler {
 
   // 병원 전체 목록
   getAllClinic() async {
-    var url = Uri.parse('http://127.0.0.1:8000/clinic/select_clinic');
+    var url = Uri.parse('$server/clinic/select_clinic');
     var response = await http.get(url);
     clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -65,13 +65,16 @@ class ClinicHandler extends LoginHandler {
           phone: phone!,
           image: image!));
     }
+    for(int i = 0; i < returnData.length; i++){
+      print(returnData[i].image);
+    }
     clinicSearch.value = returnData;
   }
 
 //  // 병원 상세 정보
   getClinicDetail() async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/clinic/detail_clinic?id=$currentIndex');
+        '$server/clinic/detail_clinic?id=$currentIndex');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'][0];
@@ -121,7 +124,7 @@ class ClinicHandler extends LoginHandler {
   // 병원 검색 기능 => 검색어를 name, address 두 컬럼에서 찾음
   searchbarClinic() async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/clinic/select_search?word=${searchbarController.text.trim()}');
+        '$server/clinic/select_search?word=${searchbarController.text.trim()}');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];

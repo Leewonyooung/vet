@@ -56,7 +56,7 @@ class LoginHandler extends ImageHandler {
 
   clinicloginJsonCheck(String id, String password) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/user/selectclinic?id=$id&password=$password');
+        '$server/user/selectclinic?id=$id&password=$password');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List result = dataConvertedJSON['results'];

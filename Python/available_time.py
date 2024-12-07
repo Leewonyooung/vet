@@ -10,6 +10,7 @@ from fastapi.responses import FileResponse
 import pymysql
 import os
 import hosts
+import router
 router = APIRouter()
 
 UPLOAD_FOLDER = 'uploads'
@@ -30,7 +31,7 @@ def connect():
 # 예약 가능한 병원id, 이름, password, 경도, 위도, 주소, 이미지, 예약 시간 (예약된 리스트 빼고 나타냄)
 @router.get('/available_clinic')
 async def get_available_clinic(time:str):
-    conn = connect()
+    conn = router.connect()
     curs = conn.cursor()
 
     sql = """
@@ -67,7 +68,7 @@ async def get_file(file_name: str):
 @router.get("/can_reservation")
 async def can_reservation(time:str=None, clinic_id:str=None):
     try:
-        conn = connect()
+        conn = router.connect()
         curs = conn.cursor()
         sql = '''
             select 

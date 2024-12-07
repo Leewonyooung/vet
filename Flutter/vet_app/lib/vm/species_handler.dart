@@ -17,7 +17,7 @@ class SpeciesHandler extends LoginHandler {
   }
 
   loadSpeciesTypes() async {
-    var url = Uri.parse('http://127.0.0.1:8000/species/types');
+    var url = Uri.parse('$server/species/types');
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {
@@ -33,7 +33,7 @@ class SpeciesHandler extends LoginHandler {
 
   loadSpeciesCategories(String speciesType) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/species/pet_categories?type=$speciesType');
+        '$server/species/pet_categories?type=$speciesType');
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {

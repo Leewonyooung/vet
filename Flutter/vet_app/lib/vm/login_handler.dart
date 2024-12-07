@@ -16,7 +16,7 @@ class LoginHandler extends UserHandler {
   List data = [];
   String userEmail = '';
   String userName = '';
-
+  
   // 로그인 상태 확인
   isLoggedIn() {
     return FirebaseAuth.instance.currentUser != null &&
@@ -30,7 +30,7 @@ class LoginHandler extends UserHandler {
 
   // 사용자 정보를 데이터베이스에서 쿼리
   queryUser(String userEmail) async {
-    var url = Uri.parse('http://127.0.0.1:8000/user/select?id=$userEmail');
+    var url = Uri.parse('$server/user/select?id=$userEmail');
     var response = await http.get(url);
     data.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -105,7 +105,7 @@ class LoginHandler extends UserHandler {
 
 // query inserted google email from db to differentiate whether email is registered or not
   userloginCheckJSONData(email) async {
-    var url = Uri.parse('http://127.0.0.1:8000/user/selectuser?id=$email');
+    var url = Uri.parse('$server/user/selectuser?id=$email');
     var response = await http.get(url);
     data.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -116,7 +116,7 @@ class LoginHandler extends UserHandler {
   // insert the account information to mysql(db) (안창빈)
   userloginInsertData(String userEmail, String userName) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/user/insertuser?id=$userEmail&password=""&image=usericon.jpg&name=$userName&phone=""');
+        '$server/user/insertuser?id=$userEmail&password=""&image=usericon.jpg&name=$userName&phone=""');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];

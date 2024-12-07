@@ -11,7 +11,7 @@ from fastapi.responses import FileResponse
 import pymysql
 import os
 import shutil
-import hosts
+import hosts, router
 mypage_router = APIRouter()
 
 # uploads = 폴더이름
@@ -35,7 +35,7 @@ def connect():
 # 마이페이지 쿼리
 @mypage_router.get('/select_mypage')
 def select_mypage(id:str):
-    conn = connect()
+    conn = router.connect()
     curs = conn.cursor()
     sql = 'select * from user where id=%s'
     curs.execute(sql,(id))
@@ -48,7 +48,7 @@ def select_mypage(id:str):
 # 유저 이름 수정
 @mypage_router.get('/name_update')
 def update_mypage (name:str=None,id:str=None,):
-    conn = connect()
+    conn = router.connect()
     curs = conn.cursor()
     
     try:
@@ -67,7 +67,7 @@ def update_mypage (name:str=None,id:str=None,):
 # 유저 이미지, 이름 모두 수정
 @mypage_router.get('/all_update')
 async def updateAll(name:str=None, image:str=None, id:str=None):
-    conn = connect()
+    conn = router.connect()
     curs = conn.cursor()
     
     try:

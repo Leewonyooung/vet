@@ -7,7 +7,7 @@ Usage: Manage favorite
 
 from fastapi import APIRouter, HTTPException 
 import pymysql
-import hosts
+import hosts, router
 router = APIRouter()
 
 def connection():
@@ -23,7 +23,7 @@ def connection():
 # 사용자의 즐겨찾기 목록 불러오기
 @router.get('/favorite_clinics')
 async def get_favorite_clinics(user_id: str):
-    conn = connection()
+    conn = router.connect()
     curs = conn.cursor()
 
     sql = "SELECT * FROM favorite WHERE user_id = %s"
@@ -39,7 +39,7 @@ async def get_favorite_clinics(user_id: str):
 # 즐겨찾기 추가
 @router.post('/add_favorite')
 async def add_favorite(user_id: str, clinic_id: str):
-    conn = connection()
+    conn = router.connect()
     curs = conn.cursor()
 
     # 중복 확인
@@ -65,7 +65,7 @@ async def add_favorite(user_id: str, clinic_id: str):
 # 즐겨찾기 삭제
 @router.delete('/delete_favorite')
 async def delete_favorite(user_id: str, clinic_id: str):
-    conn = connection()
+    conn = router.connect()
     curs = conn.cursor()
 
     # 즐겨찾기 삭제
@@ -82,7 +82,7 @@ async def delete_favorite(user_id: str, clinic_id: str):
 # 즐겨찾기 여부 검사
 @router.get('/search_favorite_clinic')
 async def search_favorit_clinic(user_id:str, clinic_id:str):
-    conn = connection()
+    conn = router.connect()
     curs = conn.cursor()
 
     sql = 'select count(*) from favorite where user_id=%s and clinic_id=%s'

@@ -14,6 +14,8 @@ from profile import mypage_router as mypage_router
 from available_time import router as available_router
 from species import router as species_router 
 from reservation import router as reservation_router
+import pymysql
+import hosts
 
 app = FastAPI()
 app.include_router(clinic_router, prefix="/clinic", tags=["clinic"])
@@ -25,8 +27,17 @@ app.include_router(available_router, prefix="/available", tags=["available"])
 app.include_router(species_router, prefix="/species", tags=["species"])
 app.include_router(reservation_router, prefix="/reservation", tags=["reservation"])
 
+def connect():
+    conn = pymysql.connect(
+        host=hosts.vet_academy,
+        user = "root",
+        password = "wy12wy10",
+        db = "vetenerian",
+        charset= 'utf8'
+    )
+    return conn
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host = "127.0.0.1", port = 8000)
+    uvicorn.run(app, host = "0.0.0.0", port = 8000)

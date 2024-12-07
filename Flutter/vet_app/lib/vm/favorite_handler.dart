@@ -19,7 +19,7 @@ class FavoriteHandler extends ClinicHandler {
   getFavoriteClinics(String userId) async {
     try {
       var url = Uri.parse(
-          'http://127.0.0.1:8000/favorite/favorite_clinics?user_id=$userId'); // 사용자 ID 기반 즐겨찾기 요청
+          '$server/favorite/favorite_clinics?user_id=$userId'); // 사용자 ID 기반 즐겨찾기 요청
       var response = await http.get(url);
 
       // 응답 상태가 성공적인지 확인
@@ -78,7 +78,7 @@ class FavoriteHandler extends ClinicHandler {
   // 즐겨찾기 병원 추가
   addFavoriteClinic(String userId, String clinicId) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/favorite/add_favorite?user_id=$userId&clinic_id=$clinicId');
+        '$server/favorite/add_favorite?user_id=$userId&clinic_id=$clinicId');
     var response = await http.post(url);
     if (response.statusCode == 200) {
       return "OK";
@@ -90,7 +90,7 @@ class FavoriteHandler extends ClinicHandler {
   // 즐겨찾기 병원 삭제
   removeFavoriteClinic(String userId, String clinicId) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/favorite/delete_favorite?user_id=$userId&clinic_id=$clinicId');
+        '$server/favorite/delete_favorite?user_id=$userId&clinic_id=$clinicId');
     var response = await http.delete(url);
 
     if (response.statusCode == 200) {
@@ -110,7 +110,7 @@ class FavoriteHandler extends ClinicHandler {
   // 즐겨찾기 아이콘 변경에 필요
   searchFavoriteClinic(String userId, String clinicId) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/favorite/search_favorite_clinic?user_id=$userId&clinic_id=$clinicId');
+        '$server/favorite/search_favorite_clinic?user_id=$userId&clinic_id=$clinicId');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     int result = dataConvertedJSON['results'];

@@ -19,7 +19,6 @@ class ClinicHandler extends LocationHandler {
   DateTime selectedDate = DateTime.now();
   RxString selected = ''.obs;
   RxString currentIndex = ''.obs;
-
   @override
   void onInit() async {
     super.onInit();
@@ -34,7 +33,7 @@ class ClinicHandler extends LocationHandler {
 
   // 병원 전체 목록
   getAllClinic() async {
-    var url = Uri.parse('http://127.0.0.1:8000/clinic/select_clinic');
+    var url = Uri.parse('$server/clinic/select_clinic');
     var response = await http.get(url);
     clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -73,7 +72,7 @@ class ClinicHandler extends LocationHandler {
 //  // 병원 상세 정보
   getClinicDetail(String clinicid) async {
     var url =
-        Uri.parse('http://127.0.0.1:8000/clinic/detail_clinic?id=$clinicid');
+        Uri.parse('$server/clinic/detail_clinic?id=$clinicid');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'][0];
@@ -120,7 +119,7 @@ class ClinicHandler extends LocationHandler {
       String phone,
       String image) async {
     var url = Uri.parse(
-        "http://127.0.0.1:8000/clinic/insert?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&starttime=$stime&endtime=$etime&introduction=$introduction&address=$address&phone=$phone&image=$image");
+        "$server/clinic/insert?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&starttime=$stime&endtime=$etime&introduction=$introduction&address=$address&phone=$phone&image=$image");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var results = dataConvertedJSON['results'];
@@ -186,7 +185,7 @@ class ClinicHandler extends LocationHandler {
     String phone,
   ) async {
     var url = Uri.parse(
-        "http://127.0.0.1:8000/clinic/update?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&starttime=$stime&endtime=$etime&introduction=$introduction&address=$address&phone=$phone");
+        "$server/clinic/update?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&starttime=$stime&endtime=$etime&introduction=$introduction&address=$address&phone=$phone");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var results = dataConvertedJSON['results'];
@@ -213,7 +212,7 @@ class ClinicHandler extends LocationHandler {
       String phone,
       String image) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/clinic/update_all?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&starttime=$stime&endtime=$etime&introduction=$introduction&address=$address&phone=$phone&image=$image');
+        '$server/clinic/update_all?id=$id&name=$name&password=$password&latitude=$latitude&longitude=$longitude&starttime=$stime&endtime=$etime&introduction=$introduction&address=$address&phone=$phone&image=$image');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];

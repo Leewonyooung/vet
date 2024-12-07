@@ -79,7 +79,7 @@ class ClinicSearch extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
-                            'http://127.0.0.1:8000/clinic/view/${clinic.image}',
+                            '${vmHandler.server}/clinic/view/${clinic.image}',
                             width: 80,
                             height: 80,
                             fit: BoxFit.cover,

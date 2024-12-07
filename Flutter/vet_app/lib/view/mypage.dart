@@ -5,11 +5,11 @@ import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/login_handler.dart';
 
 class Mypage extends StatelessWidget {
-  const Mypage({super.key});
+  Mypage({super.key});
+  final LoginHandler loginHandler = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    final LoginHandler loginHandler = Get.find();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -75,7 +75,7 @@ class Mypage extends StatelessWidget {
             CircleAvatar(
               radius: 60,
               backgroundImage: NetworkImage(
-                  'http://127.0.0.1:8000/mypage/view/${result[0].image}'),
+                  '${loginHandler.server}/mypage/view/${result[0].image}'),
             ),
             const SizedBox(height: 16),
             Text(

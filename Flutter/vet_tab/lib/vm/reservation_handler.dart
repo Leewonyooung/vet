@@ -80,10 +80,10 @@ class ReservationHandler extends ClinicHandler {
 
   // 병원 예약 현황
   currentReservationClinic() async {
-    await storeuser();
+    // await storeuser();
     await adjustedTime();
     var url = Uri.parse(
-        'http://127.0.0.1:8000/reservation/select_reservation_clinic?clinic_id=$resuserid&time=${reservationTime.substring(0, 8)}');
+        '$server/reservation/select_reservation_clinic?clinic_id=$resuserid&time=${reservationTime.substring(0, 8)}');
     var response = await http.get(url);
     clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -117,8 +117,8 @@ class ReservationHandler extends ClinicHandler {
     }
   }
 
-  storeuser() {
-    resuserid = loginHandler.box.read('id') ?? 'cmzmnvj274';
-    update();
-  }
+  // storeuser() {
+  //   resuserid = loginHandler.box.read('id') ?? 'cmzmnvj274';
+  //   update();
+  // }
 }

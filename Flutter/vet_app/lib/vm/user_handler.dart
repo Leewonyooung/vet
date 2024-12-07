@@ -14,7 +14,7 @@ class UserHandler extends LocationHandler {
 // 유저 정보 가져오는 쿼리 - mypage
   selectMyinfo(String userid) async {
     var url =
-        Uri.parse('http://127.0.0.1:8000/mypage/select_mypage?id=$userid');
+        Uri.parse('$server/mypage/select_mypage?id=$userid');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];
@@ -34,7 +34,7 @@ class UserHandler extends LocationHandler {
   // user name update - mypage update
   updateUserName(String name, String id) async {
     var url =
-        Uri.parse('http://127.0.0.1:8000/mypage/name_update?name=$name&id=$id');
+        Uri.parse('$server/mypage/name_update?name=$name&id=$id');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];
@@ -45,7 +45,7 @@ class UserHandler extends LocationHandler {
 // update 순서  - 업로드된 이미지 파일 삭제 => 신규 이미지 업로드 => update
   updateUserAll(String name, String image, String id) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/mypage/all_update?name=$name&image=$image&id=$id');
+        '$server/mypage/all_update?name=$name&image=$image&id=$id');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];

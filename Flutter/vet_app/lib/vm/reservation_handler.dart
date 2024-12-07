@@ -25,7 +25,7 @@ class ReservationHandler extends ClinicHandler {
   // 예약된 리스트
   getReservation(String userId) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/reservation/select_reservation?user_id=$userId'); //미완성
+        '$server/reservation/select_reservation?user_id=$userId'); //미완성
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];
@@ -46,7 +46,7 @@ class ReservationHandler extends ClinicHandler {
   makeReservation(String userId, String clinicId, String time, String symptoms,
       String petId) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/reservation/insert_reservation?user_id=$userId&clinic_id=$clinicId&time=$time&symptoms=$symptoms&pet_id=$petId');
+        '$server/reservation/insert_reservation?user_id=$userId&clinic_id=$clinicId&time=$time&symptoms=$symptoms&pet_id=$petId');
     var response = await http.get(url);
 
     var dataCovertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -74,7 +74,7 @@ class ReservationHandler extends ClinicHandler {
   getQuickReservation() async {
     await adjustedTime();
     var url = Uri.parse(
-        'http://127.0.0.1:8000/available/available_clinic?time=$reservationTime'); // 미완성
+        '$server/available/available_clinic?time=$reservationTime'); // 미완성
     var response = await http.get(url);
     clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -128,7 +128,7 @@ class ReservationHandler extends ClinicHandler {
     await adjustedTime();
     canReservationClinic.clear();
     var url = Uri.parse(
-        'http://127.0.0.1:8000/available/can_reservation?time=$reservationTime&clinic_id=$clinicid');
+        '$server/available/can_reservation?time=$reservationTime&clinic_id=$clinicid');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];

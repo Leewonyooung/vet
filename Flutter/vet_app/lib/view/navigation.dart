@@ -103,7 +103,7 @@ class Navigation extends StatelessWidget {
                 ),
                 onPressed: () {
                   if (loginHandler.isLoggedIn()) {
-                    Get.to(() => const Mypage());
+                    Get.to(() => Mypage());
                   } else {
                     Get.to(() => Login());
                   }
@@ -126,7 +126,7 @@ class Navigation extends StatelessWidget {
       ClinicSearch(),
       QueryReservation(),
       ChatRoom(),
-      const Mypage(),
+      Mypage(),
     ];
   }
 
@@ -337,7 +337,7 @@ class Navigation extends StatelessWidget {
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(15)),
                 child: Image.network(
-                  'http://127.0.0.1:8000/pet/uploads/${pet.image}',
+                  '${pet.image}',
                   height: 120,
                   width: double.infinity,
                   fit: BoxFit.cover,

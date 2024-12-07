@@ -7,7 +7,7 @@ Usage: store user(include clinic) acoount information
 
 from fastapi import APIRouter 
 import pymysql
-import hosts
+import hosts,router
 
 router = APIRouter()
 
@@ -25,7 +25,7 @@ def connect():
 
 @router.get("/selectuser")
 async def select(id: str=None):
-    conn = connect()
+    conn = router.connect()
     curs = conn.cursor()
 
     sql = "select id, password, image, name, phone from user where id=%s"
@@ -41,7 +41,7 @@ async def select(id: str=None):
 
 @router.get("/insertuser")
 async def insert(id: str=None, password: str=None, image: str=None, name: str=None, phone: str=None):
-    conn = connect()
+    conn = router.connect()
     curs = conn.cursor()
 
     try:
@@ -61,7 +61,7 @@ async def insert(id: str=None, password: str=None, image: str=None, name: str=No
 
 @router.get("/selectclinic")
 async def select(id: str=None, password: str=None):
-    conn = connect()
+    conn = router.connect()
     curs = conn.cursor()
 
     sql = "select id, password from clinic where id=%s and password=%s"
@@ -82,7 +82,7 @@ Usage: 채팅창 보여줄때 id > name
 async def get_user_name(id:str):
     # name= ['adfki125', 'adkljzci9786']
     try:
-        conn = connect()
+        conn = router.connect()
         curs = conn.cursor()
         sql = "select name from user where id = %s"
         curs.execute(sql,(id))

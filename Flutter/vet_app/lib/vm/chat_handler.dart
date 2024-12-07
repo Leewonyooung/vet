@@ -80,7 +80,7 @@ class ChatsHandler extends LoginHandler {
 
   getStatus() async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/clinic/detail_clinic?id=$currentClinicId');
+        '$server/clinic/detail_clinic?id=$currentClinicId');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     String startTime = dataConvertedJSON['results'][0][5];
@@ -112,7 +112,7 @@ class ChatsHandler extends LoginHandler {
 
   getClinicName(String name) async {
     var url =
-        Uri.parse('http://127.0.0.1:8000/clinic/getclinicname?name=$name');
+        Uri.parse('$server/clinic/getclinicname?name=$name');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     currentClinicId.value = dataConvertedJSON['results'][0];
@@ -183,7 +183,7 @@ class ChatsHandler extends LoginHandler {
 
   firstChatRoom(id, image) async {
     final response =
-        await http.get(Uri.parse('http://127.0.0.1:8000/clinic/view/$image'));
+        await http.get(Uri.parse('$server/clinic/view/$image'));
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/temp_image';
     final file = File(filePath);
@@ -229,7 +229,7 @@ class ChatsHandler extends LoginHandler {
     }
     for (int i = 0; i < idList.length; i++) {
       var url = Uri.parse(
-          'http://127.0.0.1:8000/clinic/select_clinic_name?name=${idList[i]}');
+          '$server/clinic/select_clinic_name?name=${idList[i]}');
       var response = await http.get(url);
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       roomName.obs.value.add(dataConvertedJSON['results'][0][0]);

@@ -40,7 +40,7 @@ class PetHandler extends SpeciesHandler {
   // 유저 ID를 기반으로 반려동물 정보 가져오기
   fetchPets(String userId) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/pet/pets?user_id=${box.read('userEmail')}');
+        '$server/pet/pets?user_id=${box.read('userEmail')}');
     try {
       var response = await http.get(url);
 
@@ -75,7 +75,7 @@ class PetHandler extends SpeciesHandler {
 
   // 반려동물 등록 (이미지 파일을 포함)
   addPet(Pet pet, File? imageFile) async {
-    var url = Uri.parse('http://127.0.0.1:8000/pet/insert');
+    var url = Uri.parse('$server/pet/insert');
 
     var request = http.MultipartRequest('POST', url)
       ..fields['id'] = pet.id
@@ -105,7 +105,7 @@ class PetHandler extends SpeciesHandler {
 
   // 반려동물 정보 수정
   updatePet(Pet pet, File? imageFile) async {
-    var url = Uri.parse('http://127.0.0.1:8000/pet/update');
+    var url = Uri.parse('$server/pet/update');
 
     var request = http.MultipartRequest('POST', url)
       ..fields['id'] = pet.id
@@ -135,7 +135,7 @@ class PetHandler extends SpeciesHandler {
 
   // 반려동물 삭제
   deletePet(String petId) async {
-    var url = Uri.parse('http://127.0.0.1:8000/pet/delete/$petId');
+    var url = Uri.parse('$server/pet/delete/$petId');
     try {
       var response = await http.delete(url);
 

@@ -7,7 +7,7 @@ class ImageHandler extends TabVm {
   late int firstDisp = 0;
   final ImagePicker picker = ImagePicker();
   String filename = "";
-
+  
   //Get image from gallery from add page (안창빈)
   getImageFromGallery(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
@@ -20,7 +20,7 @@ class ImageHandler extends TabVm {
   // upload image (안창빈)
   uploadImage() async {
     var request = http.MultipartRequest(
-        "POST", Uri.parse("http://127.0.0.1:8000/clinic/upload"));
+        "POST", Uri.parse("$server/clinic/upload"));
     var multipartFile =
         await http.MultipartFile.fromPath('file', imageFile!.path);
     request.files.add(multipartFile);

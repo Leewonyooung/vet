@@ -81,7 +81,7 @@ class PetInfo extends StatelessWidget {
       height: 250,
       width: double.infinity,
       child: Image.network(
-        'http://127.0.0.1:8000/pet/uploads/${updatedPet.image}',
+        '${updatedPet.image}',
         fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) {
           // 이미지 로드 실패 시 에러 아이콘 + 메시지

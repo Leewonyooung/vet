@@ -10,7 +10,7 @@ class SpeciesHandler extends LoginHandler {
 
   categoryInsert(String category) async {
     var url = Uri.parse(
-        "http://127.0.0.1:8000/species/add?species_category=$category");
+        "$server/species/add?species_category=$category");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var results = dataConvertedJSON['results'];
