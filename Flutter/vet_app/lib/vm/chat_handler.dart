@@ -27,7 +27,7 @@ class ChatsHandler extends LoginHandler {
       FirebaseFirestore.instance.collection('chat');
   Timer? _timer;
 
-   void startTimer() {
+  void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       queryLastChat(); // 1초마다 실행할 함수
     });
@@ -46,8 +46,8 @@ class ChatsHandler extends LoginHandler {
     startTimer();
   }
 
-  checkLength()async{
-    if(rooms.length< roomName.length){
+  checkLength() async {
+    if (rooms.length < roomName.length) {
       roomName.clear();
       getAllData();
     }
@@ -104,7 +104,6 @@ class ChatsHandler extends LoginHandler {
   }
 
   getAllData() async {
-    
     await makeChatRoom();
     await queryLastChat();
     await getlastName();
@@ -141,7 +140,7 @@ class ChatsHandler extends LoginHandler {
     if (result.isNotEmpty) {
       result.clear();
     }
-    if(returnResult.isNotEmpty){
+    if (returnResult.isNotEmpty) {
       returnResult.clear();
     }
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
@@ -191,7 +190,7 @@ class ChatsHandler extends LoginHandler {
     final firebaseStorage = FirebaseStorage.instance.ref().child("$image");
     await firebaseStorage.putFile(file);
     String downloadURL = await firebaseStorage.getDownloadURL();
-      _rooms
+    _rooms
         .doc("${id}_${box.read('userEmail')}")
         // .collection('chats')
         .set({
@@ -201,7 +200,7 @@ class ChatsHandler extends LoginHandler {
     });
     roomName.clear();
     getAllData();
-    
+
     update();
     return downloadURL;
   }
@@ -254,30 +253,56 @@ class ChatsHandler extends LoginHandler {
         chat.text.substring(13, 17) == "time";
   }
 
+  // addChat(Chats chat) async {
+  //   bool istoday = await isToday();
+  //   if (!istoday) {
+  //     await _rooms
+  //         .doc("${currentClinicId.value}_${box.read('userEmail')}")
+  //         .collection('chats')
+  //         .add({
+  //       'reciever': chat.reciever,
+  //       'sender': chat.sender,
+  //       'text': "set${DateTime.now().toString().substring(0, 10)}time",
+  //       'timestamp': DateTime.now().toString(),
+  //     });
+  //     await queryLastChat();
+  //   }
+
+  //   _rooms
+  //       .doc("${currentClinicId.value}_${box.read('userEmail')}")
+  //       .collection('chats')
+  //       .add({
+  //     'reciever': chat.reciever,
+  //     'sender': chat.sender,
+  //     'text': chat.text,
+  //     'timestamp': DateTime.now().toString(),
+  //   });
+  //   queryLastChat();
+  // }
+
   addChat(Chats chat) async {
     bool istoday = await isToday();
     if (!istoday) {
       await _rooms
           .doc("${currentClinicId.value}_${box.read('userEmail')}")
-          .collection('chats')
-          .add({
-        'reciever': chat.reciever,
-        'sender': chat.sender,
-        'text': "set${DateTime.now().toString().substring(0, 10)}time",
-        'timestamp': DateTime.now().toString(),
+          .update({
+        'chats': FieldValue.arrayUnion([
+          {
+            'sender': chat.sender,
+            'text': "set${DateTime.now().toString().substring(0, 10)}time",
+            'timestamp': DateTime.now().toString()
+          }
+        ])
       });
-      await queryLastChat();
     }
-
-    _rooms
-        .doc("${currentClinicId.value}_${box.read('userEmail')}")
-        .collection('chats')
-        .add({
-      'reciever': chat.reciever,
-      'sender': chat.sender,
-      'text': chat.text,
-      'timestamp': DateTime.now().toString(),
+    _rooms.doc("${currentClinicId.value}_${box.read('userEmail')}").update({
+      'chats': FieldValue.arrayUnion([
+        {
+          'sender': chat.sender,
+          'text': chat.text,
+          'timestamp': DateTime.now().toString()
+        }
+      ])
     });
-    queryLastChat();
   }
 }
