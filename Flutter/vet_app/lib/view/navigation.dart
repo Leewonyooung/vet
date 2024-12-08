@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
@@ -336,16 +337,31 @@ class Navigation extends StatelessWidget {
               child: ClipRRect(
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(15)),
-                child: Image.network(
-                  '${pet.image}',
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const Icon(
-                    Icons.error,
-                    size: 120,
+                child: CachedNetworkImage(
+                  imageUrl: "${pet.image}",
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    radius: 60,
+                    backgroundImage: imageProvider, // 성공적으로 로드된 ImageProvider 설정
+                  ),
+                  placeholder: (context, url) => const CircleAvatar(
+                    radius: 60,
+                    child:  CircularProgressIndicator(), // 로딩 중 상태
+                  ),
+                  errorWidget: (context, url, error) => const CircleAvatar(
+                    radius: 60,
+                    child:  Icon(Icons.error), // 오류 발생 시
                   ),
                 ),
+                // Image.network(
+                //   '${pet.image}',
+                //   height: 120,
+                //   width: double.infinity,
+                //   fit: BoxFit.cover,
+                //   errorBuilder: (context, error, stackTrace) => const Icon(
+                //     Icons.error,
+                //     size: 120,
+                //   ),
+                // ),
               ),
             ),
             Container(

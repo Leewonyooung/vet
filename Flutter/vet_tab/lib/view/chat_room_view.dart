@@ -66,59 +66,84 @@ class ChatRoomView extends StatelessWidget {
                     await chatsHandler.queryChat();
                     selectedChatIndex.value = index; // 선택된 채팅방 인덱스 업데이트
                   },
-                  child: Obx(() => Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 12.0),
-                        child: Card(
-                          color: Colors.grey[200],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            side: BorderSide(
-                              color: selectedChatIndex.value == index
-                                  ? Colors.blue // 선택된 항목의 테두리 색상 변경
-                                  : Colors.transparent,
-                              width: 2.0,
-                            ),
-                          ),
-                          elevation: 3,
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(room.image),
-                              radius: 30,
-                            ),
-                            title: Text(
-                              chatsHandler.roomName[index],
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: index < chatsHandler.lastChats.length
-                                ? Text(
-                                    chatsHandler.lastChats[index].text,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 14, color: Colors.grey),
-                                  )
-                                : const Text('채팅이 없습니다.',
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.grey)),
-                            trailing: index < chatsHandler.lastChats.length
-                                ? Text(
-                                    DateTime.now().difference(DateTime.parse(
-                                                chatsHandler.lastChats[index]
-                                                    .timestamp)) <
-                                            const Duration(hours: 24)
-                                        ? chatsHandler
-                                            .lastChats[index].timestamp
-                                            .substring(11, 16)
-                                        : "${chatsHandler.lastChats[index].timestamp.substring(5, 7)}월 ${chatsHandler.lastChats[index].timestamp.substring(8, 10)}일",
-                                    style: const TextStyle(
-                                        fontSize: 12, color: Colors.grey),
-                                  )
-                                : null,
-                          ),
-                        ),
-                      )),
+                  child: Obx(() {
+  if (chatsHandler.roomName.isEmpty || index >= chatsHandler.roomName.length) {
+    // roomName이 비어 있거나 데이터가 아직 준비되지 않은 경우
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+      child: Card(
+        color: Colors.grey[200],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: 3,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.grey[300], // 로딩 중일 때 회색 배경
+            radius: 30,
+          ),
+          title: const Text(
+            'Loading...',
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey),
+          ),
+          subtitle: const Text('Loading...',
+              style: TextStyle(fontSize: 14, color: Colors.grey)),
+          trailing: null, // 로딩 중에는 trailing 표시 없음
+        ),
+      ),
+    );
+  }
+
+  // roomName이 준비된 경우
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+    child: Card(
+      color: Colors.grey[200],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: BorderSide(
+          color: selectedChatIndex.value == index
+              ? Colors.blue // 선택된 항목의 테두리 색상
+              : Colors.transparent,
+          width: 2.0,
+        ),
+      ),
+      elevation: 3,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(room.image),
+          radius: 30,
+        ),
+        title: Text(
+          chatsHandler.roomName[index],
+          style: const TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        subtitle: index < chatsHandler.lastChats.length
+            ? Text(
+                chatsHandler.lastChats[index].text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
+              )
+            : const Text('채팅이 없습니다.',
+                style: TextStyle(fontSize: 14, color: Colors.grey)),
+        trailing: index < chatsHandler.lastChats.length
+            ? Text(
+                DateTime.now().difference(DateTime.parse(
+                            chatsHandler.lastChats[index].timestamp)) <
+                        const Duration(hours: 24)
+                    ? chatsHandler.lastChats[index].timestamp.substring(11, 16)
+                    : "${chatsHandler.lastChats[index].timestamp.substring(5, 7)}월 ${chatsHandler.lastChats[index].timestamp.substring(8, 10)}일",
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              )
+            : null,
+      ),
+    ),
+  );
+}),
+
                 );
               },
             ),

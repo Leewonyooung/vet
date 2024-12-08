@@ -5,6 +5,7 @@ Fixed: 10/11
 Usage: 채팅 목록
 */
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -13,13 +14,12 @@ import 'package:vet_app/vm/chat_handler.dart';
 
 class ChatView extends StatelessWidget {
   ChatView({super.key});
-
+  final temp = Get.arguments ?? ['Default Image', 'Default Name'];
   final ChatsHandler vmHandler = Get.find();
   final TextEditingController chatController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     vmHandler.getStatus();
-    final temp = Get.arguments ?? "__";
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -31,9 +31,18 @@ class ChatView extends StatelessWidget {
           toolbarHeight: 75,
           title: Row(
             children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage(temp[0]),
+               CircleAvatar(
+                radius: 20,
+                backgroundColor: Colors.grey[200], // 로드 중 배경색
+                child: CachedNetworkImage(
+                  imageUrl: temp[0], // 네트워크 이미지 URL
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    radius: 20,
+                    backgroundImage: imageProvider,
+                  ),
+                  placeholder: (context, url) => const CircularProgressIndicator(), // 로딩 중 표시
+                  errorWidget: (context, url, error) => const Icon(Icons.error), // 오류 발생 시 표시
+                ),
               ),
               const SizedBox(width: 12), // 사진과 병원 이름 사이의 간격 조정
               Expanded(
@@ -66,19 +75,19 @@ class ChatView extends StatelessWidget {
           ),
         ),
         body: SafeArea(
-          child: Center(
-            child: Expanded(
+          child: Column(
+            children:[ Expanded(
               child: Obx(
-                () => _buildChatList(context, temp),
+                () => _buildChatList(context),
               ),
-            ),
+            ),]
           ),
         ),
       ),
     );
   }
 
-  _buildChatList(BuildContext context, var temp) {
+  _buildChatList(BuildContext context,) {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       vmHandler.listViewContoller
           .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent);
@@ -92,22 +101,22 @@ class ChatView extends StatelessWidget {
             itemCount: vmHandler.chats.length,
             itemBuilder: (context, index) {
               Chats chat = vmHandler.chats[index];
-              return _buildChatItem(context, chat, temp);
+              return _buildChatItem(context, chat);
             },
           ),
         ),
-        _buildInputField(context, temp),
+        _buildInputField(context),
       ],
     );
   }
 
-  _buildChatItem(BuildContext context, Chats chat, var temp) {
+  _buildChatItem(BuildContext context, Chats chat) {
     if (vmHandler.checkToday(chat)) {
       return _buildDateSeparator(chat);
     } else if (vmHandler.box.read('userEmail') == chat.sender) {
       return _buildSentMessage(context, chat);
     } else {
-      return _buildReceivedMessage(context, chat, temp);
+      return _buildReceivedMessage(context, chat);
     }
   }
 
@@ -160,7 +169,7 @@ class ChatView extends StatelessWidget {
     );
   }
 
-  _buildReceivedMessage(BuildContext context, Chats chat, var temp) {
+  _buildReceivedMessage(BuildContext context, Chats chat) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       child: Row(
@@ -168,8 +177,18 @@ class ChatView extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundImage: NetworkImage(temp[0]),
+            backgroundColor: Colors.grey[200], // 로드 중 배경색
+            child: CachedNetworkImage(
+              imageUrl: temp[0], // 네트워크 이미지 URL
+              imageBuilder: (context, imageProvider) => CircleAvatar(
+                radius: 20,
+                backgroundImage: imageProvider,
+              ),
+              placeholder: (context, url) => const CircularProgressIndicator(), // 로딩 중 표시
+              errorWidget: (context, url, error) => const Icon(Icons.error), // 오류 발생 시 표시
+            ),
           ),
+
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -211,7 +230,7 @@ class ChatView extends StatelessWidget {
     );
   }
 
-  _buildInputField(BuildContext context, var temp) {
+  _buildInputField(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       color: Colors.grey[100],

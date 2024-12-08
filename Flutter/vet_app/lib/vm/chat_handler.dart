@@ -15,21 +15,22 @@ class ChatsHandler extends LoginHandler {
   final show = false.obs;
   final chats = <Chats>[].obs;
   final rooms = <Chatroom>[].obs;
-  final currentClinicId = "".obs;
+  RxString currentClinicId = "".obs;
   final lastchatroom = <Chatroom>[].obs;
   final lastChats = <Chats>[].obs;
   final status = false.obs;
   final roomName = [].obs;
   List<Chatroom> result = [];
   ScrollController listViewContoller = ScrollController();
-
+  RxMap<String, Chats?> lastChatsMap = <String, Chats?>{}.obs; 
   final CollectionReference _rooms =
       FirebaseFirestore.instance.collection('chat');
   Timer? _timer;
 
   void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      queryLastChat(); // 1초마다 실행할 함수
+      // queryLastChat(); // 1초마다 실행할 함수
+      makeChatRoom();
     });
   }
 
@@ -42,7 +43,7 @@ class ChatsHandler extends LoginHandler {
   @override
   void onInit() async {
     super.onInit();
-    await getAllData();
+    // await getAllData();
     startTimer();
   }
 
@@ -78,25 +79,66 @@ class ChatsHandler extends LoginHandler {
     return DateTime(now.year, now.month, now.day, hour, minute);
   }
 
-  getStatus() async {
-    var url = Uri.parse(
-        '$server/clinic/detail_clinic?id=$currentClinicId');
-    var response = await http.get(url);
-    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    String startTime = dataConvertedJSON['results'][0][5];
-    String endTime = dataConvertedJSON['results'][0][6];
-    DateTime time1 = parseTime(startTime);
-    DateTime time2 = parseTime(endTime);
-    DateTime resetTime1 =
-        DateTime(time1.year, time1.month, time1.day, time1.hour, time1.minute);
-    DateTime resetTime2 =
-        DateTime(time2.year, time2.month, time2.day, time2.hour, time2.minute);
-    if (DateTime.now().hour > resetTime1.hour &&
-        DateTime.now().hour < resetTime2.hour) {
-      status.value = true;
-    }
+ getStatus() async {
+  if (currentClinicId.isEmpty) {
+    status.value = false; // 기본 상태 설정
     update();
+    return;
   }
+
+  try {
+    var url = Uri.parse('$server/clinic/detail_clinic?id=$currentClinicId');
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+
+      if (dataConvertedJSON['results'] == null ||
+          dataConvertedJSON['results'].isEmpty) {
+        print('Error: No results found in the response.');
+        status.value = false; // 기본 상태 설정
+        update();
+        return;
+      }
+
+      // JSON에서 시간 정보 추출
+      String? startTime = dataConvertedJSON['results'][0][5];
+      String? endTime = dataConvertedJSON['results'][0][6];
+
+      if (startTime == null || endTime == null) {
+        status.value = false; // 기본 상태 설정
+        update();
+        return;
+      }
+
+      // 시간 파싱
+      DateTime time1 = parseTime(startTime);
+      DateTime time2 = parseTime(endTime);
+
+      if (time1 == null || time2 == null) {
+        status.value = false; // 기본 상태 설정
+        update();
+        return;
+      }
+
+      // 시간 비교
+      if (DateTime.now().isAfter(time1) && DateTime.now().isBefore(time2)) {
+        status.value = true;
+      } else {
+        status.value = false;
+      }
+    } else {
+      print('Error: HTTP request failed with status ${response.statusCode}.');
+      status.value = false; // 기본 상태 설정
+    }
+  } catch (e) {
+    print('Error in getStatus: $e');
+    status.value = false; // 기본 상태 설정
+  }
+
+  update();
+}
+
 
   showScreen() async {
     show.value = true;
@@ -105,8 +147,15 @@ class ChatsHandler extends LoginHandler {
 
   getAllData() async {
     await makeChatRoom();
-    await queryLastChat();
-    await getlastName();
+  }
+
+  getClinicId(String name) async {
+    var url =
+        Uri.parse('$server/clinic/get_clinic_name?name=$name');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    currentClinicId.value = dataConvertedJSON['results'][0];
+    update();
   }
 
   getClinicName(String name) async {
@@ -119,68 +168,23 @@ class ChatsHandler extends LoginHandler {
   }
 
   queryChat() {
-    _rooms
-        .doc("${currentClinicId.value}_${box.read('userEmail')}")
-        .collection('chats')
-        .orderBy('timestamp', descending: false)
+    _rooms.doc("${currentClinicId.value}_${box.read('userEmail')}")
         .snapshots()
         .listen(
       (event) {
-        chats.value = event.docs
-            .map(
-              (doc) => Chats.fromMap(doc.data(), doc.id),
-            )
+        List<dynamic> messages = event.get('chats') ?? [];
+        List<Chats> mappedMessages = messages
+            .map((message) =>
+                Chats.fromMap(message as Map<String, dynamic>, event.id))
             .toList();
+        mappedMessages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+        chats.value = mappedMessages;
       },
     );
   }
 
-  queryLastChat() async {
-    List<Chats> returnResult = [];
-    if (result.isNotEmpty) {
-      result.clear();
-    }
-    if (returnResult.isNotEmpty) {
-      returnResult.clear();
-    }
-    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-        .instance
-        .collection("chat")
-        .where('user', isEqualTo: box.read('userEmail'))
-        .get();
-    var tempresult = snapshot.docs.map((doc) => doc.data()).toList();
-    for (int i = 0; i < tempresult.length; i++) {
-      Chatroom chatroom = Chatroom(
-          clinic: tempresult[i]['clinic'],
-          user: tempresult[i]['user'],
-          image: tempresult[i]['image']);
-      result.add(chatroom);
-    }
-    for (int i = 0; i < result.length; i++) {
-      _rooms
-          .doc("${result[i].clinic}_${box.read('userEmail')}")
-          .collection('chats')
-          .orderBy('timestamp', descending: true)
-          .limit(1)
-          .snapshots()
-          .listen(
-        (event) {
-          for (int i = 0; i < event.docs.length; i++) {
-            var chat = event.docs[i].data();
-            returnResult.add(Chats(
-                reciever: chat['reciever'],
-                sender: chat['sender'],
-                text: chat['text'],
-                timestamp: chat['timestamp']));
-          }
-          lastChats.value = returnResult;
-        },
-      );
-    }
-    update();
-  }
 
-  firstChatRoom(id, image) async {
+  firstChatRoom(id, name, image) async {
     final response =
         await http.get(Uri.parse('$server/clinic/view/$image'));
     final tempDir = await getTemporaryDirectory();
@@ -192,48 +196,81 @@ class ChatsHandler extends LoginHandler {
     String downloadURL = await firebaseStorage.getDownloadURL();
     _rooms
         .doc("${id}_${box.read('userEmail')}")
-        // .collection('chats')
         .set({
-      'clinic': id,
+      'clinic': name,
       'image': downloadURL,
-      'user': box.read('userEmail'),
+      'user': mypageUserInfo[0].name,
+      'chats':[]
     });
     roomName.clear();
-    getAllData();
+    // getAllData();
 
     update();
     return downloadURL;
   }
 
-  makeChatRoom() async {
-    _rooms
-        .where('user', isEqualTo: box.read('userEmail'))
-        .snapshots()
-        .listen((event) {
-      rooms.value = event.docs
-          .map(
-            (doc) => Chatroom(
-                clinic: doc.get('clinic'),
-                user: doc.get('user'),
-                image: doc.get('image')),
-          )
-          .toList();
-    });
-  }
 
-  getlastName() async {
-    List idList = [];
-    for (int i = 0; i < result.length; i++) {
-      idList.add(result[i].clinic);
+makeChatRoom() async {
+  _rooms
+      .where('user', isEqualTo: box.read('userName'))
+      .snapshots()
+      .listen((event) async {
+    rooms.value = event.docs
+        .map((doc) => Chatroom(
+              clinic: doc.get('clinic'),
+              user: doc.get('user'),
+              image: doc.get('image'),
+            ))
+        .toList();
+
+    // 병렬 처리
+    final futures = event.docs.map((doc) async {
+      String clinicId = doc.get('clinic');
+      final tempLastChatsMap = <String, Chats?>{};
+      try {
+        var docData = doc.data() as Map<String, dynamic>?;
+        if (docData != null) {
+          List<dynamic> chatsList = (docData['chats'] ?? []) as List<dynamic>; // `chats`가 없으면 빈 배열로 처리
+          if (chatsList.isNotEmpty) {
+            List<Chats> mappedChats = chatsList
+                .map((chat) => Chats.fromMap(chat as Map<String, dynamic>, ''))
+                .toList();
+            mappedChats.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+            tempLastChatsMap[clinicId] =
+                mappedChats.isNotEmpty ? mappedChats.last : null;
+          } else {
+            tempLastChatsMap[clinicId] = null; // 빈 배열일 경우
+          }
+        } else {
+          tempLastChatsMap[clinicId] = null; // `docData`가 없을 경우
+        }
+      } catch (e) {
+        tempLastChatsMap[clinicId] = null;
+      }
+
+      return {
+        'lastChatsMap': tempLastChatsMap,
+      };
+    });
+
+    final results = await Future.wait(futures);
+
+    // 병렬 처리 결과 합치기
+    final combinedLastChatsMap = <String, Chats?>{};
+
+    for (var result in results) {
+      combinedLastChatsMap.addAll(result['lastChatsMap'] as Map<String, Chats?>);
     }
-    for (int i = 0; i < idList.length; i++) {
-      var url = Uri.parse(
-          '$server/clinic/select_clinic_name?name=${idList[i]}');
-      var response = await http.get(url);
-      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      roomName.obs.value.add(dataConvertedJSON['results'][0][0]);
-    }
-  }
+
+    // 데이터 업데이트
+    lastChatsMap.value = combinedLastChatsMap;
+    update(); // 상태 업데이트
+  });
+}
+
+
+
+
 
   isToday() async {
     if (chats.isEmpty) {
@@ -252,33 +289,6 @@ class ChatsHandler extends LoginHandler {
         chat.text.substring(0, 3) == "set" &&
         chat.text.substring(13, 17) == "time";
   }
-
-  // addChat(Chats chat) async {
-  //   bool istoday = await isToday();
-  //   if (!istoday) {
-  //     await _rooms
-  //         .doc("${currentClinicId.value}_${box.read('userEmail')}")
-  //         .collection('chats')
-  //         .add({
-  //       'reciever': chat.reciever,
-  //       'sender': chat.sender,
-  //       'text': "set${DateTime.now().toString().substring(0, 10)}time",
-  //       'timestamp': DateTime.now().toString(),
-  //     });
-  //     await queryLastChat();
-  //   }
-
-  //   _rooms
-  //       .doc("${currentClinicId.value}_${box.read('userEmail')}")
-  //       .collection('chats')
-  //       .add({
-  //     'reciever': chat.reciever,
-  //     'sender': chat.sender,
-  //     'text': chat.text,
-  //     'timestamp': DateTime.now().toString(),
-  //   });
-  //   queryLastChat();
-  // }
 
   addChat(Chats chat) async {
     bool istoday = await isToday();

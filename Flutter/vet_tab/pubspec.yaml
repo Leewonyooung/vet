@@ -68,6 +68,8 @@ dependencies:
   # 시간 formatting
   intl: ^0.19.0
 
+  cached_network_image: ^3.4.1
+
   # localization : pub.dev가 아니고 그냥 추가 한다
   flutter_localizations:
     sdk: flutter

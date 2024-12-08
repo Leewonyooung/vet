@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -126,12 +127,16 @@ class ClinicLocation extends StatelessWidget {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      'http://127.0.0.1:8000/clinic/view/${result.image}',
-                                      width: 80,
-                                      height: 80,
-                                      fit: BoxFit.cover,
-                                    ),
+                                    child: 
+                                    CachedNetworkImage(
+                                      imageUrl: "http://127.0.0.1:8000/clinic/view/${result.image}",
+                                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                                        radius: 20,
+                                        backgroundImage: imageProvider,
+                                      ),
+                                      placeholder: (context, url) => const CircularProgressIndicator(), // 로딩 중 표시
+                                      errorWidget: (context, url, error) => const Icon(Icons.error), // 오류 발생 시 표시
+                                    ),                                  
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(

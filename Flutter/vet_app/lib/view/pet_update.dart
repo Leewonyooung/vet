@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/pet.dart';
@@ -124,8 +125,22 @@ class PetUpdate extends StatelessWidget {
             backgroundImage: image.value != null
                 ? FileImage(image.value!)
                 : (pet.image?.isNotEmpty == true
-                    ? NetworkImage(
-                            'http://127.0.0.1:8000/pet/uploads/${pet.image}')
+                    ? 
+                     CachedNetworkImage(
+        imageUrl: "http://127.0.0.1:8000/pet/uploads/${pet.image}",
+        imageBuilder: (context, imageProvider) => CircleAvatar(
+          radius: 60,
+          backgroundImage: imageProvider, // 성공적으로 로드된 ImageProvider 설정
+        ),
+        placeholder: (context, url) => const CircleAvatar(
+          radius: 60,
+          child:  CircularProgressIndicator(), // 로딩 중 상태
+        ),
+        errorWidget: (context, url, error) => const CircleAvatar(
+          radius: 60,
+          child:  Icon(Icons.error), // 오류 발생 시
+        ),
+      )
                         as ImageProvider
                     : null),
             child: (image.value == null && pet.image?.isEmpty != false)

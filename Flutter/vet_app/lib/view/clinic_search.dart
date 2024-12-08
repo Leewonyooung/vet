@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_info.dart';
@@ -78,19 +79,37 @@ class ClinicSearch extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            '${vmHandler.server}/clinic/view/${clinic.image}',
+                          child:Container(
                             width: 80,
                             height: 80,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(
-                              width: 80,
-                              height: 80,
-                              color: Colors.grey[300],
-                              child: const Icon(
-                                Icons.error,
-                                color: Colors.red,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300], // 기본 배경색
+                              shape: BoxShape.rectangle, // 사각형 모양
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: "${vmHandler.server}/clinic/view/${clinic.image}",
+                              imageBuilder: (context, imageProvider) => Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle, // 사각형 유지
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover, // 이미지를 컨테이너에 맞게 채우기
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(), // 로딩 중 상태 표시
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300], // 오류 시 배경색
+                                ),
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.error,
+                                    color: Colors.red, // 오류 아이콘 색상
+                                  ),
+                                ),
                               ),
                             ),
                           ),

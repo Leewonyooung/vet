@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/myinfo_update.dart';
@@ -72,11 +73,26 @@ class Mypage extends StatelessWidget {
       child: Center(
         child: Column(
           children: [
-            CircleAvatar(
-              radius: 60,
-              backgroundImage: NetworkImage(
-                  '${loginHandler.server}/mypage/view/${result[0].image}'),
+          CircleAvatar(
+            radius: 60,
+            backgroundImage: null, // 기본 이미지로 null을 설정하고, CachedNetworkImage를 아래에서 처리
+            child: CachedNetworkImage(
+              imageUrl: "${loginHandler.server}/mypage/view/${result[0].image}",
+              imageBuilder: (context, imageProvider) => CircleAvatar(
+                radius: 60,
+                backgroundImage: imageProvider, // 성공적으로 로드된 ImageProvider 설정
+              ),
+              placeholder: (context, url) => const CircleAvatar(
+                radius: 60,
+                child:  CircularProgressIndicator(), // 로딩 중 상태
+              ),
+              errorWidget: (context, url, error) => const CircleAvatar(
+                radius: 60,
+                child:  Icon(Icons.error), // 오류 발생 시
+              ),
             ),
+          ),
+
             const SizedBox(height: 16),
             Text(
               result[0].name,

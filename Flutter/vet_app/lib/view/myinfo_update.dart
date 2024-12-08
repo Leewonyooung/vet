@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -70,14 +71,19 @@ class MyinfoUpdate extends StatelessWidget {
         onTap: () => userHandler.getImageFromGalleryEdit(ImageSource.gallery),
         child: Stack(
           children: [
-            CircleAvatar(
-              radius: 80,
-              backgroundImage: userHandler.imageFile == null
-                  ? NetworkImage(
-                      "http://127.0.0.1:8000/mypage/view/${result.image}")
-                  : FileImage(File(userHandler.imageFile!.path))
-                      as ImageProvider,
-            ),
+           CircleAvatar(
+            radius: 80,
+            backgroundImage: userHandler.imageFile == null
+                ? NetworkImage("http://127.0.0.1:8000/mypage/view/${result.image}") 
+                : FileImage(File(userHandler.imageFile!.path)) as ImageProvider,
+            child: userHandler.imageFile == null
+                ? CachedNetworkImage(
+                    imageUrl: "http://127.0.0.1:8000/mypage/view/${result.image}",
+                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                  )
+                : null,
+          ),
             Positioned(
               right: 0,
               bottom: 0,

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/clinic_info.dart';
@@ -134,20 +135,30 @@ class Favorite extends StatelessWidget {
   _buildClinicImage(dynamic clinic) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
-      child: Image.network(
-        'http://127.0.0.1:8000/clinic/view/${clinic.image}',
-        width: 80,
-        height: 80,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            width: 80,
-            height: 80,
-            color: Colors.grey[300],
-            child: const Icon(Icons.local_hospital, color: Colors.white),
-          );
-        },
-      ),
+      child: 
+      CachedNetworkImage(
+        imageUrl: "${favoriteHandler.server}/clinic/view/${clinic.image}",
+        imageBuilder: (context, imageProvider) => CircleAvatar(
+          radius: 20,
+          backgroundImage: imageProvider,
+        ),
+        placeholder: (context, url) => const CircularProgressIndicator(), // 로딩 중 표시
+        errorWidget: (context, url, error) => const Icon(Icons.error), // 오류 발생 시 표시
+      ),   
+      // Image.network(
+      //   'http://127.0.0.1:8000/clinic/view/${clinic.image}',
+      //   width: 80,
+      //   height: 80,
+      //   fit: BoxFit.cover,
+      //   errorBuilder: (context, error, stackTrace) {
+      //     return Container(
+      //       width: 80,
+      //       height: 80,
+      //       color: Colors.grey[300],
+      //       child: const Icon(Icons.local_hospital, color: Colors.white),
+      //     );
+      //   },
+      // ),
     );
   }
 

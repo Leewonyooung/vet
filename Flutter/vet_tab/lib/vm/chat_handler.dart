@@ -48,8 +48,8 @@ class ChatsHandler extends ClinicHandler {
   getAllData() async {
     await makeChatRoom();
     await queryLastChat();
-    await queryChat();
-    await getlastName();
+    // await queryChat();
+    // await getlastName();
     update();
   }
 
@@ -70,7 +70,7 @@ class ChatsHandler extends ClinicHandler {
 
   setcurrentClinicName(String id) async {
     var url =
-        Uri.parse('http://127.0.0.1:8000/clinic/select_clinic_name?name=$id');
+        Uri.parse('$server/clinic/select_clinic_name?name=$id');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     roomName.obs.value.add(dataConvertedJSON['results'][0].toString());
@@ -87,16 +87,16 @@ class ChatsHandler extends ClinicHandler {
     _rooms
         .doc(
             "${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
-        .collection('chats')
-        .orderBy('timestamp', descending: false)
-        .snapshots()
+           .snapshots()
         .listen(
-      (event) async {
-        chats.value = event.docs
-            .map(
-              (doc) => Chats.fromMap(doc.data(), doc.id),
-            )
+      (event) {
+        List<dynamic> messages = event.get('chats') ?? [];
+        List<Chats> mappedMessages = messages
+            .map((message) =>
+                Chats.fromMap(message as Map<String, dynamic>, event.id))
             .toList();
+        mappedMessages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+        chats.value = mappedMessages;
       },
     );
     update();
@@ -147,37 +147,46 @@ class ChatsHandler extends ClinicHandler {
     update();
   }
 
-  makeChatRoom() async {
-    _rooms
-        .where('clinic', isEqualTo: Get.find<LoginHandler>().box.read('id'))
-        .snapshots()
-        .listen((event) {
-      rooms.value = event.docs
-          .map(
-            (doc) => Chatroom(
-                clinic: doc.get('clinic'),
-                user: doc.get('user'),
-                image: doc.get('image')),
-          )
-          .toList();
-    });
-  }
+Future<void> makeChatRoom() async {
+  _rooms
+      .where('clinic', isEqualTo: Get.find<LoginHandler>().box.read('id'))
+      .snapshots()
+      .listen((event) async {
+    rooms.value = event.docs
+        .map((doc) => Chatroom(
+              clinic: doc.get('clinic'),
+              user: doc.get('user'),
+              image: doc.get('image'),
+            ))
+        .toList();
 
-  getlastName() async {
-    List idList = [];
-    for (int i = 0; i < result.length; i++) {
-      if (idList.contains(result[i]) == false) {
-        idList.add(result[i].user);
-      }
+    List<String> loadedRoomNames = []; // 로드된 이름 임시 저장
+    for (var doc in event.docs) {
+      String userName = await getlastName(doc.get('user')); // 비동기 호출
+      loadedRoomNames.add(userName);
     }
-    for (int i = 0; i < idList.length; i++) {
-      var url = Uri.parse(
-          'http://127.0.0.1:8000/user/get_user_name?id=${idList[i]}');
-      var response = await http.get(url);
+
+    roomName.value = loadedRoomNames; // 한 번에 roomName 업데이트
+  });
+}
+
+
+  Future<String> getlastName(String user) async {
+  try {
+    var url = Uri.parse('$server/user/get_user_name?id=$user');
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      roomName.obs.value.add(dataConvertedJSON['results'][0].toString());
+      return dataConvertedJSON['results'][0].toString();
+    } else {
+      throw Exception('Failed to load user name. Status code: ${response.statusCode}');
     }
+  } catch (e) {
+    print('Error in getlastName: $e');
+    return 'Unknown'; // 기본값
   }
+}
 
   isToday() async {
     bool istoday = true;
@@ -194,30 +203,31 @@ class ChatsHandler extends ClinicHandler {
         chat.text.substring(13, 17) == "time";
   }
 
+
   addChat(Chats chat) async {
     bool istoday = await isToday();
     if (!istoday) {
       await _rooms
-          .doc(
-              "${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
-          .collection('chats')
-          .add({
-        'reciever': chat.reciever,
-        'sender': chat.sender,
-        'text': "set${DateTime.now().toString().substring(0, 10)}time",
-        'timestamp': DateTime.now().toString(),
+          .doc("${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
+          .update({
+        'chats': FieldValue.arrayUnion([
+          {
+            'sender': chat.sender,
+            'text': "set${DateTime.now().toString().substring(0, 10)}time",
+            'timestamp': DateTime.now().toString()
+          }
+        ])
       });
     }
-
-    _rooms
-        .doc(
-            "${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}")
-        .collection('chats')
-        .add({
-      'reciever': chat.reciever,
-      'sender': chat.sender,
-      'text': chat.text,
-      'timestamp': DateTime.now().toString(),
+    _rooms.doc("${Get.find<LoginHandler>().box.read('id')}_${currentUserId.value}").update({
+      'chats': FieldValue.arrayUnion([
+        {
+          'sender': chat.sender,
+          'text': chat.text,
+          'timestamp': DateTime.now().toString()
+        }
+      ])
     });
   }
+
 }

@@ -10,6 +10,21 @@ class UserHandler extends LocationHandler {
   var mypageUserInfo = <UserData>[].obs; // mypage 화면 데이터
   String nameController = ""; // 유저 이름 수정 텍스트필드
 
+  @override
+  void onInit() async {
+    super.onInit();
+    await selectMyinfo(box.read('userEmail'));
+  }
+
+getMyName(String userid) async {
+    var url = 
+        Uri.parse('$server/mypage/select_mypage?id=$userid');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['result'];
+    return result[3];
+  }
+
 // 신정섭
 // 유저 정보 가져오는 쿼리 - mypage
   selectMyinfo(String userid) async {

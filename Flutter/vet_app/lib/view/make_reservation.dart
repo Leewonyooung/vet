@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/pet_register.dart';
@@ -147,18 +148,28 @@ class MakeReservation extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(15),
                   ),
-                  child: Image.network(
-                    imageUrl,
-                    height: 120,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(
-                        Icons.error,
-                        size: 120,
-                      );
-                    },
-                  ),
+                  child:
+                  CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    imageBuilder: (context, imageProvider) => CircleAvatar(
+                      radius: 20,
+                      backgroundImage: imageProvider,
+                    ),
+                    placeholder: (context, url) => const CircularProgressIndicator(), // 로딩 중 표시
+                    errorWidget: (context, url, error) => const Icon(Icons.error), // 오류 발생 시 표시
+                  ),  
+                  //  Image.network(
+                  //   imageUrl,
+                  //   height: 120,
+                  //   width: double.infinity,
+                  //   fit: BoxFit.cover,
+                  //   errorBuilder: (context, error, stackTrace) {
+                  //     return const Icon(
+                  //       Icons.error,
+                  //       size: 120,
+                  //     );
+                  //   },
+                  // ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),

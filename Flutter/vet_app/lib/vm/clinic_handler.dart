@@ -65,9 +65,6 @@ class ClinicHandler extends LoginHandler {
           phone: phone!,
           image: image!));
     }
-    for(int i = 0; i < returnData.length; i++){
-      print(returnData[i].image);
-    }
     clinicSearch.value = returnData;
   }
 

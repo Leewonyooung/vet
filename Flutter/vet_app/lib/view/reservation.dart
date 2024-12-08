@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:vet_app/view/make_reservation.dart';
 import 'package:vet_app/vm/pet_handler.dart';
@@ -86,23 +87,40 @@ class Reservation extends StatelessWidget {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      'http://127.0.1:8000/available/view/${clinic.image}',
-                                      width: 80,
-                                      height: 80,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              Container(
-                                        width: 80,
-                                        height: 80,
-                                        color: Colors.grey[300],
-                                        child: const Icon(
-                                          Icons.error,
-                                          color: Colors.red,
-                                        ),
+                                    child: 
+                                    CachedNetworkImage(
+                                      imageUrl: "http://127.0.1:8000/available/view/${clinic.image}",
+                                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                                        radius: 60,
+                                        backgroundImage: imageProvider, // 성공적으로 로드된 ImageProvider 설정
+                                      ),
+                                      placeholder: (context, url) => const CircleAvatar(
+                                        radius: 60,
+                                        child:  CircularProgressIndicator(), // 로딩 중 상태
+                                      ),
+                                      errorWidget: (context, url, error) => const CircleAvatar(
+                                        radius: 60,
+                                        child:  Icon(Icons.error), // 오류 발생 시
                                       ),
                                     ),
+                                    
+                                    // Image.network(
+                                    //   'http://127.0.1:8000/available/view/${clinic.image}',
+                                    //   width: 80,
+                                    //   height: 80,
+                                    //   fit: BoxFit.cover,
+                                    //   errorBuilder:
+                                    //       (context, error, stackTrace) =>
+                                    //           Container(
+                                    //     width: 80,
+                                    //     height: 80,
+                                    //     color: Colors.grey[300],
+                                    //     child: const Icon(
+                                    //       Icons.error,
+                                    //       color: Colors.red,
+                                    //     ),
+                                    //   ),
+                                    // ),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/pet.dart';
@@ -80,26 +81,41 @@ class PetInfo extends StatelessWidget {
     return SizedBox(
       height: 250,
       width: double.infinity,
-      child: Image.network(
-        '${updatedPet.image}',
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          // 이미지 로드 실패 시 에러 아이콘 + 메시지
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error,
-                  size: 150,
-                ),
-                SizedBox(height: 10),
-                Text('이미지를 불러올 수 없습니다'),
-              ],
-            ),
-          );
-        },
+      child: CachedNetworkImage(
+        imageUrl: "${updatedPet.image}",
+        imageBuilder: (context, imageProvider) => CircleAvatar(
+          radius: 60,
+          backgroundImage: imageProvider, // 성공적으로 로드된 ImageProvider 설정
+        ),
+        placeholder: (context, url) => const CircleAvatar(
+          radius: 60,
+          child:  CircularProgressIndicator(), // 로딩 중 상태
+        ),
+        errorWidget: (context, url, error) => const CircleAvatar(
+          radius: 60,
+          child:  Icon(Icons.error), // 오류 발생 시
+        ),
       ),
+      // Image.network(
+      //   '${updatedPet.image}',
+      //   fit: BoxFit.contain,
+      //   errorBuilder: (context, error, stackTrace) {
+      //     // 이미지 로드 실패 시 에러 아이콘 + 메시지
+      //     return const Center(
+      //       child: Column(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+      //           Icon(
+      //             Icons.error,
+      //             size: 150,
+      //           ),
+      //           SizedBox(height: 10),
+      //           Text('이미지를 불러올 수 없습니다'),
+      //         ],
+      //       ),
+      //     );
+      //   },
+      // ),
     );
   }
 
