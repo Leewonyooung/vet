@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:vet_app/vm/image_handler.dart';
 
+
 class LocationHandler extends ImageHandler {
   double currentlat = 0; // 현재 위치 lat
   double currentlng = 0; // 현재 위치  long
@@ -44,7 +45,7 @@ class LocationHandler extends ImageHandler {
   //1. 현위치를 주소 id 로 가져오기
   getCurrentPlaceID() async {
     var url = Uri.parse(
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=$currentlat,$currentlng&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=$currentlat,$currentlng&key=");
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -56,7 +57,7 @@ class LocationHandler extends ImageHandler {
   // 2.병원 주소id 가져오기
   getClinicPlaceId(double cliniclat, double cliniclng) async {
     var url = Uri.parse(
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=$cliniclat,$cliniclng&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=$cliniclat,$cliniclng&key=AIzaSyCWLtBsAqpr9bSEg5nOSjkqGUFuGVLGgDI");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     clinicPlaceID = dataConvertedJSON['results'][0]['formatted_address'];
@@ -66,7 +67,7 @@ class LocationHandler extends ImageHandler {
   createRoute() async {
     lines.clear();
     var url = Uri.parse(
-        "https://maps.googleapis.com/maps/api/directions/json?origin=$currentPlaceID&destination=$clinicPlaceID&mode=transit&language=ko&key=AIzaSyBqVdEJiq07t4uJ5ch7sk77xHK6yW0ljA0");
+        "https://maps.googleapis.com/maps/api/directions/json?origin=$currentPlaceID&destination=$clinicPlaceID&mode=transit&language=ko&key=AIzaSyCWLtBsAqpr9bSEg5nOSjkqGUFuGVLGgDI");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     polyline = polylinePoints.decodePolyline(
