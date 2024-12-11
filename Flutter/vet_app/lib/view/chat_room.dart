@@ -71,15 +71,6 @@ class ChatRoom extends StatelessWidget {
   }
 
  Widget _buildChatRoomItem(BuildContext context, Chatroom room, int index) {
-  String lastChatText =
-      vmHandler.lastChatsMap[room.clinic]?.text ?? '채팅이 없습니다.';
-  String lastChatTime = vmHandler.lastChatsMap[room.clinic]?.timestamp != null
-      ? DateTime.now().difference(
-                  DateTime.parse(vmHandler.lastChatsMap[room.clinic]!.timestamp)) <
-              const Duration(hours: 24)
-          ? vmHandler.lastChatsMap[room.clinic]!.timestamp.substring(11, 16)
-          : "${vmHandler.lastChatsMap[room.clinic]!.timestamp.substring(5, 7)}월 ${vmHandler.lastChatsMap[room.clinic]!.timestamp.substring(8, 10)}일"
-      : '';
   return GestureDetector(
   onTap: () async {
     await vmHandler.getClinicId(room.clinic); // 현재 클리닉 ID 설정

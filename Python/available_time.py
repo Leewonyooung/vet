@@ -5,33 +5,22 @@ Fixed:
 Usage: 
 """
 
-from fastapi import APIRouter, HTTPException, File, UploadFile
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
-import pymysql
 import os
 import hosts
-import router
 router = APIRouter()
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# MySQL 연결 함수
-def connect():
-    conn = pymysql.connect(
-        host=hosts.vet_academy,
-        user='root',
-        password='qwer1234',
-        charset='utf8',
-        db='veterinarian'
-    )
-    return conn
+
 
 # 예약 가능한 병원id, 이름, password, 경도, 위도, 주소, 이미지, 예약 시간 (예약된 리스트 빼고 나타냄)
 @router.get('/available_clinic')
 async def get_available_clinic(time:str):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     sql = """
@@ -67,8 +56,8 @@ async def get_file(file_name: str):
 # clinic_info, location에서 예약 버튼 활성화 관리
 @router.get("/can_reservation")
 async def can_reservation(time:str=None, clinic_id:str=None):
+    conn = hosts.connect()
     try:
-        conn = router.connect()
         curs = conn.cursor()
         sql = '''
             select 

@@ -6,24 +6,15 @@ Usage: Manage favorite
 """
 
 from fastapi import APIRouter, HTTPException 
-import pymysql
-import hosts, router
+import hosts
 router = APIRouter()
 
-def connection():
-    conn = pymysql.connect(
-        host=hosts.vet_academy,
-        user='root',
-        password='qwer1234',
-        charset='utf8',
-        db='veterinarian'
-    )
-    return conn
+
 
 # 사용자의 즐겨찾기 목록 불러오기
 @router.get('/favorite_clinics')
 async def get_favorite_clinics(user_id: str):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     sql = "SELECT * FROM favorite WHERE user_id = %s"
@@ -39,7 +30,7 @@ async def get_favorite_clinics(user_id: str):
 # 즐겨찾기 추가
 @router.post('/add_favorite')
 async def add_favorite(user_id: str, clinic_id: str):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     # 중복 확인
@@ -65,7 +56,7 @@ async def add_favorite(user_id: str, clinic_id: str):
 # 즐겨찾기 삭제
 @router.delete('/delete_favorite')
 async def delete_favorite(user_id: str, clinic_id: str):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     # 즐겨찾기 삭제
@@ -82,7 +73,7 @@ async def delete_favorite(user_id: str, clinic_id: str):
 # 즐겨찾기 여부 검사
 @router.get('/search_favorite_clinic')
 async def search_favorit_clinic(user_id:str, clinic_id:str):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     sql = 'select count(*) from favorite where user_id=%s and clinic_id=%s'

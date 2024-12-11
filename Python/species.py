@@ -6,24 +6,15 @@ Usage: Manage species types and categories
 """
 
 from fastapi import APIRouter, HTTPException
-import pymysql
-import hosts,router
+import hosts
 router = APIRouter()
 
-def connection():
-    conn = pymysql.connect(
-        host=hosts.vet_academy,
-        user='root',
-        password='qwer1234',
-        charset='utf8',
-        db='veterinarian'
-    )
-    return conn
+
 
 # 모든 종류 조회 API (GET)
 @router.get("/types")
 async def get_species_types():
-    conn = router.connect()
+    conn = hosts.connect()
     try:
         with conn.cursor() as cursor:
             sql = "SELECT DISTINCT type FROM species"
@@ -40,7 +31,7 @@ async def get_species_types():
 # 특정 종류의 세부 종류 조회 API (GET)
 @router.post("/categories")
 async def get_species_categories():
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
     try:
         sql = 'SELECT category FROM species'
@@ -58,7 +49,7 @@ async def get_species_categories():
 
 @router.get("/pet_categories")
 async def get_species_categories(type: str):
-    conn = router.connect()
+    conn = hosts.connect()
     try:
         with conn.cursor() as cursor:
             sql = "SELECT category FROM species WHERE type = %s"
@@ -77,7 +68,7 @@ async def get_species_categories(type: str):
 # 새로운 종류 추가 API 
 @router.get("/add")
 async def add_species(species_category: str):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
     try:
         sql ="INSERT INTO species (type, category) VALUES (%s, %s)"
@@ -95,7 +86,7 @@ async def add_species(species_category: str):
 # 종류 삭제 API (DELETE)
 @router.delete("/delete")
 async def delete_species(species_type: str, species_category: str):
-    conn = router.connect()
+    conn = hosts.connect()
     try:
         with conn.cursor() as cursor:
             sql = "DELETE FROM species WHERE type = %s AND category = %s"

@@ -132,35 +132,23 @@ class Favorite extends StatelessWidget {
   }
 
   // 병원 사진
-  _buildClinicImage(dynamic clinic) {
-    return ClipRRect(
+_buildClinicImage(dynamic clinic, {double width = 80, double height = 80}) {
+  return SizedBox(
+    width: width,
+    height: height,
+    child: ClipRRect(
       borderRadius: BorderRadius.circular(8),
-      child: 
-      CachedNetworkImage(
+      child: CachedNetworkImage(
         imageUrl: "${favoriteHandler.server}/clinic/view/${clinic.image}",
-        imageBuilder: (context, imageProvider) => CircleAvatar(
-          radius: 20,
-          backgroundImage: imageProvider,
-        ),
+        fit: BoxFit.cover, // 이미지가 지정된 크기에 맞게 조절
         placeholder: (context, url) => const CircularProgressIndicator(), // 로딩 중 표시
         errorWidget: (context, url, error) => const Icon(Icons.error), // 오류 발생 시 표시
-      ),   
-      // Image.network(
-      //   'http://127.0.0.1:8000/clinic/view/${clinic.image}',
-      //   width: 80,
-      //   height: 80,
-      //   fit: BoxFit.cover,
-      //   errorBuilder: (context, error, stackTrace) {
-      //     return Container(
-      //       width: 80,
-      //       height: 80,
-      //       color: Colors.grey[300],
-      //       child: const Icon(Icons.local_hospital, color: Colors.white),
-      //     );
-      //   },
-      // ),
-    );
-  }
+      ),
+    ),
+  );
+}
+
+
 
 // 즐겨찾기 삭제 확인
   _showDeleteConfirmation(String userId, String clinicId) {

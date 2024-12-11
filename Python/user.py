@@ -5,27 +5,17 @@ Fixed: 07/Oct/2024
 Usage: store user(include clinic) acoount information
 """
 
-from fastapi import APIRouter 
-import pymysql
-import hosts,router
+from fastapi import APIRouter
+import hosts
 
 router = APIRouter()
 
-def connect():
-    conn = pymysql.connect(
-        host=hosts.vet_academy,
-        user='root',
-        passwd='qwer1234',
-        db='veterinarian',
-        charset='utf8'
-    )
-    return conn
 
-    ## Check User account from db  (안창빈)
+## Check User account from db  (안창빈)
 
 @router.get("/selectuser")
 async def select(id: str=None):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     sql = "select id, password, image, name, phone from user where id=%s"
@@ -41,7 +31,7 @@ async def select(id: str=None):
 
 @router.get("/insertuser")
 async def insert(id: str=None, password: str=None, image: str=None, name: str=None, phone: str=None):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     try:
@@ -61,7 +51,7 @@ async def insert(id: str=None, password: str=None, image: str=None, name: str=No
 
 @router.get("/selectclinic")
 async def select(id: str=None, password: str=None):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     sql = "select id, password from clinic where id=%s and password=%s"
@@ -82,7 +72,7 @@ Usage: 채팅창 보여줄때 id > name
 async def get_user_name(id:str):
     # name= ['adfki125', 'adkljzci9786']
     try:
-        conn = router.connect()
+        conn = hosts.connect()
         curs = conn.cursor()
         sql = "select name from user where id = %s"
         curs.execute(sql,(id))

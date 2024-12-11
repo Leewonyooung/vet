@@ -6,26 +6,15 @@ Usage:
 """
 
 from fastapi import APIRouter
-import pymysql
-import hosts,router
+import hosts
 
 router = APIRouter()
 
 
-def connect():
-    conn = pymysql.connect(
-        host=hosts.vet_academy,
-        user='root',
-        password='qwer1234',
-        db='veterinarian',
-        charset='utf8'
-    )
-    return conn
-
 # 긴급예약에서 예약하기 눌렀을시 예약DB에 저장
 @router.get('/insert_reservation')
 async def insert_reservation(user_id: str, clinic_id: str, time: str, symptoms: str, pet_id: str):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     sql = "insert into reservation(user_id, clinic_id, time, symptoms, pet_id) values (%s, %s, %s, %s, %s)"
@@ -38,7 +27,7 @@ async def insert_reservation(user_id: str, clinic_id: str, time: str, symptoms: 
 # 예약내역 보여주는 리스트
 @router.get('/select_reservation')
 async def select_reservation(user_id: str):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     sql = 'select clinic.id, clinic.name, clinic.latitude, clinic.longitude, reservation.time, clinic.address from reservation , clinic where reservation.clinic_id = clinic.id and user_id = %s'
@@ -52,7 +41,7 @@ async def select_reservation(user_id: str):
 # 병원에서 보는 예약 현황 이종남
 @router.get('/select_reservation_clinic')
 async def select_reservation(clinic_id: str, time: str):
-    conn = router.connect()
+    conn = hosts.connect()
     curs = conn.cursor()
 
     sql = '''

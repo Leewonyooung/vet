@@ -115,12 +115,6 @@ class ChatsHandler extends LoginHandler {
       DateTime time1 = parseTime(startTime);
       DateTime time2 = parseTime(endTime);
 
-      if (time1 == null || time2 == null) {
-        status.value = false; // 기본 상태 설정
-        update();
-        return;
-      }
-
       // 시간 비교
       if (DateTime.now().isAfter(time1) && DateTime.now().isBefore(time2)) {
         status.value = true;

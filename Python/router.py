@@ -14,8 +14,8 @@ from profile import mypage_router as mypage_router
 from available_time import router as available_router
 from species import router as species_router 
 from reservation import router as reservation_router
-import pymysql
-import hosts
+from auth import router as auth_router
+
 
 app = FastAPI()
 app.include_router(clinic_router, prefix="/clinic", tags=["clinic"])
@@ -26,16 +26,8 @@ app.include_router(mypage_router, prefix="/mypage", tags=["mypage"])
 app.include_router(available_router, prefix="/available", tags=["available"])
 app.include_router(species_router, prefix="/species", tags=["species"])
 app.include_router(reservation_router, prefix="/reservation", tags=["reservation"])
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
 
-def connect():
-    conn = pymysql.connect(
-        host=hosts.vet_academy,
-        user = "root",
-        password = "wy12wy10",
-        db = "vetenerian",
-        charset= 'utf8'
-    )
-    return conn
 
 
 if __name__ == "__main__":

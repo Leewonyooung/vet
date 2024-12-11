@@ -17,10 +17,11 @@ import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
+import 'package:vet_app/vm/token_access.dart';
 
 class Navigation extends StatelessWidget {
   Navigation({super.key});
-
+  final TokenAccess token = Get.put(TokenAccess());
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
   final LoginHandler loginHandler = Get.put(LoginHandler(), permanent: true);
@@ -139,15 +140,25 @@ class Navigation extends StatelessWidget {
         color: Colors.green.shade100,
         borderRadius: BorderRadius.circular(15),
       ),
-      child: const Center(
-        child: Text(
-          '전문가 상담\n우리집 강아지 고민\n지금 무료 상담 받으세요!',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
+      child: Center(
+        child: Column(
+          children: [
+            const Text(
+              '전문가 상담\n우리집 강아지 고민\n지금 무료 상담 받으세요!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                print(loginHandler.box.read('jwtToken'));
+              }, 
+              child: const Text('jwt')
+            )
+          ],
         ),
       ),
     );

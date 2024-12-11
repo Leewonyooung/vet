@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vet_app/model/userdata.dart';
@@ -10,6 +11,8 @@ import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/user_handler.dart';
 
 class LoginHandler extends UserHandler {
+  @override
+  // final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
   var isObscured = true.obs;
@@ -47,61 +50,104 @@ class LoginHandler extends UserHandler {
         .add(UserData(id: id, password: password, image: image, name: name));
   }
 
-  // Google Sign in pop up (안창빈)
-  signInWithGoogle() async {
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
-    // to prevent the error whitch when user return to the login page without signing in (안창빈)
+// Google Sign in pop up (안창빈)
+Future<UserCredential?> signInWithGoogle() async {
+  try {
+    // Google Sign-In
+    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
     if (gUser == null) {
-      return null;
+      return null; // 사용자가 로그인 취소 시 처리
     }
 
-    // Obtain the auth details from the request (안창빈)
     final GoogleSignInAuthentication googleAuth = await gUser.authentication;
-
     userEmail = gUser.email;
     userName = gUser.displayName!;
     box.write('userEmail', userEmail);
     box.write('userName', userName);
-
-    // check whether the account is registered (안창빈)
-    bool isUserRegistered = await userloginCheckDatabase(userEmail);
-
-    // if the account is trying to login on the first time add the google account information to the mySQL DB (안창빈)
-    if (!isUserRegistered) {
-      userloginInsertData(userEmail, userName);
-    }
-
-    // firbase Create a new credential (안창빈)
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
-    // Sign in to Firebase with the Google credentials (안창빈)
+    // Firebase 로그인
     final UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    // Navigate to Navigation page after successful sign-in (안창빈)
-    Get.to(() => Navigation());
-    await Get.find<ChatsHandler>().getAllData();
-    // 로그인 성공 후 반려동물 정보 불러오기
-    await Get.find<PetHandler>().fetchPets(getStoredEmail());
-
-    // print(userCredential);
-    // Return the UserCredential after successful sign-in (안창빈)
-    return userCredential;
-  }
-
-  // check whether the account is registered (안창빈)
-  userloginCheckDatabase(String email) async {
-    userloginCheckJSONData(email);
-    if (data.isEmpty) {
-      return false;
-    } else {
-      return true;
+    // Firebase ID 토큰 가져오기
+    final String? idToken = await userCredential.user!.getIdToken();
+    if (idToken == null) {
+      print("Firebase ID Token is null.");
+      return null;
     }
+
+    // 서버로 Firebase ID 토큰 전송 및 사용자 인증
+    final jwtTokens = await _authenticateWithServer(idToken);
+
+    if (jwtTokens != null) {
+      try {
+        // JWT 및 Refresh Token 저장
+        await secureStorage.write(key: 'accessToken', value: jwtTokens['accessToken']);
+        await secureStorage.write(key: 'refreshToken', value: jwtTokens['refreshToken']);
+        print("Tokens saved successfully.");
+      } catch (e) {
+        print("Error saving tokens: $e");
+        return null;
+      }
+
+      // 이후 페이지 이동 및 데이터 초기화
+      Get.to(() => Navigation());
+      await Get.find<ChatsHandler>().getAllData();
+      await Get.find<PetHandler>().fetchPets(userEmail);
+    } else {
+      print("JWT tokens are null.");
+    }
+
+    return userCredential;
+  } catch (e) {
+    print("Google Sign-In Error: $e");
+    return null;
   }
+}
+
+// 서버와 Firebase ID 토큰 인증
+Future<Map<String, String>?> _authenticateWithServer(String idToken) async {
+  String serverUrl = "$server/auth/auth/firebase"; // FastAPI 서버 URL
+
+  try {
+    final response = await http.post(
+      Uri.parse(serverUrl),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({"id_token": idToken}),
+    );
+
+    // 서버 응답 디버깅
+    print("Server Response: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+
+      // 응답 데이터 유효성 검사
+      if (responseData.containsKey('access_token') && responseData.containsKey('refresh_token')) {
+        return {
+          'accessToken': responseData['access_token'],
+          'refreshToken': responseData['refresh_token'],
+        };
+      } else {
+        print("Invalid server response: ${response.body}");
+        return null;
+      }
+    } else {
+      print("Server Authentication Failed: ${response.body}");
+      return null;
+    }
+  } catch (e) {
+    print("Error connecting to server: $e");
+    return null;
+  }
+}
+
+
 
 // query inserted google email from db to differentiate whether email is registered or not
   userloginCheckJSONData(email) async {

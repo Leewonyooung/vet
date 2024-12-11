@@ -1,14 +1,17 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/view/myinfo_update.dart';
 import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/login_handler.dart';
+import 'package:vet_app/vm/token_access.dart';
 
 class Mypage extends StatelessWidget {
   Mypage({super.key});
   final LoginHandler loginHandler = Get.find();
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +30,7 @@ class Mypage extends StatelessWidget {
           ? GetBuilder<LoginHandler>(builder: (_) {
               return FutureBuilder(
                 future:
-                    loginHandler.selectMyinfo(loginHandler.getStoredEmail()),
+                    loginHandler.selectMyinfo(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -66,46 +69,67 @@ class Mypage extends StatelessWidget {
     );
   }
 
-  _buildProfileSection(BuildContext context, List result) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      color: Colors.green.shade50,
-      child: Center(
-        child: Column(
-          children: [
-          CircleAvatar(
-            radius: 60,
-            backgroundImage: null, // 기본 이미지로 null을 설정하고, CachedNetworkImage를 아래에서 처리
-            child: CachedNetworkImage(
-              imageUrl: "${loginHandler.server}/mypage/view/${result[0].image}",
-              imageBuilder: (context, imageProvider) => CircleAvatar(
-                radius: 60,
-                backgroundImage: imageProvider, // 성공적으로 로드된 ImageProvider 설정
-              ),
-              placeholder: (context, url) => const CircleAvatar(
-                radius: 60,
-                child:  CircularProgressIndicator(), // 로딩 중 상태
-              ),
-              errorWidget: (context, url, error) => const CircleAvatar(
-                radius: 60,
-                child:  Icon(Icons.error), // 오류 발생 시
-              ),
+_buildProfileSection(BuildContext context, List result) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 20),
+    color: Colors.green.shade50,
+    child: Center(
+      child: Column(
+        children: [
+          FutureBuilder<String?>(
+            future: loginHandler.fetchAccessToken(), // 비동기적으로 토큰 가져오기
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                // 로딩 중 상태
+                return const CircleAvatar(
+                  radius: 60,
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+                // 오류 발생 시
+                return const CircleAvatar(
+                  radius: 60,
+                  child: Icon(Icons.error),
+                );
+              }
+
+              final accessToken = snapshot.data;
+
+              return CachedNetworkImage(
+                imageUrl: "${loginHandler.server}/mypage/view/${result[0].image}",
+                httpHeaders: {
+                  'Authorization': 'Bearer $accessToken', // 가져온 토큰 설정
+                },
+                imageBuilder: (context, imageProvider) => CircleAvatar(
+                  radius: 60,
+                  backgroundImage: imageProvider,
+                ),
+                placeholder: (context, url) => const CircleAvatar(
+                  radius: 60,
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) => const CircleAvatar(
+                  radius: 60,
+                  child: Icon(Icons.error),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 16),
+          Text(
+            result[0].name,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
-
-            const SizedBox(height: 16),
-            Text(
-              result[0].name,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
+
 
   _buildInfoSection(List result) {
     return Container(
@@ -183,7 +207,7 @@ class Mypage extends StatelessWidget {
             onPressed: () {
               Get.to(MyinfoUpdate(), arguments: result[0].id)!.then(
                 (value) =>
-                    loginHandler.selectMyinfo(loginHandler.getStoredEmail()),
+                    loginHandler.selectMyinfo(),
               );
             },
             color: Colors.green,

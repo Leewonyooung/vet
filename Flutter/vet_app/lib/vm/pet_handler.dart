@@ -39,11 +39,11 @@ class PetHandler extends SpeciesHandler {
 
   // 유저 ID를 기반으로 반려동물 정보 가져오기
   fetchPets(String userId) async {
-    var url = Uri.parse(
-        '$server/pet/pets?user_id=${box.read('userEmail')}');
+    // var url = await Uri.parse(
+    //     '$server/pet/pets?user_id=${box.read('userEmail')}');
     try {
-      var response = await http.get(url);
-
+      final response = await makeAuthenticatedRequest('$server/pet/pets?user_id=${box.read('userEmail')}');
+      // var response = await http.get(url);
       if (response.statusCode == 200) {
         var data = json.decode(utf8.decode(response.bodyBytes));
         pets.value = (data as List).map((petJson) {

@@ -30,7 +30,7 @@ class MyinfoUpdate extends StatelessWidget {
       body: GetBuilder<LoginHandler>(
         builder: (_) {
           return FutureBuilder(
-            future: loginHandler.selectMyinfo(value),
+            future: loginHandler.selectMyinfo(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -74,11 +74,11 @@ class MyinfoUpdate extends StatelessWidget {
            CircleAvatar(
             radius: 80,
             backgroundImage: userHandler.imageFile == null
-                ? NetworkImage("http://127.0.0.1:8000/mypage/view/${result.image}") 
+                ? NetworkImage("${userHandler.server}/mypage/view/${result.image}") 
                 : FileImage(File(userHandler.imageFile!.path)) as ImageProvider,
             child: userHandler.imageFile == null
                 ? CachedNetworkImage(
-                    imageUrl: "http://127.0.0.1:8000/mypage/view/${result.image}",
+                    imageUrl: "${userHandler.server}/mypage/view/${result.image}",
                     placeholder: (context, url) => const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => const Icon(Icons.error),
                   )

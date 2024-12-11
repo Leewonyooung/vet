@@ -32,8 +32,9 @@ class ClinicHandler extends LoginHandler {
 
   // 병원 전체 목록
   getAllClinic() async {
-    var url = Uri.parse('$server/clinic/select_clinic');
-    var response = await http.get(url);
+    // var url = Uri.parse('$server/clinic/select_clinic');
+    // var response = await http.get(url);
+    var response = await makeAuthenticatedRequest('$server/clinic/select_clinic');
     clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List results = dataConvertedJSON['results'];
@@ -70,10 +71,12 @@ class ClinicHandler extends LoginHandler {
 
 //  // 병원 상세 정보
   getClinicDetail() async {
-    var url = Uri.parse(
-        '$server/clinic/detail_clinic?id=$currentIndex');
-    var response = await http.get(url);
+    // var url = Uri.parse(
+    //     '$server/clinic/detail_clinic?id=$currentIndex');
+    // var response = await http.get(url);
+    var response = await makeAuthenticatedRequest('$server/clinic/detail_clinic?id=$currentIndex');
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    print(dataConvertedJSON);
     List results = dataConvertedJSON['results'][0];
     List<Clinic> returnData = [];
 
