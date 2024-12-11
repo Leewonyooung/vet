@@ -1,6 +1,5 @@
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class SpeciesHandler extends LoginHandler {
@@ -17,9 +16,8 @@ class SpeciesHandler extends LoginHandler {
   }
 
   loadSpeciesTypes() async {
-    var url = Uri.parse('$server/species/types');
     try {
-      var response = await http.get(url);
+      var response = await makeAuthenticatedRequest('$server/species/types');
       if (response.statusCode == 200) {
         var data = json.decode(utf8.decode(response.bodyBytes));
         speciesTypes.value = List<String>.from(data);
@@ -32,10 +30,8 @@ class SpeciesHandler extends LoginHandler {
   }
 
   loadSpeciesCategories(String speciesType) async {
-    var url = Uri.parse(
-        '$server/species/pet_categories?type=$speciesType');
     try {
-      var response = await http.get(url);
+      var response = await makeAuthenticatedRequest('$server/species/pet_categories?type=$speciesType');
       if (response.statusCode == 200) {
         var data = json.decode(utf8.decode(response.bodyBytes));
         speciesCategories.value = List<String>.from(data);
@@ -45,7 +41,6 @@ class SpeciesHandler extends LoginHandler {
     } catch (e) {
       return false;
     }
-    // selectedSpeciesCategory.value = null;
   }
 
   setSpeciesType(String? type) {

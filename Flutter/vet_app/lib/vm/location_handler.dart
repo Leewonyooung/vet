@@ -45,7 +45,7 @@ class LocationHandler extends ImageHandler {
   //1. 현위치를 주소 id 로 가져오기
   getCurrentPlaceID() async {
     var url = Uri.parse(
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=$currentlat,$currentlng&key=");
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=$currentlat,$currentlng&key=AIzaSyCWLtBsAqpr9bSEg5nOSjkqGUFuGVLGgDI");
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));

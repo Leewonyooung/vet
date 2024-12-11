@@ -14,7 +14,6 @@ class MyinfoUpdate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var value = Get.arguments;
     return Scaffold(
       appBar: AppBar(
         title: const Text(

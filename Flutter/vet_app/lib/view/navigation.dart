@@ -90,9 +90,12 @@ class Navigation extends StatelessWidget {
                   Icons.favorite,
                   color: Colors.white,
                 ),
-                onPressed: () {
+                onPressed: () async{
+
                   if (loginHandler.isLoggedIn()) {
+                    await favoriteHandler.getFavoriteClinics(loginHandler.box.read('userEmail'));
                     Get.to(() => Favorite());
+                    
                   } else {
                     Get.to(() => Login());
                   }
@@ -140,10 +143,11 @@ class Navigation extends StatelessWidget {
         color: Colors.green.shade100,
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Center(
+      child: const Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               '전문가 상담\n우리집 강아지 고민\n지금 무료 상담 받으세요!',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -152,12 +156,6 @@ class Navigation extends StatelessWidget {
                 fontSize: 18,
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                print(loginHandler.box.read('jwtToken'));
-              }, 
-              child: const Text('jwt')
-            )
           ],
         ),
       ),

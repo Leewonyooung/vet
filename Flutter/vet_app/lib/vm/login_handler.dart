@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vet_app/model/userdata.dart';
@@ -11,8 +10,6 @@ import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/user_handler.dart';
 
 class LoginHandler extends UserHandler {
-  @override
-  // final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
   var isObscured = true.obs;
@@ -22,6 +19,8 @@ class LoginHandler extends UserHandler {
   
   // 로그인 상태 확인
   isLoggedIn() {
+    print(FirebaseAuth.instance.currentUser);
+    print(getStoredEmail());
     return FirebaseAuth.instance.currentUser != null &&
         getStoredEmail().isNotEmpty;
   }

@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:vet_app/view/login.dart';
+import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/token_access.dart';
 
 class Myapi extends TokenAccess {
@@ -13,6 +16,7 @@ class Myapi extends TokenAccess {
       final tokenRefreshed = await refreshAccessToken();
       if (!tokenRefreshed) {
         // throw Exception("Failed to refresh access token");
+        Get.find<LoginHandler>().box.write('userEmail', '');
       }
       accessToken = await getAccessToken();
     }
@@ -37,7 +41,8 @@ class Myapi extends TokenAccess {
           accessToken = await getAccessToken();
           return await makeAuthenticatedRequest(url, method: method, body: body);
         } else {
-          throw Exception("Failed to refresh access token");
+          Get.find<LoginHandler>().box.write('userEmail', '');
+          // throw Exception("Failed to refresh access token");
         }
       }
 

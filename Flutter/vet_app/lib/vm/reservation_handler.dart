@@ -4,7 +4,6 @@ import 'package:vet_app/model/available_clinic.dart';
 import 'package:vet_app/model/reservation.dart';
 import 'package:vet_app/model/search_reservation.dart';
 import 'package:vet_app/vm/clinic_handler.dart';
-import 'package:http/http.dart' as http;
 import 'package:vet_app/vm/login_handler.dart';
 
 class ReservationHandler extends ClinicHandler {
@@ -24,11 +23,11 @@ class ReservationHandler extends ClinicHandler {
 
   // 예약된 리스트
   getReservation(String userId) async {
-    // var url = Uri.parse(
-    //     '$server/reservation/select_reservation?user_id=$userId'); //미완성
-    // var response = await http.get(url);
     var response = await makeAuthenticatedRequest('$server/reservation/select_reservation?user_id=$userId');
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    if(dataConvertedJSON['results'] == null){
+      return;
+    }
     List results = dataConvertedJSON['results'];
     List<SearchReservations> returnData = [];
     for (int i = 0; i < results.length; i++) {
@@ -46,9 +45,6 @@ class ReservationHandler extends ClinicHandler {
   // make_reservation에서 사용할 예약 insert
   makeReservation(String userId, String clinicId, String time, String symptoms,
       String petId) async {
-    // var url = Uri.parse(
-    //     '$server/reservation/insert_reservation?user_id=$userId&clinic_id=$clinicId&time=$time&symptoms=$symptoms&pet_id=$petId');
-    // var response = await http.get(url);
     var response = await makeAuthenticatedRequest( '$server/reservation/insert_reservation?user_id=$userId&clinic_id=$clinicId&time=$time&symptoms=$symptoms&pet_id=$petId');
     var dataCovertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var results = dataCovertedJSON['results'];
@@ -74,9 +70,6 @@ class ReservationHandler extends ClinicHandler {
   // 메인화면에서 긴급예약 눌렀을때 보여주는 리스트
   getQuickReservation() async {
     await adjustedTime();
-    // var url = Uri.parse(
-    //     '$server/available/available_clinic?time=$reservationTime'); // 미완성
-    // var response = await http.get(url);
     var response = await makeAuthenticatedRequest('$server/available/available_clinic?time=$reservationTime');
     clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -129,9 +122,6 @@ class ReservationHandler extends ClinicHandler {
   reservationButtonMgt(String clinicid) async {
     await adjustedTime();
     canReservationClinic.clear();
-    // var url = Uri.parse(
-    //     '$server/available/can_reservation?time=$reservationTime&clinic_id=$clinicid');
-    // var response = await http.get(url);
     var response = await makeAuthenticatedRequest('$server/available/can_reservation?time=$reservationTime&clinic_id=$clinicid');
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];
