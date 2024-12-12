@@ -111,7 +111,7 @@ Future<UserCredential?> signInWithGoogle() async {
 
 // 서버와 Firebase ID 토큰 인증
 Future<Map<String, String>?> _authenticateWithServer(String idToken) async {
-  String serverUrl = "$server/auth/auth/firebase"; // FastAPI 서버 URL
+  String serverUrl = "$server/auth/firebase"; // FastAPI 서버 URL
 
   try {
     final response = await http.post(
