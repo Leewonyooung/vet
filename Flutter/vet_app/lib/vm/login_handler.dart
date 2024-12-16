@@ -8,20 +8,107 @@ import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/user_handler.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginHandler extends UserHandler {
   var userdata = <UserData>[].obs;
   var savedData = <UserData>[].obs;
   var isObscured = true.obs;
+
   List data = [];
   String userEmail = '';
   String userName = '';
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  // Get user email
+  String getUserEmail() => _firebaseAuth.currentUser?.email ?? "User";
   
-  // 로그인 상태 확인
+  // apple login - 안창빈 14/dec/2024
+  Future<UserCredential?> signInWithApple() async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      String? email = appleCredential.email;
+      String userIdentifier = appleCredential.userIdentifier ?? ""; 
+      print('Apple Email: $email');
+      print('Apple User Identifier: $userIdentifier');
+
+      final oAuthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      // Sign in with Firebase
+      final userCredential = await _firebaseAuth.signInWithCredential(oAuthCredential);
+
+      // Firebase ID Token
+      final String? idToken = await userCredential.user?.getIdToken();
+      if (idToken == null) {
+        return null;
+      }
+      
+      final jwtTokens = await _authenticateAppleWithServer(idToken, userIdentifier, email);
+
+      if (jwtTokens != null) {
+        try {
+          await secureStorage.write(key: 'accessToken', value: jwtTokens['accessToken']);
+          await secureStorage.write(key: 'refreshToken', value: jwtTokens['refreshToken']);
+          print("Tokens saved successfully.");
+        } catch (e) {
+          print("Error saving tokens: $e");
+          return null;
+        }
+
+        Get.to(() => Navigation());
+        await Get.find<ChatsHandler>().getAllData();
+        await Get.find<PetHandler>().fetchPets(email ?? ""); 
+      } else {
+        print("JWT tokens are null.");
+      }
+
+      return userCredential;
+    } catch (e) {
+      print("Error during Sign in with Apple: $e");
+      return null;
+    }
+  }
+
+  Future<Map<String, String>?> _authenticateAppleWithServer(
+      String idToken, String userIdentifier, String? email) async {
+    String serverUrl = "$server/auth/apple"; 
+
+  try {
+    final response = await http.post(
+      Uri.parse(serverUrl),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({
+        "id_token": idToken,
+        "user_identifier": userIdentifier,
+        "email": email,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print("Authentication successful: ${response.body}");
+    } else {
+      print("Authentication failed: ${response.body}");
+    }
+  } catch (e) {
+    print("Error: $e");
+  }
+}
+
+
+  // gooelg login로그인 상태 확인
   isLoggedIn() {
-    print(FirebaseAuth.instance.currentUser);
+    print(_firebaseAuth.currentUser);
     print(getStoredEmail());
-    return FirebaseAuth.instance.currentUser != null &&
+    return _firebaseAuth.currentUser != null &&
         getStoredEmail().isNotEmpty;
   }
 
@@ -172,7 +259,7 @@ Future<Map<String, String>?> _authenticateWithServer(String idToken) async {
 
   // 로그아웃 및 비우기
   signOut() async {
-    await FirebaseAuth.instance.signOut();
+    await _firebaseAuth.signOut();
     await GoogleSignIn().signOut();
     box.write('userEmail', "");
     Get.find<PetHandler>().clearPet();

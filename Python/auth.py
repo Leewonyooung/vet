@@ -14,7 +14,7 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 import hosts
-
+from flask import Flask, request, jsonify
 
 router = APIRouter()
 
@@ -119,3 +119,21 @@ async def refresh_token(request: RefreshTokenRequest):
     # 새 accessToken 발급
     new_access_token = create_access_token(data={"id": user_id})
     return {"access_token": new_access_token, "token_type": "bearer"}
+
+
+
+@router.post('/auth/apple')
+def apple_auth():
+    data = request.json
+    id_token = data.get('id_token')
+    user_identifier = data.get('user_identifier')
+    email = data.get('email')
+
+    if not id_token or not user_identifier:
+        return {"detail": "Missing required fields"}, 400
+
+    # Simulate success
+    return {
+        "access_token": "test_access_token",
+        "refresh_token": "test_refresh_token"
+    }, 200

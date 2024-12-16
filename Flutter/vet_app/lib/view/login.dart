@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:vet_app/vm/login_handler.dart';
 
 class Login extends StatelessWidget {
@@ -21,6 +22,11 @@ class Login extends StatelessWidget {
                 await LoginHandler().signInWithGoogle();
               },
               child: Image.asset('images/web_light_rd_SI@1x.png'),
+            ),
+            SignInWithAppleButton(
+              onPressed: () async {
+                await LoginHandler().signInWithApple();
+              },
             ),
           ],
         ),

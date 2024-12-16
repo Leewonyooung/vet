@@ -84,6 +84,10 @@ dependencies:
   # 로그인 토큰 저장을 위한 Upgrade(Get_storage)
   flutter_secure_storage: ^9.2.2
 
+  # apple login
+
+  sign_in_with_apple: ^6.1.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
