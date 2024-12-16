@@ -1,10 +1,6 @@
 # 멍스파인더
 
 
-## EER
-<img width="1083" alt="mysql_EER" src="https://github.com/user-attachments/assets/50eea10b-75c9-44f9-856b-beb5e81e48a1">
-<img width="1269" alt="chat_EER" src="https://github.com/user-attachments/assets/943ea205-2f4a-4658-8e7e-19c528a78efb">
-
 ## ⚙ Organization
 
 |    역할   |           Name           | 
@@ -14,6 +10,15 @@
 |    팀원   | <center> 안창빈  </center> | 
 |    팀원   | <center> 이종남  </center> | 
 |    팀원   | <center> 정정영  </center> |
+
+
+## 시스템 구조
+<img width="1083" alt="mysql_EER" src="https://github.com/user-attachments/assets/ce4d20f6-7195-4307-9459-74137850c2ac">
+
+
+## EER
+<img width="1083" alt="mysql_EER" src="https://github.com/user-attachments/assets/50eea10b-75c9-44f9-856b-beb5e81e48a1">
+<img width="1269" alt="chat_EER" src="https://github.com/user-attachments/assets/943ea205-2f4a-4658-8e7e-19c528a78efb">
 
 
 ## 디자인 패턴(MVVM)
@@ -70,6 +75,12 @@
 
   # Date Format
   intl: ^0.19.0
+
+  # 이미지 캐싱을 지원해주는 패키지
+  cached_network_image: ^3.4.1
+
+  # 로그인 토큰 저장을 위한 Upgrade(Get_storage)
+  flutter_secure_storage: ^9.2.2
 ```
 
 
@@ -82,7 +93,9 @@
 
 
 ### 데모 시연
-
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=9ZcVRowjb1A
+" target="_blank"><img src="http://img.youtube.com/vi/9ZcVRowjb1A/0.jpg" 
+alt="IMAGE ALT TEXT HERE" width="720" height="480" border="10" /></a>
 
 
 ## Progress
@@ -126,14 +139,26 @@
   최종 코드 확인 및 코드 리뷰
   발표 준비 및 document 작업
 
+  10.17(완료) ~ 현재
+
+  앱스토어 배포를 위해 로컬서버에서 Cloud로 서버 이관
+  이미지 로딩 속도 개선을 위한 CachedNetworkImage 패키지 사용 및 Redis 서버 추가 및 연동
+  Firebase 로그인 + JWT토큰 연동을 통한 사용자 유효성 확인 로직 추가
+  
 
 ## Contribution
 
   요약
-  - ..
- 
+  - 현재 시간을 기준으로 30분 혹은 1시간 이내로 예약 가능한 동물병원들을 리스트 뷰로 보여주고 리스트타일을 클릭하면 병원의 정보를 보여주고
+    현재 위치정보를 기반으로 구글맵 API를 통해 길찾기 기능을 제공, 사용자 별로 반려동물을 등록 가능하며 예약하려는 병원과 채팅을 통해
+    간단한 상담 또는 일정 조율을 할 수 있습니다.
+
+ 백엔드
+  서버
+  -  이원영: AWS S3, Redis, CloudType 연동
+    
   Python
-  -  이원영 : 라우터 설계
+  -  이원영 : 라우터 설계, 
   -  신정섭 : //
   -  안창빈 : //
   -  이종남 : //
