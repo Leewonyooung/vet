@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vet_app/model/userdata.dart';
 import 'package:http/http.dart' as http;
+import 'package:vet_app/view/login.dart';
 import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
@@ -245,12 +246,32 @@ class LoginHandler extends UserHandler {
   }
 
   // 로그아웃 및 비우기
-  signOut() async {
+signOut() async {
+  try {
+    // Firebase 로그아웃
     await _firebaseAuth.signOut();
+
+    // Google 로그아웃
     await GoogleSignIn().signOut();
+
+
+    // 로컬 저장소 데이터 삭제
     box.write('userEmail', "");
+    box.write('userName', "");
+    box.write('saved', "");
+    box.write('savedName', "");
+
+    // 앱 내부 상태 초기화
     Get.find<PetHandler>().clearPet();
     Get.find<ChatsHandler>().chatsClear();
     update();
+
+    // 로그아웃 확인
+    Get.offAll(() => Login()); // 로그인 페이지로 이동
+  } catch (e) {
+    throw Exception("Failed to sign out");
   }
+}
+
+
 }

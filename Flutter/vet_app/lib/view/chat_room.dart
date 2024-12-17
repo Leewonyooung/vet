@@ -16,7 +16,7 @@ import 'package:vet_app/vm/chat_handler.dart';
 class ChatRoom extends StatelessWidget {
   ChatRoom({super.key});
 
-  final ChatsHandler vmHandler = Get.put(ChatsHandler());
+  final ChatsHandler vmHandler = Get.find();
 
   @override
    Widget build(BuildContext context) {
