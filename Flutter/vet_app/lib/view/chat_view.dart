@@ -101,7 +101,11 @@ class ChatView extends StatelessWidget {
             itemCount: vmHandler.chats.length,
             itemBuilder: (context, index) {
               Chats chat = vmHandler.chats[index];
-              return _buildChatItem(context, chat);
+              if (vmHandler.chats.isEmpty){
+                return const Center(child: Text('채팅이 없습니다.'),);
+              }else{
+                return _buildChatItem(context, chat);
+              }
             },
           ),
         ),

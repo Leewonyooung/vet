@@ -148,7 +148,7 @@ class ChatsHandler extends LoginHandler {
         Uri.parse('$server/clinic/get_clinic_name?name=$name');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    currentClinicId.value = dataConvertedJSON['results'][0][0];
+    currentClinicId.value = dataConvertedJSON['results'][0];
     update();
   }
 

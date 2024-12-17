@@ -4,7 +4,6 @@ import 'package:vet_app/model/available_clinic.dart';
 import 'package:vet_app/model/reservation.dart';
 import 'package:vet_app/model/search_reservation.dart';
 import 'package:vet_app/vm/clinic_handler.dart';
-import 'package:vet_app/vm/login_handler.dart';
 
 class ReservationHandler extends ClinicHandler {
   final reservations = <Reservation>[].obs; // 예약하기
@@ -15,11 +14,11 @@ class ReservationHandler extends ClinicHandler {
       <AvailableClinic>[].obs; //정섭 = 병원 상세정보에서 예약으로 데이터 넘기기 위한 리스트
   var resButtonValue = false.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    getReservation(Get.find<LoginHandler>().box.read('userEmail'));
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   getReservation(Get.find<LoginHandler>().box.read('userEmail'));
+  // }
 
   // 예약된 리스트
   getReservation(String userId) async {

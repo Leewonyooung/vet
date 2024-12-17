@@ -11,6 +11,7 @@ class ClinicSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    vmHandler.getAllClinic();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,

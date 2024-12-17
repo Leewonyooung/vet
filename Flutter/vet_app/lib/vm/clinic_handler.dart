@@ -13,11 +13,6 @@ class ClinicHandler extends LoginHandler {
   var workColor = Colors.red.obs;
   RxString currentIndex = ''.obs;
 
-  @override
-  void onInit() async {
-    super.onInit();
-    await getAllClinic();
-  }
 
   @override
   void onClose() async {

@@ -32,7 +32,6 @@ class LoginHandler extends UserHandler {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
-
       final identityToken = appleCredential.identityToken;
       final userIdentifier = appleCredential.userIdentifier;
 
@@ -48,27 +47,20 @@ class LoginHandler extends UserHandler {
         box.write('userName', userName);
         box.write('savedName', userName);
         box.write('saved', email);
-        // DB에 사용자 정보 저장
         await userloginInsertData(email, userName);
       } else {
-        // 두 번째 로그인: 저장된 정보 사용
         box.write('userEmail', box.read('saved'));
         box.write('userName', box.read('savedName'));
         userName = box.read('userName');
-
-        if (email == null) {
-          throw Exception('No stored email or name for returning user.');
-        }
       }
 
-      // API 서버에 Apple Token 전송
       final response = await http.post(
         Uri.parse("$server/auth/apple"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'identity_token': identityToken,
           'user_identifier': userIdentifier,
-          'email': email, // 서버로 저장된 이메일 전송
+          'email': box.read('userEmail'), // 서버로 저장된 이메일 전송
         }),
       );
 
@@ -91,7 +83,7 @@ class LoginHandler extends UserHandler {
 
         Get.to(() => Navigation());
         await Get.find<ChatsHandler>().getAllData();
-        await Get.find<PetHandler>().fetchPets(email);
+        await Get.find<PetHandler>().fetchPets(box.read('userEmail'));
       }
     } catch (e) {
       return 'Error during Apple Sign-In: $e';
@@ -151,6 +143,7 @@ class LoginHandler extends UserHandler {
       userName = gUser.displayName!;
       box.write('userEmail', userEmail);
       box.write('userName', userName);
+      
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -258,8 +251,6 @@ signOut() async {
     // 로컬 저장소 데이터 삭제
     box.write('userEmail', "");
     box.write('userName', "");
-    box.write('saved', "");
-    box.write('savedName', "");
 
     // 앱 내부 상태 초기화
     Get.find<PetHandler>().clearPet();

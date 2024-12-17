@@ -9,11 +9,11 @@ class UserHandler extends Myapi {
   var mypageUserInfo = <UserData>[].obs; // mypage 화면 데이터
   String nameController = ""; // 유저 이름 수정 텍스트필드
 
-  @override
-  void onInit() async {
-    super.onInit();
-    await selectMyinfo();
-  }
+  // @override
+  // void onInit() async {
+  //   super.onInit();
+  //   // await selectMyinfo();
+  // }
 
 getMyName(String userid) async {
     var response = await makeAuthenticatedRequest('$server/mypage/select_mypage?id=$userid');
