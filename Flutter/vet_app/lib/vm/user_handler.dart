@@ -32,7 +32,6 @@ getMyName(String userid) async {
           //  // JSON 데이터를 디코드
           var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
           var result = dataConvertedJSON['result'];
-
           if (result != null) {
             mypageUserInfo.clear();
             String id = result[0];

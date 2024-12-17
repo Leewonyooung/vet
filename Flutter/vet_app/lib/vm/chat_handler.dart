@@ -61,6 +61,7 @@ class ChatsHandler extends LoginHandler {
     roomName.clear();
     lastChats.clear();
     lastchatroom.clear();
+    update();
   }
 
   DateTime parseTime(String timeStr) {
@@ -95,7 +96,6 @@ class ChatsHandler extends LoginHandler {
 
       if (dataConvertedJSON['results'] == null ||
           dataConvertedJSON['results'].isEmpty) {
-        print('Error: No results found in the response.');
         status.value = false; // 기본 상태 설정
         update();
         return;
@@ -122,12 +122,12 @@ class ChatsHandler extends LoginHandler {
         status.value = false;
       }
     } else {
-      print('Error: HTTP request failed with status ${response.statusCode}.');
       status.value = false; // 기본 상태 설정
+      return ('Error: HTTP request failed with status ${response.statusCode}.');
     }
   } catch (e) {
-    print('Error in getStatus: $e');
     status.value = false; // 기본 상태 설정
+    return ('Error in getStatus: $e');
   }
 
   update();
@@ -205,6 +205,10 @@ class ChatsHandler extends LoginHandler {
 
 
 makeChatRoom() async {
+  if(box.read('userEmail')==''){
+    rooms.clear();
+    return;
+  }
   _rooms
       .where('user', isEqualTo: box.read('userName'))
       .snapshots()

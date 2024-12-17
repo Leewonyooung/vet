@@ -22,9 +22,8 @@ class LoginHandler extends UserHandler {
 
   // Get user email
   String getUserEmail() => _firebaseAuth.currentUser?.email ?? "User";
-  
   // apple login - 안창빈 14/dec/2024
-  Future<UserCredential?> signInWithApple() async {
+  signInWithApple() async {
     try {
       final appleCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -33,83 +32,84 @@ class LoginHandler extends UserHandler {
         ],
       );
 
-      String? email = appleCredential.email;
-      String userIdentifier = appleCredential.userIdentifier ?? ""; 
-      print('Apple Email: $email');
-      print('Apple User Identifier: $userIdentifier');
+      final identityToken = appleCredential.identityToken;
+      final userIdentifier = appleCredential.userIdentifier;
 
-      final oAuthCredential = OAuthProvider("apple.com").credential(
-        idToken: appleCredential.identityToken,
-        accessToken: appleCredential.authorizationCode,
+      // 첫 로그인 시 이메일과 이름 저장
+      String? email = appleCredential.email;
+      String? gname = appleCredential.givenName;
+      String? fname = appleCredential.familyName;
+
+      if (email != null && gname != null && fname != null) {
+        // 첫 로그인: 이메일과 이름을 저장
+        userName = '$fname$gname';
+        box.write('userEmail', email);
+        box.write('userName', userName);
+        box.write('savedName', userName);
+        box.write('saved', email);
+        // DB에 사용자 정보 저장
+        await userloginInsertData(email, userName);
+      } else {
+        // 두 번째 로그인: 저장된 정보 사용
+        box.write('userEmail', box.read('saved'));
+        box.write('userName', box.read('savedName'));
+        userName = box.read('userName');
+
+        if (email == null) {
+          throw Exception('No stored email or name for returning user.');
+        }
+      }
+
+      // API 서버에 Apple Token 전송
+      final response = await http.post(
+        Uri.parse("$server/auth/apple"),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'identity_token': identityToken,
+          'user_identifier': userIdentifier,
+          'email': email, // 서버로 저장된 이메일 전송
+        }),
       );
 
-      // Sign in with Firebase
-      final userCredential = await _firebaseAuth.signInWithCredential(oAuthCredential);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final accessToken = data['access_token'];
+        final refreshToken = data['refresh_token'];
 
-      // Firebase ID Token
-      final String? idToken = await userCredential.user?.getIdToken();
-      if (idToken == null) {
-        return null;
-      }
-      
-      final jwtTokens = await _authenticateAppleWithServer(idToken, userIdentifier, email);
+        await secureStorage.write(key: 'accessToken', value: accessToken);
+        await secureStorage.write(key: 'refreshToken', value: refreshToken);
 
-      if (jwtTokens != null) {
-        try {
-          await secureStorage.write(key: 'accessToken', value: jwtTokens['accessToken']);
-          await secureStorage.write(key: 'refreshToken', value: jwtTokens['refreshToken']);
-          print("Tokens saved successfully.");
-        } catch (e) {
-          print("Error saving tokens: $e");
-          return null;
-        }
+        // Firebase 인증
+        final OAuthCredential credential =
+            OAuthProvider('apple.com').credential(
+          idToken: identityToken,
+          accessToken: appleCredential.authorizationCode,
+        );
+
+        await FirebaseAuth.instance.signInWithCredential(credential);
 
         Get.to(() => Navigation());
         await Get.find<ChatsHandler>().getAllData();
-        await Get.find<PetHandler>().fetchPets(email ?? ""); 
-      } else {
-        print("JWT tokens are null.");
+        await Get.find<PetHandler>().fetchPets(email);
       }
-
-      return userCredential;
     } catch (e) {
-      print("Error during Sign in with Apple: $e");
-      return null;
+      return 'Error during Apple Sign-In: $e';
     }
   }
 
-  Future<Map<String, String>?> _authenticateAppleWithServer(
-      String idToken, String userIdentifier, String? email) async {
-    String serverUrl = "$server/auth/apple"; 
-
-  try {
-    final response = await http.post(
-      Uri.parse(serverUrl),
-      headers: {"Content-Type": "application/json"},
-      body: json.encode({
-        "id_token": idToken,
-        "user_identifier": userIdentifier,
-        "email": email,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      print("Authentication successful: ${response.body}");
+  // check whether the account is registered (안창빈)
+  userloginCheckDatabase(String email) async {
+    userloginCheckJSONData(email);
+    if (data.isEmpty) {
+      return false;
     } else {
-      print("Authentication failed: ${response.body}");
+      return true;
     }
-  } catch (e) {
-    print("Error: $e");
   }
-}
-
 
   // gooelg login로그인 상태 확인
   isLoggedIn() {
-    print(_firebaseAuth.currentUser);
-    print(getStoredEmail());
-    return _firebaseAuth.currentUser != null &&
-        getStoredEmail().isNotEmpty;
+    return _firebaseAuth.currentUser != null && getStoredEmail().isNotEmpty;
   }
 
   // GetStorage에서 저장된 이메일을 가져옴
@@ -136,104 +136,91 @@ class LoginHandler extends UserHandler {
         .add(UserData(id: id, password: password, image: image, name: name));
   }
 
-
 // Google Sign in pop up (안창빈)
-Future<UserCredential?> signInWithGoogle() async {
-  try {
-    // Google Sign-In
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-    if (gUser == null) {
-      return null; // 사용자가 로그인 취소 시 처리
-    }
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      // Google Sign-In
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+      if (gUser == null) {
+        return null; // 사용자가 로그인 취소 시 처리
+      }
 
-    final GoogleSignInAuthentication googleAuth = await gUser.authentication;
-    userEmail = gUser.email;
-    userName = gUser.displayName!;
-    box.write('userEmail', userEmail);
-    box.write('userName', userName);
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+      final GoogleSignInAuthentication googleAuth = await gUser.authentication;
+      userEmail = gUser.email;
+      userName = gUser.displayName!;
+      box.write('userEmail', userEmail);
+      box.write('userName', userName);
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-    // Firebase 로그인
-    final UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+      // Firebase 로그인
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
-    // Firebase ID 토큰 가져오기
-    final String? idToken = await userCredential.user!.getIdToken();
-    if (idToken == null) {
-      print("Firebase ID Token is null.");
-      return null;
-    }
-
-    // 서버로 Firebase ID 토큰 전송 및 사용자 인증
-    final jwtTokens = await _authenticateWithServer(idToken);
-
-    if (jwtTokens != null) {
-      try {
-        // JWT 및 Refresh Token 저장
-        await secureStorage.write(key: 'accessToken', value: jwtTokens['accessToken']);
-        await secureStorage.write(key: 'refreshToken', value: jwtTokens['refreshToken']);
-        print("Tokens saved successfully.");
-      } catch (e) {
-        print("Error saving tokens: $e");
+      // Firebase ID 토큰 가져오기
+      final String? idToken = await userCredential.user!.getIdToken();
+      if (idToken == null) {
         return null;
       }
 
-      // 이후 페이지 이동 및 데이터 초기화
-      Get.to(() => Navigation());
-      await Get.find<ChatsHandler>().getAllData();
-      await Get.find<PetHandler>().fetchPets(userEmail);
-    } else {
-      print("JWT tokens are null.");
-    }
+      // 서버로 Firebase ID 토큰 전송 및 사용자 인증
+      final jwtTokens = await _authenticateWithServer(idToken);
 
-    return userCredential;
-  } catch (e) {
-    print("Google Sign-In Error: $e");
-    return null;
+      if (jwtTokens != null) {
+        try {
+          // JWT 및 Refresh Token 저장
+          await secureStorage.write(
+              key: 'accessToken', value: jwtTokens['accessToken']);
+          await secureStorage.write(
+              key: 'refreshToken', value: jwtTokens['refreshToken']);
+        } catch (e) {
+          return null;
+        }
+
+        // 이후 페이지 이동 및 데이터 초기화
+        Get.to(() => Navigation());
+        await Get.find<ChatsHandler>().getAllData();
+        await Get.find<PetHandler>().fetchPets(userEmail);
+      }
+      return userCredential;
+    } catch (e) {
+      return null;
+    }
   }
-}
 
 // 서버와 Firebase ID 토큰 인증
-Future<Map<String, String>?> _authenticateWithServer(String idToken) async {
-  String serverUrl = "$server/auth/firebase"; // FastAPI 서버 URL
+  Future<Map<String, String>?> _authenticateWithServer(String idToken) async {
+    String serverUrl = "$server/auth/firebase"; // FastAPI 서버 URL
 
-  try {
-    final response = await http.post(
-      Uri.parse(serverUrl),
-      headers: {"Content-Type": "application/json"},
-      body: json.encode({"id_token": idToken}),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(serverUrl),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({"id_token": idToken}),
+      );
 
-    // 서버 응답 디버깅
-    print("Server Response: ${response.body}");
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
 
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-
-      // 응답 데이터 유효성 검사
-      if (responseData.containsKey('access_token') && responseData.containsKey('refresh_token')) {
-        return {
-          'accessToken': responseData['access_token'],
-          'refreshToken': responseData['refresh_token'],
-        };
+        // 응답 데이터 유효성 검사
+        if (responseData.containsKey('access_token') &&
+            responseData.containsKey('refresh_token')) {
+          return {
+            'accessToken': responseData['access_token'],
+            'refreshToken': responseData['refresh_token'],
+          };
+        } else {
+          return null;
+        }
       } else {
-        print("Invalid server response: ${response.body}");
         return null;
       }
-    } else {
-      print("Server Authentication Failed: ${response.body}");
+    } catch (e) {
       return null;
     }
-  } catch (e) {
-    print("Error connecting to server: $e");
-    return null;
   }
-}
-
-
 
 // query inserted google email from db to differentiate whether email is registered or not
   userloginCheckJSONData(email) async {

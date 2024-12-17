@@ -183,7 +183,6 @@ Future<void> makeChatRoom() async {
       throw Exception('Failed to load user name. Status code: ${response.statusCode}');
     }
   } catch (e) {
-    print('Error in getlastName: $e');
     return 'Unknown'; // 기본값
   }
 }

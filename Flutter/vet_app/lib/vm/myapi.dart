@@ -1,18 +1,14 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:vet_app/view/login.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/token_access.dart';
 
 class Myapi extends TokenAccess {
   Future<http.Response> makeAuthenticatedRequest(String url, {String method = 'GET', Map<String, dynamic>? body}) async {
     String? accessToken = await getAccessToken();
-    print(await secureStorage.read(key:'accessToken'));
-    print(await secureStorage.read(key:'refreshToken'));
     // JWT 유효성 검증
     if (!isValidToken(accessToken)) {
-      print("Invalid or missing AccessToken. Attempting to refresh...");
       final tokenRefreshed = await refreshAccessToken();
       if (!tokenRefreshed) {
         // throw Exception("Failed to refresh access token");
@@ -20,7 +16,6 @@ class Myapi extends TokenAccess {
       }
       accessToken = await getAccessToken();
     }
-
     try {
       // 요청 생성
       var request = http.Request(method, Uri.parse(url))
@@ -34,7 +29,6 @@ class Myapi extends TokenAccess {
 
       // AccessToken 만료 시 RefreshToken 사용
       if (res.statusCode == 401) {
-        print("AccessToken expired. Refreshing token...");
         final tokenRefreshed = await refreshAccessToken();
         if (tokenRefreshed) {
           // 토큰 갱신 후 다시 요청
@@ -48,7 +42,6 @@ class Myapi extends TokenAccess {
 
       return res;
     } catch (e) {
-      print("Request failed: $e");
       rethrow;
     }
   }

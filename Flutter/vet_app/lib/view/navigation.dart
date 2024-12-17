@@ -12,7 +12,6 @@ import 'package:vet_app/view/pet_info.dart';
 import 'package:vet_app/view/pet_register.dart';
 import 'package:vet_app/view/query_reservation.dart';
 import 'package:vet_app/view/reservation.dart';
-import 'package:vet_app/vm/chat_handler.dart';
 import 'package:vet_app/vm/favorite_handler.dart';
 import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
@@ -26,7 +25,7 @@ class Navigation extends StatelessWidget {
       PersistentTabController(initialIndex: 0);
   final LoginHandler loginHandler = Get.put(LoginHandler(), permanent: true);
   final PetHandler petHandler = Get.put(PetHandler(), permanent: true);
-  final ChatsHandler chatsHandler = Get.put(ChatsHandler());
+  // final ChatsHandler chatsHandler = Get.put(ChatsHandler());
   final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler(), permanent: true);
 
   final vmHnadler = Get.put(ReservationHandler());

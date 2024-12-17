@@ -54,7 +54,6 @@ class TokenAccess extends LocationHandler{
   try {
     final refreshToken = await getRefreshToken();
     if (refreshToken == null || refreshToken.isEmpty) {
-      print("Missing RefreshToken");
       return false;
     }
 
@@ -69,15 +68,12 @@ class TokenAccess extends LocationHandler{
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       await saveAccessToken(data['access_token']);
-      await saveRefreshToken(data['refresh_token']); // 필요시
-      print("AccessToken refreshed successfully.");
+      await saveRefreshToken(data['refresh_token']);
       return true;
     } else {
-      print("Failed to refresh AccessToken: ${response.body}");
       return false;
     }
   } catch (e) {
-    print("Error refreshing token: $e");
     return false;
   }
 }
