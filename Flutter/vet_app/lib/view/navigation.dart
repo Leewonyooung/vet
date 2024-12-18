@@ -27,16 +27,20 @@ class Navigation extends StatelessWidget {
   final LoginHandler loginHandler = Get.put(LoginHandler(), permanent: true);
   final PetHandler petHandler = Get.put(PetHandler(), permanent: true);
   final ChatsHandler chatsHandler = Get.put(ChatsHandler());
-  final FavoriteHandler favoriteHandler = Get.put(FavoriteHandler(), permanent: true);
+  final FavoriteHandler favoriteHandler =
+      Get.put(FavoriteHandler(), permanent: true);
+  final vmHandler = Get.put(ReservationHandler());
 
-  final vmHnadler = Get.put(ReservationHandler());
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: PersistentTabView(
         context,
         controller: _controller,
-        screens: _screens(),
+        screens: _screens(screenWidth, screenHeight),
         items: _items(),
         handleAndroidBackButtonPress: true,
         resizeToAvoidBottomInset: true,
@@ -65,69 +69,66 @@ class Navigation extends StatelessWidget {
           ),
         ),
         confineToSafeArea: true,
-        navBarHeight: 60,
+        navBarHeight: screenHeight * 0.09,
         navBarStyle: NavBarStyle.style8,
       ),
     );
   }
 
-  List<Widget> _screens() {
+  List<Widget> _screens(double screenWidth, double screenHeight) {
     return [
       Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              '멍스파인더',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+        appBar: AppBar(
+          title: Text(
+            '멍스파인더',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: screenWidth * 0.05,
             ),
-            backgroundColor: Colors.green.shade400,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.favorite,
-                  color: Colors.white,
-                ),
-                onPressed: () async{
-
-                  if (loginHandler.isLoggedIn()) {
-                    await favoriteHandler.getFavoriteClinics(loginHandler.box.read('userEmail'));
-                    Get.to(() => Favorite());
-                    
-                  } else {
-                    Get.to(() => Login());
-                  }
-                },
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  if (loginHandler.isLoggedIn()) {
-                    Get.to(() => Mypage());
-                  } else {
-                    Get.to(() => Login());
-                  }
-                },
-              ),
+          ),
+          backgroundColor: Colors.green.shade400,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.favorite, color: Colors.white),
+              iconSize: screenWidth * 0.07,
+              onPressed: () async {
+                if (loginHandler.isLoggedIn()) {
+                  await favoriteHandler
+                      .getFavoriteClinics(loginHandler.box.read('userEmail'));
+                  Get.to(() => Favorite());
+                } else {
+                  Get.to(() => Login());
+                }
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.person, color: Colors.white),
+              iconSize: screenWidth * 0.07,
+              onPressed: () {
+                if (loginHandler.isLoggedIn()) {
+                  Get.to(() => Mypage());
+                } else {
+                  Get.to(() => Login());
+                }
+              },
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: screenHeight * 0.03),
+              _buildBanner(screenWidth, screenHeight),
+              SizedBox(height: screenHeight * 0.03),
+              _buildQuickActions(screenWidth),
+              SizedBox(height: screenHeight * 0.03),
+              _buildPetSection(screenWidth),
             ],
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 30),
-                _buildBanner(),
-                const SizedBox(height: 30),
-                _buildQuickActions(),
-                const SizedBox(height: 30),
-                _buildPetSection(),
-              ],
-            ),
-          )),
+        ),
+      ),
       ClinicSearch(),
       QueryReservation(),
       ChatRoom(),
@@ -135,36 +136,31 @@ class Navigation extends StatelessWidget {
     ];
   }
 
-  _buildBanner() {
+  Widget _buildBanner(double screenWidth, double screenHeight) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      height: 150,
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+      height: screenHeight * 0.2,
       decoration: BoxDecoration(
         color: Colors.green.shade100,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(screenWidth * 0.04),
       ),
-      child: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '전문가 상담\n우리집 강아지 고민\n지금 무료 상담 받으세요!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-          ],
+      child: Center(
+        child: Text(
+          '전문가 상담\n우리집 강아지 고민\n지금 무료 상담 받으세요!',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: screenWidth * 0.045,
+          ),
         ),
       ),
     );
   }
 
-  _buildQuickActions() {
+  Widget _buildQuickActions(double screenWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -179,6 +175,7 @@ class Navigation extends StatelessWidget {
                 Get.to(() => Login());
               }
             },
+            screenWidth: screenWidth,
           ),
           _buildActionButton(
             icon: Icons.assignment,
@@ -191,25 +188,27 @@ class Navigation extends StatelessWidget {
                 Get.to(() => Login());
               }
             },
+            screenWidth: screenWidth,
           ),
         ],
       ),
     );
   }
 
-  _buildActionButton({
+  Widget _buildActionButton({
     required IconData icon,
     required String text,
     required Color color,
     required VoidCallback onTap,
+    required double screenWidth,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
         children: [
           Container(
-            height: 70,
-            width: 70,
+            height: screenWidth * 0.2,
+            width: screenWidth * 0.2,
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
@@ -225,14 +224,14 @@ class Navigation extends StatelessWidget {
             child: Icon(
               icon,
               color: Colors.white,
-              size: 30,
+              size: screenWidth * 0.08,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: screenWidth * 0.02),
           Text(
             text,
-            style: const TextStyle(
-              fontSize: 14,
+            style: TextStyle(
+              fontSize: screenWidth * 0.04,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -241,16 +240,16 @@ class Navigation extends StatelessWidget {
     );
   }
 
-  _buildPetSection() {
+  Widget _buildPetSection(double screenWidth) {
     return Obx(() {
       if (petHandler.pets.isEmpty) {
-        return _buildRegisterBanner();
+        return _buildRegisterBanner(screenWidth);
       }
-      return _buildPetList();
+      return _buildPetList(screenWidth);
     });
   }
 
-  _buildRegisterBanner() {
+  Widget _buildRegisterBanner(double screenWidth) {
     return GestureDetector(
       onTap: () async {
         if (loginHandler.isLoggedIn()) {
@@ -264,10 +263,10 @@ class Navigation extends StatelessWidget {
         }
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+        padding: EdgeInsets.all(screenWidth * 0.04),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(screenWidth * 0.04),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
@@ -281,15 +280,15 @@ class Navigation extends StatelessWidget {
           children: [
             Icon(
               Icons.pets,
-              size: 40,
+              size: screenWidth * 0.12,
               color: Colors.grey[900],
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: screenWidth * 0.04),
             Expanded(
               child: Text(
                 '내가 키우는 반려동물을 등록해 보세요',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: screenWidth * 0.045,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey[900],
                 ),
@@ -301,31 +300,31 @@ class Navigation extends StatelessWidget {
     );
   }
 
-  _buildPetList() {
+  Widget _buildPetList(double screenWidth) {
     return Container(
-      height: 200,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      height: screenWidth * 0.5,
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: petHandler.pets.length + 1,
         itemBuilder: (context, index) {
           if (index == petHandler.pets.length) {
-            return _buildAddPetCard();
+            return _buildAddPetCard(screenWidth);
           }
-          return _buildPetCard(petHandler.pets[index]);
+          return _buildPetCard(petHandler.pets[index], screenWidth);
         },
       ),
     );
   }
 
-  _buildPetCard(Pet pet) {
+  Widget _buildPetCard(Pet pet, double screenWidth) {
     return GestureDetector(
       onTap: () => Get.to(() => PetInfo(pet: pet)),
       child: Container(
-        width: 160,
-        margin: const EdgeInsets.only(right: 16),
+        width: screenWidth * 0.4,
+        margin: EdgeInsets.only(right: screenWidth * 0.04),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(screenWidth * 0.04),
           color: Colors.white,
           border: Border.all(
             color: Colors.green.shade200,
@@ -342,57 +341,39 @@ class Navigation extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(15)),
-                child: CachedNetworkImage(
-                  imageUrl: "${pet.image}",
-                  imageBuilder: (context, imageProvider) => CircleAvatar(
-                    radius: 60,
-                    backgroundImage: imageProvider, // 성공적으로 로드된 ImageProvider 설정
-                  ),
-                  placeholder: (context, url) => const CircleAvatar(
-                    radius: 60,
-                    child:  CircularProgressIndicator(), // 로딩 중 상태
-                  ),
-                  errorWidget: (context, url, error) => const CircleAvatar(
-                    radius: 60,
-                    child:  Icon(Icons.error), // 오류 발생 시
-                  ),
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(screenWidth * 0.04)),
+              child: CachedNetworkImage(
+                imageUrl: pet.image!,
+                placeholder: (context, url) => CircleAvatar(
+                  radius: screenWidth * 0.2,
+                  child: const CircularProgressIndicator(),
                 ),
-                // Image.network(
-                //   '${pet.image}',
-                //   height: 120,
-                //   width: double.infinity,
-                //   fit: BoxFit.cover,
-                //   errorBuilder: (context, error, stackTrace) => const Icon(
-                //     Icons.error,
-                //     size: 120,
-                //   ),
-                // ),
+                errorWidget: (context, url, error) => CircleAvatar(
+                  radius: screenWidth * 0.2,
+                  child: const Icon(Icons.error),
+                ),
               ),
             ),
-            Container(
-              height: 2,
-              color: Colors.green.shade300,
-            ),
+            Divider(color: Colors.green.shade300, height: screenWidth * 0.01),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(screenWidth * 0.02),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     pet.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: screenWidth * 0.045,
                     ),
                   ),
                   Text(
                     pet.speciesCategory,
                     style: TextStyle(
                       color: Colors.grey[600],
+                      fontSize: screenWidth * 0.035,
                     ),
                   ),
                 ],
@@ -404,7 +385,7 @@ class Navigation extends StatelessWidget {
     );
   }
 
-  _buildAddPetCard() {
+  Widget _buildAddPetCard(double screenWidth) {
     return GestureDetector(
       onTap: () async {
         var result = await Get.to(() => PetRegister());
@@ -414,29 +395,29 @@ class Navigation extends StatelessWidget {
         }
       },
       child: Container(
-        width: 160,
-        margin: const EdgeInsets.only(right: 16),
+        width: screenWidth * 0.4,
+        margin: EdgeInsets.only(right: screenWidth * 0.04),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(screenWidth * 0.04),
           color: Colors.green.shade50,
           border: Border.all(
             color: Colors.green.shade200,
             width: 2,
           ),
         ),
-        child: const Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.add_circle_outline,
-              size: 40,
+              size: screenWidth * 0.1,
               color: Colors.green,
             ),
-            SizedBox(height: 8),
+            SizedBox(height: screenWidth * 0.02),
             Text(
               '반려동물 등록',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: screenWidth * 0.045,
                 fontWeight: FontWeight.bold,
                 color: Colors.green,
               ),
@@ -449,26 +430,11 @@ class Navigation extends StatelessWidget {
 
   List<PersistentBottomNavBarItem> _items() {
     return [
-      _buildNavBarItem(
-        "홈",
-        Icons.home_filled,
-      ),
-      _buildNavBarItem(
-        "검색",
-        Icons.search,
-      ),
-      _buildNavBarItem(
-        "예약내역",
-        Icons.calendar_today,
-      ),
-      _buildNavBarItem(
-        "채팅",
-        Icons.chat,
-      ),
-      _buildNavBarItem(
-        "마이페이지",
-        Icons.person,
-      ),
+      _buildNavBarItem("홈", Icons.home_filled),
+      _buildNavBarItem("검색", Icons.search),
+      _buildNavBarItem("예약내역", Icons.calendar_today),
+      _buildNavBarItem("채팅", Icons.chat),
+      _buildNavBarItem("마이페이지", Icons.person),
     ];
   }
 

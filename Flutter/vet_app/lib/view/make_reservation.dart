@@ -7,7 +7,6 @@ import 'package:vet_app/vm/login_handler.dart';
 import 'package:vet_app/vm/pet_handler.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 
-// 긴급 예약 확정페이지
 class MakeReservation extends StatelessWidget {
   MakeReservation({super.key});
   final LoginHandler loginHandler = Get.find();
@@ -17,14 +16,19 @@ class MakeReservation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     TextEditingController symptomsController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           '긴급 예약',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
+            fontSize: screenWidth * 0.05,
           ),
         ),
         backgroundColor: Colors.green.shade400,
@@ -32,25 +36,31 @@ class MakeReservation extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(screenWidth * 0.05),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 '내 반려동물',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: screenWidth * 0.06,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(height: 20),
-              _buildPetList(context),
-              const SizedBox(height: 30),
-              const Text(
+              SizedBox(height: screenHeight * 0.03),
+              _buildPetList(context, screenWidth, screenHeight),
+              SizedBox(height: screenHeight * 0.04),
+              Text(
                 '증상',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: screenWidth * 0.06,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(height: 10),
-              _buildSymptomsField(symptomsController),
-              const SizedBox(height: 30),
-              _buildReservationButton(context, symptomsController),
+              SizedBox(height: screenHeight * 0.02),
+              _buildSymptomsField(symptomsController, screenWidth),
+              SizedBox(height: screenHeight * 0.04),
+              _buildReservationButton(context, symptomsController, screenWidth),
             ],
           ),
         ),
@@ -58,9 +68,10 @@ class MakeReservation extends StatelessWidget {
     );
   }
 
-  _buildPetList(BuildContext context) {
+  Widget _buildPetList(
+      BuildContext context, double screenWidth, double screenHeight) {
     return SizedBox(
-      height: 220,
+      height: screenHeight * 0.3,
       child: GetBuilder<PetHandler>(
         builder: (_) {
           return ListView.builder(
@@ -68,9 +79,9 @@ class MakeReservation extends StatelessWidget {
             itemCount: petHandler.pets.length + 1,
             itemBuilder: (context, index) {
               if (index == petHandler.pets.length) {
-                return _buildAddPetCard(context);
+                return _buildAddPetCard(context, screenWidth, screenHeight);
               }
-              return _buildPetCard(context, index);
+              return _buildPetCard(context, index, screenWidth, screenHeight);
             },
           );
         },
@@ -78,7 +89,8 @@ class MakeReservation extends StatelessWidget {
     );
   }
 
-  _buildAddPetCard(BuildContext context) {
+  Widget _buildAddPetCard(
+      BuildContext context, double screenWidth, double screenHeight) {
     return GestureDetector(
       onTap: () async {
         var result = await Get.to(() => PetRegister());
@@ -88,25 +100,25 @@ class MakeReservation extends StatelessWidget {
       },
       child: Card(
         elevation: 4,
-        margin: const EdgeInsets.all(8),
+        margin: EdgeInsets.all(screenWidth * 0.02),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(screenWidth * 0.03),
         ),
-        child: const SizedBox(
-          width: 160,
+        child: SizedBox(
+          width: screenWidth * 0.4,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Icons.add_circle_outline,
-                size: 50,
+                size: screenWidth * 0.12,
                 color: Colors.green,
               ),
-              SizedBox(height: 10),
+              SizedBox(height: screenHeight * 0.02),
               Text(
                 '반려동물 등록',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: screenWidth * 0.045,
                   fontWeight: FontWeight.bold,
                   color: Colors.green,
                 ),
@@ -118,7 +130,8 @@ class MakeReservation extends StatelessWidget {
     );
   }
 
-  _buildPetCard(BuildContext context, int index) {
+  Widget _buildPetCard(BuildContext context, int index, double screenWidth,
+      double screenHeight) {
     final pet = petHandler.pets[index];
     String baseUrl = 'http://127.0.0.1:8000';
     String imageUrl = '$baseUrl/pet/uploads/${pet.image}';
@@ -132,68 +145,64 @@ class MakeReservation extends StatelessWidget {
         },
         child: Card(
           elevation: 4,
-          margin: const EdgeInsets.all(8),
+          margin: EdgeInsets.all(screenWidth * 0.02),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(screenWidth * 0.03),
             side: BorderSide(
               color: petHandler.borderList[index],
               width: 2,
             ),
           ),
           child: SizedBox(
-            width: 160,
+            width: screenWidth * 0.4,
             child: Column(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(15),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(screenWidth * 0.03),
                   ),
-                  child:
-                  CachedNetworkImage(
+                  child: CachedNetworkImage(
                     imageUrl: imageUrl,
-                    imageBuilder: (context, imageProvider) => CircleAvatar(
-                      radius: 20,
-                      backgroundImage: imageProvider,
+                    imageBuilder: (context, imageProvider) => Container(
+                      width: screenWidth * 0.4,
+                      height: screenHeight * 0.2,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                    placeholder: (context, url) => const CircularProgressIndicator(), // 로딩 중 표시
-                    errorWidget: (context, url, error) => const Icon(Icons.error), // 오류 발생 시 표시
-                  ),  
-                  //  Image.network(
-                  //   imageUrl,
-                  //   height: 120,
-                  //   width: double.infinity,
-                  //   fit: BoxFit.cover,
-                  //   errorBuilder: (context, error, stackTrace) {
-                  //     return const Icon(
-                  //       Icons.error,
-                  //       size: 120,
-                  //     );
-                  //   },
-                  // ),
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(screenWidth * 0.02),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         pet.name,
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.045,
                           fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         '종류: ${pet.speciesType}',
-                        style: const TextStyle(
-                          fontSize: 12,
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.04,
                         ),
                       ),
                       Text(
                         '성별: ${pet.gender}',
-                        style: const TextStyle(
-                          fontSize: 12,
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.04,
                         ),
                       ),
                     ],
@@ -207,17 +216,18 @@ class MakeReservation extends StatelessWidget {
     });
   }
 
-  _buildSymptomsField(TextEditingController controller) {
+  Widget _buildSymptomsField(
+      TextEditingController controller, double screenWidth) {
     return TextField(
       controller: controller,
       maxLines: 4,
       decoration: InputDecoration(
         hintText: '증상을 입력해주세요',
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(screenWidth * 0.03),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(screenWidth * 0.03),
           borderSide: const BorderSide(
             color: Colors.green,
             width: 2,
@@ -227,8 +237,8 @@ class MakeReservation extends StatelessWidget {
     );
   }
 
-  _buildReservationButton(
-      BuildContext context, TextEditingController symptomsController) {
+  Widget _buildReservationButton(BuildContext context,
+      TextEditingController symptomsController, double screenWidth) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -236,22 +246,22 @@ class MakeReservation extends StatelessWidget {
             _showReservationConfirmDialog(context, symptomsController),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.lightGreen.shade300,
-          padding: const EdgeInsets.symmetric(vertical: 15),
+          padding: EdgeInsets.symmetric(vertical: screenWidth * 0.04),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(screenWidth * 0.03),
           ),
         ),
-        child: const Text(
+        child: Text(
           '예약하기',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: screenWidth * 0.05,
           ),
         ),
       ),
     );
   }
 
-  _showReservationConfirmDialog(
+  void _showReservationConfirmDialog(
       BuildContext context, TextEditingController symptomsController) {
     Get.defaultDialog(
       title: '예약하기',

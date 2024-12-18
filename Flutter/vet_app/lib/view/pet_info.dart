@@ -14,59 +14,51 @@ class PetInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
-        // 타이틀 : {반려동물 이름} 정보
         title: Obx(() {
           final updatedPet = petHandler.getPet(pet.id);
           return Text(
             updatedPet != null ? '${updatedPet.name} 정보' : '반려동물 정보',
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              fontSize: screenWidth * 0.045,
               fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           );
         }),
         centerTitle: true,
         backgroundColor: Colors.green.shade400,
         actions: [
-          // 수정 버튼
           IconButton(
-            icon: const Icon(
-              Icons.edit,
-              color: Colors.white,
-            ),
+            icon:
+                Icon(Icons.edit, size: screenWidth * 0.07, color: Colors.white),
             onPressed: () => _editPet(context),
           ),
-          // 삭제 버튼
           IconButton(
-            icon: const Icon(
-              Icons.delete,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.delete,
+                size: screenWidth * 0.07, color: Colors.white),
             onPressed: () => _deletePet(context),
           ),
         ],
       ),
       body: Obx(() {
         final updatedPet = petHandler.getPet(pet.id);
-        // 반려동물 정보가 없는 경우 (삭제된 경우) 처리
         if (updatedPet == null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Get.offAll(() => Navigation());
-            Get.snackbar(
-              '알림',
-              '해당 반려동물 정보가 삭제되었습니다.',
-            );
+            Get.snackbar('알림', '해당 반려동물 정보가 삭제되었습니다.');
           });
           return const Center(child: CircularProgressIndicator());
         }
-        // 반려동물 정보 표시
         return SingleChildScrollView(
           child: Column(
             children: [
-              _buildPetImage(updatedPet),
-              _buildPetInfo(updatedPet),
+              _buildPetImage(updatedPet, screenWidth, screenHeight),
+              _buildPetInfo(updatedPet, screenWidth),
             ],
           ),
         );
@@ -74,110 +66,74 @@ class PetInfo extends StatelessWidget {
     );
   }
 
-  // --- Functions ---
-
-  // 반려동물 이미지
-  _buildPetImage(Pet updatedPet) {
-    return SizedBox(
-      height: 250,
+  Widget _buildPetImage(
+      Pet updatedPet, double screenWidth, double screenHeight) {
+    return Container(
       width: double.infinity,
+      height: screenHeight * 0.3,
+      margin: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 7,
+          ),
+        ],
+      ),
       child: CachedNetworkImage(
-        imageUrl: "${updatedPet.image}",
+        imageUrl: updatedPet.image!,
         imageBuilder: (context, imageProvider) => CircleAvatar(
-          radius: 60,
-          backgroundImage: imageProvider, // 성공적으로 로드된 ImageProvider 설정
+          radius: screenWidth * 0.2,
+          backgroundImage: imageProvider,
         ),
-        placeholder: (context, url) => const CircleAvatar(
-          radius: 60,
-          child:  CircularProgressIndicator(), // 로딩 중 상태
+        placeholder: (context, url) => CircleAvatar(
+          radius: screenWidth * 0.2,
+          child: const CircularProgressIndicator(),
         ),
-        errorWidget: (context, url, error) => const CircleAvatar(
-          radius: 60,
-          child:  Icon(Icons.error), // 오류 발생 시
+        errorWidget: (context, url, error) => CircleAvatar(
+          radius: screenWidth * 0.2,
+          child: const Icon(Icons.error),
         ),
       ),
-      // Image.network(
-      //   '${updatedPet.image}',
-      //   fit: BoxFit.contain,
-      //   errorBuilder: (context, error, stackTrace) {
-      //     // 이미지 로드 실패 시 에러 아이콘 + 메시지
-      //     return const Center(
-      //       child: Column(
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         children: [
-      //           Icon(
-      //             Icons.error,
-      //             size: 150,
-      //           ),
-      //           SizedBox(height: 10),
-      //           Text('이미지를 불러올 수 없습니다'),
-      //         ],
-      //       ),
-      //     );
-      //   },
-      // ),
     );
   }
 
-  // 반려동물 상세 정보 표시
-  _buildPetInfo(Pet updatedPet) {
+  Widget _buildPetInfo(Pet updatedPet, double screenWidth) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(screenWidth * 0.05),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _buildInfoTile('이름', updatedPet.name, Icons.pets, screenWidth),
+          _buildInfoTile('ID', updatedPet.id, Icons.tag, screenWidth),
           _buildInfoTile(
-            '이름',
-            updatedPet.name,
-            Icons.pets,
-          ),
+              '종류', updatedPet.speciesType, Icons.category, screenWidth),
           _buildInfoTile(
-            'ID',
-            updatedPet.id,
-            Icons.tag,
-          ),
-          _buildInfoTile(
-            '종류',
-            updatedPet.speciesType,
-            Icons.category,
-          ),
-          _buildInfoTile(
-            '세부 종류',
-            updatedPet.speciesCategory,
-            Icons.details,
-          ),
+              '세부 종류', updatedPet.speciesCategory, Icons.details, screenWidth),
           _buildInfoTile(
             '성별',
             updatedPet.gender,
             updatedPet.gender == '수컷' ? Icons.male : Icons.female,
+            screenWidth,
           ),
           _buildInfoTile(
-            '특징',
-            updatedPet.features,
-            Icons.description,
-          ),
-          _buildInfoTile(
-            '생일',
-            updatedPet.birthday,
-            Icons.cake,
-          ),
+              '특징', updatedPet.features, Icons.description, screenWidth),
+          _buildInfoTile('생일', updatedPet.birthday, Icons.cake, screenWidth),
         ],
       ),
     );
   }
 
-  // 반려동물 정보 목록
-  _buildInfoTile(String title, String value, IconData icon) {
+  Widget _buildInfoTile(
+      String title, String value, IconData icon, double screenWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
       child: Row(
         children: [
-          Icon(
-            icon,
-            color: Colors.lightGreen,
-            size: 24,
-          ),
-          const SizedBox(width: 16),
+          Icon(icon, size: screenWidth * 0.07, color: Colors.lightGreen),
+          SizedBox(width: screenWidth * 0.04),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,14 +141,14 @@ class PetInfo extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: screenWidth * 0.035,
                     color: Colors.grey[600],
                   ),
                 ),
                 Text(
                   value,
-                  style: const TextStyle(
-                    fontSize: 18,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.045,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -204,25 +160,19 @@ class PetInfo extends StatelessWidget {
     );
   }
 
-  // 반려동물 정보 수정
-  _editPet(BuildContext context) async {
+  void _editPet(BuildContext context) async {
     final updatedPet = petHandler.getPet(pet.id);
     if (updatedPet != null) {
       final result = await Get.to(() => PetUpdate(pet: updatedPet));
       if (result == true) {
-        // 수정 성공 시 반려동물 정보 새로고침
         petHandler.fetchPets(pet.userId);
       }
     } else {
-      Get.snackbar(
-        '알림',
-        '해당 반려동물 정보가 존재하지 않습니다.',
-      );
+      Get.snackbar('알림', '해당 반려동물 정보가 존재하지 않습니다.');
     }
   }
 
-  // 반려동물 삭제
-  _deletePet(BuildContext context) {
+  void _deletePet(BuildContext context) {
     Get.dialog(
       AlertDialog(
         title: const Text('반려동물 삭제'),
@@ -238,12 +188,9 @@ class PetInfo extends StatelessWidget {
               final success = await petHandler.deletePet(pet.id);
               if (success) {
                 Get.back();
-                Get.to(() => Navigation());
+                Get.offAll(() => Navigation());
               } else {
-                Get.snackbar(
-                  '오류',
-                  '반려동물 삭제에 실패했습니다.',
-                );
+                Get.snackbar('오류', '반려동물 삭제에 실패했습니다.');
               }
             },
           ),

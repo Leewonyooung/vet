@@ -5,29 +5,25 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vet_app/view/navigation.dart';
 import 'package:vet_app/vm/reservation_handler.dart';
 
-// 예약완료 페이지
+// 예약 완료 페이지
 class ReservationComplete extends StatelessWidget {
   final ReservationHandler vmHandler = Get.find();
   ReservationComplete({super.key});
-  final makervalue = Get.arguments; // 예약할 때 필요한 병원정보 받아옴
+  final List<dynamic> makervalue = Get.arguments ?? [];
 
   @override
   Widget build(BuildContext context) {
-    final queryvalue = Get.arguments;
-    var value = makervalue == null
-        ? queryvalue
-        : makervalue ??
-            [
-              ' ',
-              ' ',
-              ' ',
-              ' ',
-              ' ',
-              ' ',
-              ' ',
-            ];
-    final Completer<GoogleMapController> mapController = // 구글지도 맵
-        Completer<GoogleMapController>();
+    final List<dynamic> queryvalue = Get.arguments ?? [];
+    final List<dynamic> value = makervalue.isNotEmpty
+        ? makervalue
+        : queryvalue.isNotEmpty
+            ? queryvalue
+            : [' ', ' ', ' ', ' ', ' ', ' '];
+
+    final Completer<GoogleMapController> mapController = Completer();
+
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -42,7 +38,7 @@ class ReservationComplete extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(screenWidth * 0.04),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -50,7 +46,7 @@ class ReservationComplete extends StatelessWidget {
               Center(
                 child: Icon(
                   Icons.check_circle_outline,
-                  size: 100,
+                  size: screenWidth * 0.2,
                   color: Colors.green.shade400,
                 ),
               ),
@@ -59,33 +55,31 @@ class ReservationComplete extends StatelessWidget {
                 child: Text(
                   "예약이 확정되었습니다",
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: screenWidth * 0.06,
                     fontWeight: FontWeight.bold,
                     color: Colors.green.shade700,
                   ),
                 ),
               ),
               const SizedBox(height: 30),
-              _buildInfoCard(value),
+              _buildInfoCard(value, screenWidth),
               const SizedBox(height: 30),
-              const Text(
+              Text(
                 '찾아오시는 길',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: screenWidth * 0.05,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 10),
               Text(
                 ' * 주소: ${value[5]}',
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
+                style: TextStyle(fontSize: screenWidth * 0.04),
               ),
               const SizedBox(height: 20),
-              _buildMap(value, mapController),
+              _buildMap(value, mapController, screenWidth),
               const SizedBox(height: 30),
-              _buildButtons(),
+              _buildButtons(screenWidth),
             ],
           ),
         ),
@@ -93,7 +87,7 @@ class ReservationComplete extends StatelessWidget {
     );
   }
 
-  _buildInfoCard(List<dynamic> value) {
+  Widget _buildInfoCard(List<dynamic> value, double screenWidth) {
     return Card(
       color: Colors.white,
       elevation: 4,
@@ -101,14 +95,14 @@ class ReservationComplete extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(screenWidth * 0.04),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "${value[1]}",
-              style: const TextStyle(
-                fontSize: 20,
+              style: TextStyle(
+                fontSize: screenWidth * 0.05,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -122,8 +116,8 @@ class ReservationComplete extends StatelessWidget {
                 const SizedBox(width: 10),
                 Text(
                   '일정: ${value[4]}',
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.04,
                   ),
                 ),
               ],
@@ -134,9 +128,10 @@ class ReservationComplete extends StatelessWidget {
     );
   }
 
-  _buildMap(List<dynamic> value, Completer<GoogleMapController> mapController) {
+  Widget _buildMap(List<dynamic> value,
+      Completer<GoogleMapController> mapController, double screenWidth) {
     return Container(
-      height: 200,
+      height: screenWidth * 0.6,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
@@ -166,29 +161,22 @@ class ReservationComplete extends StatelessWidget {
                 title: value[1],
                 snippet: value[1],
               ),
-              markerId: MarkerId(
-                value[1],
-              ),
-              position: LatLng(
-                value[2],
-                value[3],
-              ),
+              markerId: MarkerId(value[1]),
+              position: LatLng(value[2], value[3]),
             ),
           },
           myLocationButtonEnabled: false,
           myLocationEnabled: false,
           zoomControlsEnabled: false,
-          zoomGesturesEnabled: false,
-          rotateGesturesEnabled: false,
-          buildingsEnabled: false,
+          zoomGesturesEnabled: true,
         ),
       ),
     );
   }
 
-  _buildButtons() {
+  Widget _buildButtons(double screenWidth) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton.icon(
           icon: const Icon(Icons.home),
@@ -197,7 +185,10 @@ class ReservationComplete extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green.shade400,
             foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.1,
+              vertical: screenWidth * 0.04,
+            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),

@@ -7,91 +7,115 @@ class ClinicLogin extends StatelessWidget {
 
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final vmHandler = Get.put(LoginHandler());
+  final LoginHandler vmHandler = Get.put(LoginHandler());
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''),
+        title: const Text('병원 로그인'),
+        backgroundColor: Colors.green.shade400,
       ),
-      body: GetBuilder<LoginHandler>(builder: (controller) {
-        return Obx(() {
-          return SingleChildScrollView(
-            child: Center(
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 300, 0, 50),
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 60,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 500,
-                      child: TextField(
-                        controller: idController,
-                        decoration: const InputDecoration(
-                          labelText: '아이디를 입력하세요',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 500,
-                      child: TextField(
-                        controller: passwordController,
-                        obscureText: vmHandler.isObscured.value,
-                        decoration: InputDecoration(
-                          labelText: '비밀번호를 입력하세요',
-                          border: const OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              // vmHandler.togglePasswordVisibility();
-                            },
-                            icon: Icon(
-                              vmHandler.isObscured.value
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: ElevatedButton(
-                      onPressed: () => clinicloginJsonCheck(),
-                      child: const Text('login'),
-                    ),
-                  ),
-                ],
-              ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.1,
+              vertical: screenHeight * 0.1,
             ),
-          );
-        });
-      }),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Login',
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.1,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: screenHeight * 0.05),
+                _buildTextField(
+                  controller: idController,
+                  labelText: '아이디를 입력하세요',
+                  isObscured: false,
+                ),
+                SizedBox(height: screenHeight * 0.02),
+                Obx(() {
+                  return _buildTextField(
+                    controller: passwordController,
+                    labelText: '비밀번호를 입력하세요',
+                    isObscured: vmHandler.isObscured.value,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        vmHandler.isObscured.value =
+                            !vmHandler.isObscured.value;
+                      },
+                      icon: Icon(
+                        vmHandler.isObscured.value
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                    ),
+                  );
+                }),
+                SizedBox(height: screenHeight * 0.05),
+                ElevatedButton(
+                  onPressed: () => clinicloginJsonCheck(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green.shade400,
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenHeight * 0.02,
+                      horizontal: screenWidth * 0.3,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  //Function
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    bool isObscured = false,
+    Widget? suffixIcon,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: isObscured,
+      decoration: InputDecoration(
+        labelText: labelText,
+        border: const OutlineInputBorder(),
+        suffixIcon: suffixIcon,
+        filled: true,
+        fillColor: Colors.grey[200],
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 16,
+        ),
+      ),
+    );
+  }
+
+  // Functionality remains the same
   clinicloginJsonCheck() async {
-    // List results = await vmHandler.clinicloginJsonCheck(id, password);
-    // if (results.isEmpty) {
-    //   errorDialog();
-    // } else {
-    //   loginDialog();
-    // }
+    // Add the logic for login validation here
   }
 
   errorDialog() {
@@ -114,8 +138,8 @@ class ClinicLogin extends StatelessWidget {
         idController.clear();
         passwordController.clear();
         Get.back();
-        // Get.to(() => const MgtHome());
+        // Navigate to the next page if necessary
       },
     );
   }
-} // END
+}

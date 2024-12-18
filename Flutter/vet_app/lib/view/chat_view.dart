@@ -7,19 +7,24 @@ Usage: 채팅 목록
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:vet_app/model/chats.dart';
 import 'package:vet_app/vm/chat_handler.dart';
 
 class ChatView extends StatelessWidget {
   ChatView({super.key});
+
   final temp = Get.arguments ?? ['Default Image', 'Default Name'];
   final ChatsHandler vmHandler = Get.find();
   final TextEditingController chatController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     vmHandler.getStatus();
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -28,33 +33,35 @@ class ChatView extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.lightGreen[100],
           elevation: 0,
-          toolbarHeight: 75,
+          toolbarHeight: screenHeight * 0.1,
           title: Row(
             children: [
-               CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.grey[200], // 로드 중 배경색
+              CircleAvatar(
+                radius: screenWidth * 0.06,
+                backgroundColor: Colors.grey[200],
                 child: CachedNetworkImage(
-                  imageUrl: temp[0], // 네트워크 이미지 URL
+                  imageUrl: temp[0],
                   imageBuilder: (context, imageProvider) => CircleAvatar(
-                    radius: 20,
+                    radius: screenWidth * 0.06,
                     backgroundImage: imageProvider,
                   ),
-                  placeholder: (context, url) => const CircularProgressIndicator(), // 로딩 중 표시
-                  errorWidget: (context, url, error) => const Icon(Icons.error), // 오류 발생 시 표시
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error, color: Colors.red),
                 ),
               ),
-              const SizedBox(width: 12), // 사진과 병원 이름 사이의 간격 조정
+              SizedBox(width: screenWidth * 0.03),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       temp[1],
-                      overflow: TextOverflow.ellipsis, // 이름이 너무 길 경우 줄임표 처리
+                      overflow: TextOverflow.ellipsis,
                       maxLines: 1,
-                      style: const TextStyle(
-                        fontSize: 18,
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.045,
                         color: Colors.black,
                       ),
                     ),
@@ -65,7 +72,7 @@ class ChatView extends StatelessWidget {
                                 ? Colors.green[400]
                                 : Colors.red[400],
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: screenWidth * 0.04,
                           ),
                         )),
                   ],
@@ -76,71 +83,64 @@ class ChatView extends StatelessWidget {
         ),
         body: SafeArea(
           child: Column(
-            children:[ Expanded(
-              child: Obx(
-                () => _buildChatList(context),
+            children: [
+              Expanded(
+                child: Obx(() => _buildChatList(context, screenWidth)),
               ),
-            ),]
+              _buildInputField(context, screenWidth),
+            ],
           ),
         ),
       ),
     );
   }
 
-  _buildChatList(BuildContext context,) {
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
+  Widget _buildChatList(BuildContext context, double screenWidth) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       vmHandler.listViewContoller
           .jumpTo(vmHandler.listViewContoller.position.maxScrollExtent);
     });
 
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            controller: vmHandler.listViewContoller,
-            itemCount: vmHandler.chats.length,
-            itemBuilder: (context, index) {
-              Chats chat = vmHandler.chats[index];
-              if (vmHandler.chats.isEmpty){
-                return const Center(child: Text('채팅이 없습니다.'),);
-              }else{
-                return _buildChatItem(context, chat);
-              }
-            },
-          ),
-        ),
-        _buildInputField(context),
-      ],
+    return ListView.builder(
+      controller: vmHandler.listViewContoller,
+      itemCount: vmHandler.chats.length,
+      itemBuilder: (context, index) {
+        Chats chat = vmHandler.chats[index];
+        return _buildChatItem(context, chat, screenWidth);
+      },
     );
   }
 
-  _buildChatItem(BuildContext context, Chats chat) {
+  Widget _buildChatItem(BuildContext context, Chats chat, double screenWidth) {
     if (vmHandler.checkToday(chat)) {
-      return _buildDateSeparator(chat);
+      return _buildDateSeparator(chat, screenWidth);
     } else if (vmHandler.box.read('userEmail') == chat.sender) {
-      return _buildSentMessage(context, chat);
+      return _buildSentMessage(chat, screenWidth);
     } else {
-      return _buildReceivedMessage(context, chat);
+      return _buildReceivedMessage(chat, screenWidth);
     }
   }
 
-  _buildDateSeparator(Chats chat) {
+  Widget _buildDateSeparator(Chats chat, double screenWidth) {
     return Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
       child: Text(
         chat.text.substring(3, 13),
         style: TextStyle(
           color: Colors.grey[600],
-          fontSize: 14,
+          fontSize: screenWidth * 0.04,
         ),
       ),
     );
   }
 
-  _buildSentMessage(BuildContext context, Chats chat) {
+  Widget _buildSentMessage(Chats chat, double screenWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      padding: EdgeInsets.symmetric(
+        vertical: screenWidth * 0.01,
+        horizontal: screenWidth * 0.04,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -148,22 +148,22 @@ class ChatView extends StatelessWidget {
           Text(
             chat.timestamp.substring(11, 16),
             style: TextStyle(
-              fontSize: 12,
+              fontSize: screenWidth * 0.03,
               color: Colors.grey[600],
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: screenWidth * 0.02),
           Flexible(
             child: Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(screenWidth * 0.03),
               decoration: BoxDecoration(
                 color: Colors.green[100],
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 chat.text,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: screenWidth * 0.04,
                 ),
               ),
             ),
@@ -173,59 +173,65 @@ class ChatView extends StatelessWidget {
     );
   }
 
-  _buildReceivedMessage(BuildContext context, Chats chat) {
+  Widget _buildReceivedMessage(Chats chat, double screenWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      padding: EdgeInsets.symmetric(
+        vertical: screenWidth * 0.01,
+        horizontal: screenWidth * 0.04,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.grey[200], // 로드 중 배경색
+            radius: screenWidth * 0.06,
+            backgroundColor: Colors.grey[200],
             child: CachedNetworkImage(
-              imageUrl: temp[0], // 네트워크 이미지 URL
+              imageUrl: temp[0],
               imageBuilder: (context, imageProvider) => CircleAvatar(
-                radius: 20,
+                radius: screenWidth * 0.06,
                 backgroundImage: imageProvider,
               ),
-              placeholder: (context, url) => const CircularProgressIndicator(), // 로딩 중 표시
-              errorWidget: (context, url, error) => const Icon(Icons.error), // 오류 발생 시 표시
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) =>
+                  const Icon(Icons.error, color: Colors.red),
             ),
           ),
-
-          const SizedBox(width: 8),
+          SizedBox(width: screenWidth * 0.02),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   temp[1],
-                  overflow: TextOverflow.ellipsis, // 이름이 길 경우 줄임표 처리
+                  overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    fontSize: screenWidth * 0.04,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: screenWidth * 0.01),
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(screenWidth * 0.03),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     chat.text,
-                    style: const TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.04,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: screenWidth * 0.02),
           Text(
             chat.timestamp.substring(11, 16),
             style: TextStyle(
-              fontSize: 12,
+              fontSize: screenWidth * 0.03,
               color: Colors.grey[600],
             ),
           ),
@@ -234,9 +240,12 @@ class ChatView extends StatelessWidget {
     );
   }
 
-  _buildInputField(BuildContext context) {
+  Widget _buildInputField(BuildContext context, double screenWidth) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(
+        horizontal: screenWidth * 0.02,
+        vertical: screenWidth * 0.01,
+      ),
       color: Colors.grey[100],
       child: Row(
         children: [
@@ -251,16 +260,16 @@ class ChatView extends StatelessWidget {
                 ),
                 filled: true,
                 fillColor: Colors.grey[300],
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.04,
+                  vertical: screenWidth * 0.03,
+                ),
               ),
             ),
           ),
           IconButton(
-            icon: const Icon(
-              Icons.send,
-              color: Colors.green,
-            ),
+            icon:
+                Icon(Icons.send, color: Colors.green, size: screenWidth * 0.06),
             onPressed: () => inputChat(temp),
           ),
         ],
@@ -268,18 +277,18 @@ class ChatView extends StatelessWidget {
     );
   }
 
-  inputChat(var temp) async {
+  void inputChat(List<String> temp) async {
     if (vmHandler.currentClinicId.isEmpty) {
       await vmHandler.getClinicName(temp[1]);
     }
-    Chats inputchat = Chats(
+    Chats inputChat = Chats(
       reciever: vmHandler.currentClinicId.value,
       sender: vmHandler.box.read('userEmail'),
       text: chatController.text.trim(),
       timestamp: DateTime.now().toString(),
     );
     if (chatController.text.isNotEmpty) {
-      await vmHandler.addChat(inputchat);
+      await vmHandler.addChat(inputChat);
     }
     chatController.clear();
   }

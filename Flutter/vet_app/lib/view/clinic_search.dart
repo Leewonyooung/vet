@@ -11,16 +11,20 @@ class ClinicSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     vmHandler.getAllClinic();
+
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 80,
+        toolbarHeight: screenHeight * 0.1,
         title: SearchBar(
-          leading: const Padding(
-            padding: EdgeInsets.only(left: 12.0),
+          leading: Padding(
+            padding: EdgeInsets.only(left: screenWidth * 0.03),
             child: Icon(
               Icons.search_outlined,
-              size: 25,
+              size: screenWidth * 0.07,
               color: Colors.grey,
             ),
           ),
@@ -34,13 +38,11 @@ class ClinicSearch extends StatelessWidget {
             }
           },
           hintText: "병원 이름을 검색하세요",
-          backgroundColor: WidgetStateProperty.all(
-            Colors.grey[200],
-          ),
+          backgroundColor: WidgetStateProperty.all(Colors.grey[200]),
           elevation: WidgetStateProperty.all(4),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(screenWidth * 0.05),
             ),
           ),
         ),
@@ -57,7 +59,6 @@ class ClinicSearch extends StatelessWidget {
                   await vmHandler.getAllClinic();
                   await vmHandler.updateCurrentIndex(clinic.id);
                   await vmHandler.getClinicDetail();
-                  vmHandler.updateCurrentIndex(clinic.id);
                   vmHandler.searchbarController.clear();
                   Get.to(
                     () => ClinicInfo(),
@@ -66,83 +67,87 @@ class ClinicSearch extends StatelessWidget {
                 },
                 child: Card(
                   color: Colors.white,
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.04,
+                    vertical: screenHeight * 0.01,
                   ),
                   elevation: 4,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(screenWidth * 0.04),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: EdgeInsets.all(screenWidth * 0.03),
                     child: Row(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child:Container(
-                            width: 80,
-                            height: 80,
+                          borderRadius:
+                              BorderRadius.circular(screenWidth * 0.03),
+                          child: Container(
+                            width: screenWidth * 0.2,
+                            height: screenWidth * 0.2,
                             decoration: BoxDecoration(
-                              color: Colors.grey[300], // 기본 배경색
-                              shape: BoxShape.rectangle, // 사각형 모양
+                              color: Colors.grey[300],
+                              shape: BoxShape.rectangle,
                             ),
                             child: CachedNetworkImage(
-                              imageUrl: "${vmHandler.server}/clinic/view/${clinic.image}",
-                              imageBuilder: (context, imageProvider) => Container(
+                              imageUrl:
+                                  "${vmHandler.server}/clinic/view/${clinic.image}",
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
                                 decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle, // 사각형 유지
+                                  shape: BoxShape.rectangle,
                                   image: DecorationImage(
                                     image: imageProvider,
-                                    fit: BoxFit.cover, // 이미지를 컨테이너에 맞게 채우기
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
                               placeholder: (context, url) => const Center(
-                                child: CircularProgressIndicator(), // 로딩 중 상태 표시
+                                child: CircularProgressIndicator(),
                               ),
                               errorWidget: (context, url, error) => Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[300], // 오류 시 배경색
+                                  color: Colors.grey[300],
                                 ),
                                 child: const Center(
                                   child: Icon(
                                     Icons.error,
-                                    color: Colors.red, // 오류 아이콘 색상
+                                    color: Colors.red,
                                   ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox(width: screenWidth * 0.04),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 clinic.name,
-                                style: const TextStyle(
-                                  fontSize: 18,
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.05,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              const SizedBox(height: 4),
+                              SizedBox(height: screenWidth * 0.01),
                               Text(
                                 clinic.address,
                                 style: TextStyle(
                                   color: Colors.grey[600],
-                                  fontSize: 14,
+                                  fontSize: screenWidth * 0.04,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
                         ),
-                        const Icon(
+                        Icon(
                           Icons.arrow_forward_ios,
                           color: Colors.grey,
+                          size: screenWidth * 0.05,
                         ),
                       ],
                     ),

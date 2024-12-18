@@ -8,16 +8,20 @@ import 'package:vet_app/vm/login_handler.dart';
 class Mypage extends StatelessWidget {
   Mypage({super.key});
   final LoginHandler loginHandler = Get.find();
-  
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           '마이페이지',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
+            fontSize: screenWidth * 0.05,
           ),
         ),
         backgroundColor: Colors.green.shade400,
@@ -26,8 +30,7 @@ class Mypage extends StatelessWidget {
       body: loginHandler.isLoggedIn()
           ? GetBuilder<LoginHandler>(builder: (_) {
               return FutureBuilder(
-                future:
-                    loginHandler.selectMyinfo(),
+                future: loginHandler.selectMyinfo(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -39,14 +42,16 @@ class Mypage extends StatelessWidget {
                       return SingleChildScrollView(
                         child: Column(
                           children: [
-                            _buildProfileSection(context, result),
-                            _buildInfoSection(result),
-                            const Divider(
-                                color: Colors.grey,
-                                thickness: 1,
-                                indent: 16,
-                                endIndent: 16),
-                            _buildActionButtons(context, loginHandler, result),
+                            _buildProfileSection(context, result, screenWidth),
+                            _buildInfoSection(result, screenWidth),
+                            Divider(
+                              color: Colors.grey,
+                              thickness: 1,
+                              indent: screenWidth * 0.05,
+                              endIndent: screenWidth * 0.05,
+                            ),
+                            _buildActionButtons(
+                                context, loginHandler, result, screenWidth),
                           ],
                         ),
                       );
@@ -55,107 +60,107 @@ class Mypage extends StatelessWidget {
                 },
               );
             })
-          : const Center(
+          : Center(
               child: Text(
                 '로그인이 필요합니다.',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: screenWidth * 0.05,
                 ),
               ),
             ),
     );
   }
 
-_buildProfileSection(BuildContext context, List result) {
-  return Container(
-    padding: const EdgeInsets.symmetric(vertical: 20),
-    color: Colors.green.shade50,
-    child: Center(
-      child: Column(
-        children: [
-          FutureBuilder<String?>(
-            future: loginHandler.fetchAccessToken(), // 비동기적으로 토큰 가져오기
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // 로딩 중 상태
-                return const CircleAvatar(
-                  radius: 60,
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-                // 오류 발생 시
-                return const CircleAvatar(
-                  radius: 60,
-                  child: Icon(Icons.error),
-                );
-              }
-
-              final accessToken = snapshot.data;
-
-              return CachedNetworkImage(
-                imageUrl: "${loginHandler.server}/mypage/view/${result[0].image}",
-                httpHeaders: {
-                  'Authorization': 'Bearer $accessToken', // 가져온 토큰 설정
-                },
-                imageBuilder: (context, imageProvider) => CircleAvatar(
-                  radius: 60,
-                  backgroundImage: imageProvider,
-                ),
-                placeholder: (context, url) => const CircleAvatar(
-                  radius: 60,
-                  child: CircularProgressIndicator(),
-                ),
-                errorWidget: (context, url, error) => const CircleAvatar(
-                  radius: 60,
-                  child: Icon(Icons.error),
-                ),
-              );
-            },
-          ),
-          const SizedBox(height: 16),
-          Text(
-            result[0].name,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-
-
-  _buildInfoSection(List result) {
+  Widget _buildProfileSection(
+      BuildContext context, List result, double screenWidth) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.05),
+      color: Colors.green.shade50,
+      child: Center(
+        child: Column(
+          children: [
+            FutureBuilder<String?>(
+              future: loginHandler.fetchAccessToken(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircleAvatar(
+                    radius: screenWidth * 0.15,
+                    child: const CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError ||
+                    !snapshot.hasData ||
+                    snapshot.data == null) {
+                  return CircleAvatar(
+                    radius: screenWidth * 0.15,
+                    child: const Icon(Icons.error),
+                  );
+                }
+
+                final accessToken = snapshot.data;
+
+                return CachedNetworkImage(
+                  imageUrl:
+                      "${loginHandler.server}/mypage/view/${result[0].image}",
+                  httpHeaders: {
+                    'Authorization': 'Bearer $accessToken',
+                  },
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    radius: screenWidth * 0.15,
+                    backgroundImage: imageProvider,
+                  ),
+                  placeholder: (context, url) => CircleAvatar(
+                    radius: screenWidth * 0.15,
+                    child: const CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => CircleAvatar(
+                    radius: screenWidth * 0.15,
+                    child: const Icon(Icons.error),
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: screenWidth * 0.04),
+            Text(
+              result[0].name,
+              style: TextStyle(
+                fontSize: screenWidth * 0.06,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoSection(List result, double screenWidth) {
+    return Container(
+      padding: EdgeInsets.all(screenWidth * 0.05),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             '회원 정보',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: screenWidth * 0.05,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: screenWidth * 0.04),
           Card(
             color: Colors.white,
             elevation: 4,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(screenWidth * 0.03),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(screenWidth * 0.04),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildInfoItem('이름', result[0].name),
-                  const SizedBox(height: 8),
-                  _buildInfoItem('이메일', result[0].id!),
+                  _buildInfoItem('이름', result[0].name, screenWidth),
+                  SizedBox(height: screenWidth * 0.02),
+                  _buildInfoItem('이메일', result[0].id!, screenWidth),
                 ],
               ),
             ),
@@ -165,30 +170,33 @@ _buildProfileSection(BuildContext context, List result) {
     );
   }
 
-  _buildInfoItem(String label, String value) {
+  Widget _buildInfoItem(String label, String value, double screenWidth) {
     return Row(
       children: [
         Text(
           '$label: ',
-          style: const TextStyle(
-            fontSize: 16,
+          style: TextStyle(
+            fontSize: screenWidth * 0.045,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 16,
+          style: TextStyle(
+            fontSize: screenWidth * 0.045,
           ),
         ),
       ],
     );
   }
 
-  _buildActionButtons(
-      BuildContext context, LoginHandler loginHandler, List result) {
+  Widget _buildActionButtons(BuildContext context, LoginHandler loginHandler,
+      List result, double screenWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(
+        horizontal: screenWidth * 0.05,
+        vertical: screenWidth * 0.02,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -197,45 +205,53 @@ _buildProfileSection(BuildContext context, List result) {
             label: '로그아웃',
             onPressed: () => showDialog(loginHandler),
             color: Colors.red,
+            screenWidth: screenWidth,
           ),
           _buildActionButton(
             icon: Icons.edit,
             label: '내정보 수정',
             onPressed: () {
               Get.to(MyinfoUpdate(), arguments: result[0].id)!.then(
-                (value) =>
-                    loginHandler.selectMyinfo(),
+                (value) => loginHandler.selectMyinfo(),
               );
             },
             color: Colors.green,
+            screenWidth: screenWidth,
           ),
         ],
       ),
     );
   }
 
-  _buildActionButton({
+  Widget _buildActionButton({
     required IconData icon,
     required String label,
     required VoidCallback onPressed,
     required Color color,
+    required double screenWidth,
   }) {
     return ElevatedButton.icon(
-      icon: Icon(icon),
-      label: Text(label),
+      icon: Icon(icon, size: screenWidth * 0.05),
+      label: Text(
+        label,
+        style: TextStyle(fontSize: screenWidth * 0.045),
+      ),
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04,
+          vertical: screenWidth * 0.035,
+        ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(screenWidth * 0.03),
         ),
       ),
     );
   }
 
-  showDialog(LoginHandler loginHandler) {
+  void showDialog(LoginHandler loginHandler) {
     Get.defaultDialog(
       title: "로그아웃",
       titleStyle: const TextStyle(

@@ -14,13 +14,17 @@ class MyinfoUpdate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           '계정 정보 수정',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
+            fontSize: screenWidth * 0.05,
           ),
         ),
         backgroundColor: Colors.green.shade400,
@@ -38,19 +42,22 @@ class MyinfoUpdate extends StatelessWidget {
               } else {
                 final result = loginHandler.mypageUserInfo[0];
                 nameController.text = result.name;
+
                 return SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: EdgeInsets.all(screenWidth * 0.05),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildProfileImage(context, loginHandler, result),
-                        const SizedBox(height: 30),
-                        _buildEmailInfo(result),
-                        const SizedBox(height: 20),
-                        _buildNameField(),
-                        const SizedBox(height: 30),
-                        _buildSaveButton(context, loginHandler, result),
+                        _buildProfileImage(
+                            context, loginHandler, result, screenWidth),
+                        SizedBox(height: screenHeight * 0.04),
+                        _buildEmailInfo(result, screenWidth),
+                        SizedBox(height: screenHeight * 0.03),
+                        _buildNameField(screenWidth),
+                        SizedBox(height: screenHeight * 0.05),
+                        _buildSaveButton(
+                            context, loginHandler, result, screenWidth),
                       ],
                     ),
                   ),
@@ -63,39 +70,44 @@ class MyinfoUpdate extends StatelessWidget {
     );
   }
 
-  _buildProfileImage(
-      BuildContext context, UserHandler userHandler, dynamic result) {
+  Widget _buildProfileImage(BuildContext context, UserHandler userHandler,
+      dynamic result, double screenWidth) {
     return Center(
       child: GestureDetector(
         onTap: () => userHandler.getImageFromGalleryEdit(ImageSource.gallery),
         child: Stack(
           children: [
-           CircleAvatar(
-            radius: 80,
-            backgroundImage: userHandler.imageFile == null
-                ? NetworkImage("${userHandler.server}/mypage/view/${result.image}") 
-                : FileImage(File(userHandler.imageFile!.path)) as ImageProvider,
-            child: userHandler.imageFile == null
-                ? CachedNetworkImage(
-                    imageUrl: "${userHandler.server}/mypage/view/${result.image}",
-                    placeholder: (context, url) => const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
-                  )
-                : null,
-          ),
+            CircleAvatar(
+              radius: screenWidth * 0.2,
+              backgroundImage: userHandler.imageFile == null
+                  ? NetworkImage(
+                      "${userHandler.server}/mypage/view/${result.image}")
+                  : FileImage(File(userHandler.imageFile!.path))
+                      as ImageProvider,
+              child: userHandler.imageFile == null
+                  ? CachedNetworkImage(
+                      imageUrl:
+                          "${userHandler.server}/mypage/view/${result.image}",
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    )
+                  : null,
+            ),
             Positioned(
               right: 0,
               bottom: 0,
               child: Container(
-                padding: const EdgeInsets.all(4),
+                padding: EdgeInsets.all(screenWidth * 0.02),
                 decoration: const BoxDecoration(
                   color: Colors.lightGreen,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.edit,
                   color: Colors.white,
-                  size: 20,
+                  size: screenWidth * 0.05,
                 ),
               ),
             ),
@@ -105,26 +117,27 @@ class MyinfoUpdate extends StatelessWidget {
     );
   }
 
-  _buildEmailInfo(dynamic result) {
+  Widget _buildEmailInfo(dynamic result, double screenWidth) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(screenWidth * 0.03),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(screenWidth * 0.04),
         child: Row(
           children: [
             Icon(
               Icons.email,
               color: Colors.grey[600],
+              size: screenWidth * 0.06,
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: screenWidth * 0.03),
             Expanded(
               child: Text(
                 "이메일: ${result.id}",
-                style: const TextStyle(
-                  fontSize: 18,
+                style: TextStyle(
+                  fontSize: screenWidth * 0.045,
                 ),
               ),
             ),
@@ -134,17 +147,18 @@ class MyinfoUpdate extends StatelessWidget {
     );
   }
 
-  _buildNameField() {
+  Widget _buildNameField(double screenWidth) {
     return TextField(
       controller: nameController,
       maxLength: 45,
       decoration: InputDecoration(
         labelText: '이름',
+        labelStyle: TextStyle(fontSize: screenWidth * 0.045),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(screenWidth * 0.03),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(screenWidth * 0.03),
           borderSide: const BorderSide(
             color: Colors.green,
             width: 2,
@@ -154,8 +168,8 @@ class MyinfoUpdate extends StatelessWidget {
     );
   }
 
-  _buildSaveButton(
-      BuildContext context, UserHandler userHandler, dynamic result) {
+  Widget _buildSaveButton(BuildContext context, UserHandler userHandler,
+      dynamic result, double screenWidth) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -176,23 +190,23 @@ class MyinfoUpdate extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.lightGreen.shade300,
-          padding: const EdgeInsets.symmetric(vertical: 15),
+          padding: EdgeInsets.symmetric(vertical: screenWidth * 0.04),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(screenWidth * 0.03),
           ),
         ),
-        child: const Text(
+        child: Text(
           '저장',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: screenWidth * 0.045,
           ),
         ),
       ),
     );
   }
 
-  //이름만 수정할때
-  nameUpdateAction(UserHandler userHandler, String userid) async {
+  // 이름만 수정할 때
+  void nameUpdateAction(UserHandler userHandler, String userid) async {
     String name = nameController.text.trim();
     String id = userid;
     var updateResult = await userHandler.updateUserName(name, id);
@@ -207,8 +221,9 @@ class MyinfoUpdate extends StatelessWidget {
     }
   }
 
-  // 이름, 이미지 모두 수정할때
-  allUpdateAction(UserHandler userHandler, String image, String userid) async {
+  // 이름, 이미지 모두 수정할 때
+  void allUpdateAction(
+      UserHandler userHandler, String image, String userid) async {
     await userHandler.deleteUserImage(image);
     await userHandler.uploadUserImage();
     var updateResult = await userHandler.updateUserAll(
@@ -224,8 +239,8 @@ class MyinfoUpdate extends StatelessWidget {
     }
   }
 
-// 수정확인 다이얼로그
-  okShowDialog() {
+  // 수정 성공 다이얼로그
+  void okShowDialog() {
     Get.defaultDialog(
       title: '수정성공',
       middleText: '수정이 완료되었습니다.',
@@ -241,14 +256,13 @@ class MyinfoUpdate extends StatelessWidget {
     );
   }
 
-  // error 스낵바
-  // 제목, 메세지, 스낵포지션
-  errorSnackBar(String title, String message, SnackPosition position) {
+  // 에러 스낵바
+  void errorSnackBar(String title, String message, SnackPosition position) {
     Get.snackbar(
       title,
       message,
       backgroundColor: Colors.red,
-      colorText: Colors.black,
+      colorText: Colors.white,
       duration: const Duration(seconds: 2),
       snackPosition: position,
     );

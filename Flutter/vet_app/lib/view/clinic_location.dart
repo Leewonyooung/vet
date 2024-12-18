@@ -15,18 +15,22 @@ class ClinicLocation extends StatelessWidget {
   final ReservationHandler reservationHandler = Get.find();
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     final Completer<GoogleMapController> mapController =
         Completer<GoogleMapController>();
     final result = vmHandler.clinicDetail[0];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           '위치보기',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
+            fontSize: screenWidth * 0.05,
           ),
         ),
         backgroundColor: Colors.green.shade400,
@@ -38,11 +42,11 @@ class ClinicLocation extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return const Center(
+            return Center(
               child: Text(
                 '다시 시도하세요',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: screenWidth * 0.045,
                 ),
               ),
             );
@@ -70,19 +74,14 @@ class ClinicLocation extends StatelessWidget {
                           infoWindow: InfoWindow(
                             title: result.name,
                             snippet: result.name,
-                          ), //병원 이름 표시
-                          markerId: MarkerId(result.name),
-                          position: LatLng(
-                            result.latitude,
-                            result.longitude,
                           ),
+                          markerId: MarkerId(result.name),
+                          position: LatLng(result.latitude, result.longitude),
                         ),
                         Marker(
                           markerId: const MarkerId('병원'),
                           position: LatLng(
-                            vmHandler.currentlat,
-                            vmHandler.currentlng,
-                          ),
+                              vmHandler.currentlat, vmHandler.currentlng),
                         ),
                       },
                       polylines: vmHandler.lines.toSet(),
@@ -92,12 +91,13 @@ class ClinicLocation extends StatelessWidget {
                       zoomGesturesEnabled: true,
                     ),
                     Positioned(
-                      bottom: MediaQuery.sizeOf(context).height * 0.02,
+                      bottom: screenHeight * 0.02,
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.9,
+                        width: screenWidth * 0.9,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius:
+                              BorderRadius.circular(screenWidth * 0.03),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
@@ -110,35 +110,39 @@ class ClinicLocation extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
+                            Padding(
+                              padding: EdgeInsets.all(screenWidth * 0.02),
                               child: Text(
                                 '대중교통 정보만 지원합니다.',
                                 style: TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: screenWidth * 0.04,
                                 ),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(12.0),
+                              padding: EdgeInsets.all(screenWidth * 0.03),
                               child: Row(
                                 children: [
                                   ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: 
-                                    CachedNetworkImage(
-                                      imageUrl: "http://127.0.0.1:8000/clinic/view/${result.image}",
-                                      imageBuilder: (context, imageProvider) => CircleAvatar(
-                                        radius: 20,
+                                    borderRadius: BorderRadius.circular(
+                                        screenWidth * 0.03),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "http://127.0.0.1:8000/clinic/view/${result.image}",
+                                      imageBuilder: (context, imageProvider) =>
+                                          CircleAvatar(
+                                        radius: screenWidth * 0.08,
                                         backgroundImage: imageProvider,
                                       ),
-                                      placeholder: (context, url) => const CircularProgressIndicator(), // 로딩 중 표시
-                                      errorWidget: (context, url, error) => const Icon(Icons.error), // 오류 발생 시 표시
-                                    ),                                  
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    ),
                                   ),
-                                  const SizedBox(width: 12),
+                                  SizedBox(width: screenWidth * 0.03),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -146,30 +150,30 @@ class ClinicLocation extends StatelessWidget {
                                       children: [
                                         Text(
                                           result.name,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 16,
+                                            fontSize: screenWidth * 0.045,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                         ),
-                                        const SizedBox(height: 4),
+                                        SizedBox(height: screenWidth * 0.02),
                                         Text(
                                           vmHandler.workText.value,
                                           style: TextStyle(
                                             color: vmHandler.workColor.value,
-                                            fontSize: 14,
+                                            fontSize: screenWidth * 0.04,
                                           ),
                                         ),
                                         Text(
                                           "${result.endTime} 영업종료",
-                                          style: const TextStyle(
-                                            fontSize: 14,
+                                          style: TextStyle(
+                                            fontSize: screenWidth * 0.04,
                                           ),
                                         ),
                                         Text(
                                           "거리 : ${vmHandler.distanceText}",
-                                          style: const TextStyle(
-                                            fontSize: 14,
+                                          style: TextStyle(
+                                            fontSize: screenWidth * 0.04,
                                           ),
                                         ),
                                       ],
@@ -181,21 +185,20 @@ class ClinicLocation extends StatelessWidget {
                             Visibility(
                               visible: reservationHandler.resButtonValue.value,
                               child: Padding(
-                                padding: const EdgeInsets.all(12.0),
+                                padding: EdgeInsets.all(screenWidth * 0.03),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.amber.shade300,
                                     foregroundColor: Colors.black,
-                                    minimumSize: const Size(
-                                      double.infinity,
-                                      50,
-                                    ),
+                                    minimumSize: Size(
+                                        double.infinity, screenWidth * 0.12),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(
+                                          screenWidth * 0.03),
                                     ),
                                   ),
                                   onPressed: () {
-                                    if (vmHandler.isLoggedIn() == false) {
+                                    if (!vmHandler.isLoggedIn()) {
                                       Get.to(() => Login());
                                     } else {
                                       Get.to(
@@ -218,10 +221,10 @@ class ClinicLocation extends StatelessWidget {
                                       );
                                     }
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     '예약하기',
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: screenWidth * 0.045,
                                     ),
                                   ),
                                 ),
