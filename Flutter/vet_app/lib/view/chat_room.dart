@@ -21,7 +21,6 @@ class ChatRoom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
     Timer(const Duration(milliseconds: 1500), () {
       vmHandler.showScreen();

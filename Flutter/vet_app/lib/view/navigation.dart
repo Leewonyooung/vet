@@ -69,7 +69,7 @@ class Navigation extends StatelessWidget {
           ),
         ),
         confineToSafeArea: true,
-        navBarHeight: screenHeight * 0.09,
+        navBarHeight: screenHeight * 0.07,
         navBarStyle: NavBarStyle.style8,
       ),
     );
@@ -214,7 +214,7 @@ class Navigation extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.5),
+                  color: color..withValues(alpha: 0.5),
                   spreadRadius: 2,
                   blurRadius: 7,
                   offset: const Offset(0, 3),
