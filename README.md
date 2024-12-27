@@ -79,8 +79,6 @@
   # 이미지 캐싱을 지원해주는 패키지
   cached_network_image: ^3.4.1
 
-  # 로그인 토큰 저장을 위한 Upgrade(Get_storage)
-  flutter_secure_storage: ^9.2.2
 ```
 
 
