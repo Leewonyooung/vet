@@ -143,7 +143,6 @@ alt="IMAGE ALT TEXT HERE" width="720" height="480" border="10" /></a>
 
   앱스토어 배포를 위해 로컬서버에서 Cloud로 서버 이관
   이미지 로딩 속도 개선을 위한 CachedNetworkImage 패키지 사용 및 Redis 서버 추가 및 연동
-  Firebase 로그인 + JWT토큰 연동을 통한 사용자 유효성 확인 로직 추가
   
 
 ## Contribution
