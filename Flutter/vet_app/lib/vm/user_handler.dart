@@ -9,11 +9,11 @@ class UserHandler extends Myapi {
   var mypageUserInfo = <UserData>[].obs; // mypage 화면 데이터
   String nameController = ""; // 유저 이름 수정 텍스트필드
 
-  // @override
-  // void onInit() async {
-  //   super.onInit();
-  //   // await selectMyinfo();
-  // }
+  @override
+  void onInit() async {
+    super.onInit();
+    await selectMyinfo();
+  }
 
 getMyName(String userid) async {
     var response = await makeAuthenticatedRequest('$server/mypage/select_mypage?id=$userid');
@@ -28,8 +28,6 @@ getMyName(String userid) async {
     try {
       final response = await makeAuthenticatedRequest('$server/mypage/select_mypage?id=${box.read('userEmail')}');
         if (response.statusCode == 200) {
-          // final data = jsonDecode(response.body);
-          //  // JSON 데이터를 디코드
           var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
           var result = dataConvertedJSON['result'];
           if (result != null) {
@@ -46,7 +44,6 @@ getMyName(String userid) async {
               image: image,
               name: name,
             ));
-
             mypageUserInfo.addAll(returnData);
         }} }catch (e) {
           // print("Error calling API: $e");

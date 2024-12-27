@@ -12,7 +12,6 @@ class Mypage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -30,79 +29,42 @@ class Mypage extends StatelessWidget {
           ? GetBuilder<LoginHandler>(builder: (_) {
               return FutureBuilder(
                 future: loginHandler.selectMyinfo(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('${snapshot.error}'));
-                  } else {
-                    return Obx(() {
-                      final result = loginHandler.mypageUserInfo;
-                      return SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            _buildProfileSection(context, result, screenWidth),
-                            _buildInfoSection(result, screenWidth),
-                            Divider(
-                              color: Colors.grey,
-                              thickness: 1,
-                              indent: screenWidth * 0.05,
-                              endIndent: screenWidth * 0.05,
-                            ),
-                            _buildActionButtons(
-                                context, loginHandler, result, screenWidth),
-                          ],
+                builder: (context, snapshot) =>  Obx(() {
+                  final result = loginHandler.mypageUserInfo;
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _buildProfileSection(context, result, screenWidth),
+                        _buildInfoSection(result, screenWidth),
+                        Divider(
+                          color: Colors.grey,
+                          thickness: 1,
+                          indent: screenWidth * 0.05,
+                          endIndent: screenWidth * 0.05,
                         ),
-                      );
-                    });
-                  }
-                },
+                        _buildActionButtons(
+                            context, loginHandler, result, screenWidth),
+                      ],
+                    ),
+                  );
+                }
+                            ),
               );
-            })
-          : Center(
-              child: Text(
-                '로그인이 필요합니다.',
-                style: TextStyle(
-                  fontSize: screenWidth * 0.05,
-                ),
-              ),
-            ),
-    );
+          }
+    ):const Center(child: CircularProgressIndicator(),));
   }
 
   Widget _buildProfileSection(
-      BuildContext context, List result, double screenWidth) {
+    BuildContext context, List result, double screenWidth) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: screenWidth * 0.05),
       color: Colors.green.shade50,
       child: Center(
         child: Column(
           children: [
-            FutureBuilder<String?>(
-              future: loginHandler.fetchAccessToken(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircleAvatar(
-                    radius: screenWidth * 0.15,
-                    child: const CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError ||
-                    !snapshot.hasData ||
-                    snapshot.data == null) {
-                  return CircleAvatar(
-                    radius: screenWidth * 0.15,
-                    child: const Icon(Icons.error),
-                  );
-                }
-
-                final accessToken = snapshot.data;
-
-                return CachedNetworkImage(
+            CachedNetworkImage(
                   imageUrl:
                       "${loginHandler.server}/mypage/view/${result[0].image}",
-                  httpHeaders: {
-                    'Authorization': 'Bearer $accessToken',
-                  },
                   imageBuilder: (context, imageProvider) => CircleAvatar(
                     radius: screenWidth * 0.15,
                     backgroundImage: imageProvider,
@@ -115,10 +77,8 @@ class Mypage extends StatelessWidget {
                     radius: screenWidth * 0.15,
                     child: const Icon(Icons.error),
                   ),
-                );
-              },
-            ),
-            SizedBox(height: screenWidth * 0.04),
+                ),
+                  SizedBox(height: screenWidth * 0.04),
             Text(
               result[0].name,
               style: TextStyle(
@@ -126,9 +86,9 @@ class Mypage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ],
-        ),
-      ),
+          ]
+        )
+      )
     );
   }
 
