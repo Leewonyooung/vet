@@ -15,6 +15,13 @@ class ClinicHandler extends LoginHandler {
 
 
   @override
+  void onInit() async {
+    super.onInit();
+    // await getAllData();
+    getAllClinic();
+  }
+
+  @override
   void onClose() async {
     resetTextfield();
     super.onClose();
@@ -28,7 +35,6 @@ class ClinicHandler extends LoginHandler {
   // 병원 전체 목록
   getAllClinic() async {
     var response = await makeAuthenticatedRequest('$server/clinic/select_clinic');
-    clinicSearch.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     if(dataConvertedJSON['results'] == null){
       return;

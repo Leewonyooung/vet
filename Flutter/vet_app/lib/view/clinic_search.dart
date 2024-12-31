@@ -14,8 +14,6 @@ class ClinicSearch extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    vmHandler.getAllClinic();
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: screenHeight * 0.1,
