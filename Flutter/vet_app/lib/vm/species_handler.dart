@@ -29,19 +29,23 @@ class SpeciesHandler extends LoginHandler {
     }
   }
 
-  loadSpeciesCategories(String speciesType) async {
-    try {
-      var response = await makeAuthenticatedRequest('$server/species/pet_categories?type=$speciesType');
-      if (response.statusCode == 200) {
-        var data = json.decode(utf8.decode(response.bodyBytes));
-        speciesCategories.value = List<String>.from(data);
-      } else {
-        throw Exception("Failed to load species categories");
-      }
-    } catch (e) {
-      return false;
+loadSpeciesCategories(String speciesType) async {
+  try {
+    var encodedType = Uri.encodeComponent(speciesType);
+    var response = await makeAuthenticatedRequest('$server/species/pet_categories?type=$encodedType');
+    if (response.statusCode == 200) {
+      var data = json.decode(utf8.decode(response.bodyBytes));
+      speciesCategories.value = List<String>.from(data["results"]);
+      return true;
+    } else {
+      throw Exception("Failed to load species categories: ${response.statusCode}");
     }
+  } catch (e) {
+    print("Error loading species categories: $e");
+    return false;
   }
+}
+
 
   setSpeciesType(String? type) {
     selectedSpeciesType.value = type;
