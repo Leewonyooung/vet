@@ -46,7 +46,8 @@ class PetHandler extends SpeciesHandler {
       // var response = await http.get(url);
       if (response.statusCode == 200) {
         var data = json.decode(utf8.decode(response.bodyBytes));
-        pets.value = (data as List).map((petJson) {
+        print(data);
+        pets.value = (data['results'] as List).map((petJson) {
           return Pet(
             id: petJson['id'],
             userId: petJson['user_id'],
@@ -59,6 +60,7 @@ class PetHandler extends SpeciesHandler {
             image: petJson['image'],
           );
         }).toList();
+        print(pets.length);
       } else {
         // 오류 발생 시 핸들링
         throw Exception("Failed to load pets");
