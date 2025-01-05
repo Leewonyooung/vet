@@ -45,7 +45,7 @@ class SpeciesHandler extends LoginHandler {
         throw Exception("Failed to load species categories: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error loading species categories: $e");
+      // print("Error loading species categories: $e");
       return false;
     }
   }

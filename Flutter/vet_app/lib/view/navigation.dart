@@ -214,7 +214,7 @@ class Navigation extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: color..withValues(alpha: 0.5),
+                  color: color.withValues(alpha: 0.5),
                   spreadRadius: 2,
                   blurRadius: 7,
                   offset: const Offset(0, 3),
@@ -304,15 +304,19 @@ class Navigation extends StatelessWidget {
     return Container(
       height: screenWidth * 0.5,
       margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-      child: ListView.builder(
+      child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        itemCount: petHandler.pets.length + 1,
-        itemBuilder: (context, index) {
-          if (index == petHandler.pets.length) {
-            return _buildAddPetCard(screenWidth);
-          }
-          return _buildPetCard(petHandler.pets[index], screenWidth);
-        },
+        child: Row(
+          children: List.generate(
+            petHandler.pets.length + 1,
+            (index) {
+              if (index == petHandler.pets.length) {
+                return _buildAddPetCard(screenWidth);
+              }
+              return _buildPetCard(petHandler.pets[index], screenWidth);
+            },
+          ),
+        ),
       ),
     );
   }
@@ -341,18 +345,28 @@ class Navigation extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(screenWidth * 0.04)),
-              child: CachedNetworkImage(
-                imageUrl: pet.image!,
-                placeholder: (context, url) => CircleAvatar(
-                  radius: screenWidth * 0.2,
-                  child: const CircularProgressIndicator(),
+            Container(
+              height: screenWidth * 0.3,
+              width: screenWidth * 0.4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(screenWidth * 0.04),
                 ),
-                errorWidget: (context, url, error) => CircleAvatar(
-                  radius: screenWidth * 0.2,
-                  child: const Icon(Icons.error),
+                color: Colors.grey.shade200,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(screenWidth * 0.04),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: pet.image!,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => const Center(
+                    child: Icon(Icons.error, color: Colors.red),
+                  ),
                 ),
               ),
             ),
@@ -364,6 +378,8 @@ class Navigation extends StatelessWidget {
                 children: [
                   Text(
                     pet.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: screenWidth * 0.045,
