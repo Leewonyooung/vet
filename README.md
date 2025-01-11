@@ -16,7 +16,7 @@
 <img width="1083" alt="mysql_EER" src="https://github.com/user-attachments/assets/ce4d20f6-7195-4307-9459-74137850c2ac">
 
 
-## EER
+## ERD
 <img width="1083" alt="mysql_EER" src="https://github.com/user-attachments/assets/50eea10b-75c9-44f9-856b-beb5e81e48a1">
 <img width="1269" alt="chat_EER" src="https://github.com/user-attachments/assets/943ea205-2f4a-4658-8e7e-19c528a78efb">
 
