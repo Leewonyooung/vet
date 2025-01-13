@@ -23,19 +23,19 @@ getMyName(String userid) async {
 
 // 신정섭
 // 유저 정보 가져오는 쿼리 - mypage
-  Future<void> selectMyinfo( ) async {
+selectMyinfo( ) async {
     if(box.read('userEmail') == null) return;
     try {
-      final response = await makeAuthenticatedRequest('$server/mypage/select_mypage?id=${box.read('userEmail')}');
+      final response = await makeAuthenticatedRequest('$server/user/selectuser?id=${box.read('userEmail')}');
         if (response.statusCode == 200) {
           var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-          var result = dataConvertedJSON['result'];
+          var result = dataConvertedJSON['results'][0];
           if (result != null) {
             mypageUserInfo.clear();
-            String id = result[0];
-            String password = result[1];
-            String image = result[2];
-            String name = result[3];
+            String id = result['id'];
+            String password = result['password'];
+            String image = result['image'];
+            String name = result['name'];
 
             List<UserData> returnData = [];
             returnData.add(UserData(
@@ -45,7 +45,8 @@ getMyName(String userid) async {
               name: name,
             ));
             mypageUserInfo.addAll(returnData);
-        }} }catch (e) {
+        }}
+        }catch (e) {
           return;
         }
 

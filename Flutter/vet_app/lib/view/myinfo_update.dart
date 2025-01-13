@@ -77,23 +77,25 @@ class MyinfoUpdate extends StatelessWidget {
         onTap: () => userHandler.getImageFromGalleryEdit(ImageSource.gallery),
         child: Stack(
           children: [
-            CircleAvatar(
-              radius: screenWidth * 0.2,
-              backgroundImage: userHandler.imageFile == null
-                  ? NetworkImage(
-                      "${userHandler.server}/mypage/view/${result.image}")
-                  : FileImage(File(userHandler.imageFile!.path))
-                      as ImageProvider,
-              child: userHandler.imageFile == null
-                  ? CachedNetworkImage(
-                      imageUrl:
-                          "${userHandler.server}/mypage/view/${result.image}",
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    )
-                  : null,
+            ClipOval(
+              child: CircleAvatar(
+                radius: screenWidth * 0.2,
+                backgroundImage: userHandler.imageFile == null
+                    ? NetworkImage(
+                        "${userHandler.server}/mypage/view/${result.image}")
+                    : FileImage(File(userHandler.imageFile!.path))
+                        as ImageProvider,
+                child: userHandler.imageFile == null
+                    ? CachedNetworkImage(
+                        imageUrl:
+                            "${userHandler.server}/mypage/view/${result.image}",
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      )
+                    : null,
+              ),
             ),
             Positioned(
               right: 0,
@@ -206,7 +208,7 @@ class MyinfoUpdate extends StatelessWidget {
   }
 
   // 이름만 수정할 때
-  void nameUpdateAction(UserHandler userHandler, String userid) async {
+  nameUpdateAction(UserHandler userHandler, String userid) async {
     String name = nameController.text.trim();
     String id = userid;
     var updateResult = await userHandler.updateUserName(name, id);
@@ -222,8 +224,7 @@ class MyinfoUpdate extends StatelessWidget {
   }
 
   // 이름, 이미지 모두 수정할 때
-  void allUpdateAction(
-      UserHandler userHandler, String image, String userid) async {
+  allUpdateAction(UserHandler userHandler, String image, String userid) async {
     await userHandler.deleteUserImage(image);
     await userHandler.uploadUserImage();
     var updateResult = await userHandler.updateUserAll(
@@ -240,7 +241,7 @@ class MyinfoUpdate extends StatelessWidget {
   }
 
   // 수정 성공 다이얼로그
-  void okShowDialog() {
+  okShowDialog() {
     Get.defaultDialog(
       title: '수정성공',
       middleText: '수정이 완료되었습니다.',
@@ -257,7 +258,7 @@ class MyinfoUpdate extends StatelessWidget {
   }
 
   // 에러 스낵바
-  void errorSnackBar(String title, String message, SnackPosition position) {
+  errorSnackBar(String title, String message, SnackPosition position) {
     Get.snackbar(
       title,
       message,

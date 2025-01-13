@@ -55,6 +55,9 @@ class Navigation extends StatelessWidget {
             favoriteHandler.searchbarController.clear();
             favoriteHandler.getAllClinic();
           }
+          // if (index == 4){
+          //   loginHandler.selectMyinfo();
+          // }
           if (index != 0 && index != 1 && !loginHandler.isLoggedIn()) {
             Get.to(() => Login());
           }

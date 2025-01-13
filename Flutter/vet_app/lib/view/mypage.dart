@@ -13,83 +13,102 @@ class Mypage extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '마이페이지',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontSize: screenWidth * 0.05,
+        appBar: AppBar(
+          title: Text(
+            '마이페이지',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: screenWidth * 0.05,
+            ),
           ),
+          backgroundColor: Colors.green.shade400,
+          elevation: 0,
         ),
-        backgroundColor: Colors.green.shade400,
-        elevation: 0,
-      ),
-      body: loginHandler.isLoggedIn()
-          ? GetBuilder<LoginHandler>(builder: (_) {
-              return FutureBuilder(
-                future: loginHandler.selectMyinfo(),
-                builder: (context, snapshot) =>  Obx(() {
-                  final result = loginHandler.mypageUserInfo;
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _buildProfileSection(context, result, screenWidth),
-                        _buildInfoSection(result, screenWidth),
-                        Divider(
-                          color: Colors.grey,
-                          thickness: 1,
-                          indent: screenWidth * 0.05,
-                          endIndent: screenWidth * 0.05,
-                        ),
-                        _buildActionButtons(
-                            context, loginHandler, result, screenWidth),
-                      ],
-                    ),
-                  );
-                }
+        body: loginHandler.isLoggedIn()
+            ? GetBuilder<LoginHandler>(builder: (_) {
+                return FutureBuilder(
+                  future: loginHandler.selectMyinfo(),
+                  builder: (context, snapshot) => Obx(() {
+                    final result = loginHandler.mypageUserInfo;
+                    if (result.isEmpty) {
+                      return Center(
+                        child: Text('Error'),
+                      );
+                    } else {
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            _buildProfileSection(context, result, screenWidth),
+                            _buildInfoSection(result, screenWidth),
+                            Divider(
+                              color: Colors.grey,
+                              thickness: 1,
+                              indent: screenWidth * 0.05,
+                              endIndent: screenWidth * 0.05,
                             ),
-              );
-          }
-    ):const Center(child: CircularProgressIndicator(),));
+                            _buildActionButtons(
+                                context, loginHandler, result, screenWidth),
+                          ],
+                        ),
+                      );
+                    }
+                  }),
+                );
+              })
+            : Center(
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.person,
+                    size: screenWidth * 0.15,
+                    color: Colors.grey
+                        .withOpacity(0.5), // 0.0 (완전 투명) ~ 1.0 (완전 불투명)
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    '로그인이 필요합니다.',
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.045,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              )));
   }
 
   Widget _buildProfileSection(
-    BuildContext context, List result, double screenWidth) {
+      BuildContext context, List result, double screenWidth) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.05),
-      color: Colors.green.shade50,
-      child: Center(
-        child: Column(
-          children: [
-            CachedNetworkImage(
-                  imageUrl:
-                      "${loginHandler.server}/mypage/view/${result[0].image}",
-                  imageBuilder: (context, imageProvider) => CircleAvatar(
-                    radius: screenWidth * 0.15,
-                    backgroundImage: imageProvider,
-                  ),
-                  placeholder: (context, url) => CircleAvatar(
-                    radius: screenWidth * 0.15,
-                    child: const CircularProgressIndicator(),
-                  ),
-                  errorWidget: (context, url, error) => CircleAvatar(
-                    radius: screenWidth * 0.15,
-                    child: const Icon(Icons.error),
-                  ),
-                ),
-                  SizedBox(height: screenWidth * 0.04),
-            Text(
-              result[0].name,
-              style: TextStyle(
-                fontSize: screenWidth * 0.06,
-                fontWeight: FontWeight.bold,
-              ),
+        padding: EdgeInsets.symmetric(vertical: screenWidth * 0.05),
+        color: Colors.green.shade50,
+        child: Center(
+            child: Column(children: [
+          CachedNetworkImage(
+            imageUrl: "${loginHandler.server}/mypage/view/${result[0].image}",
+            imageBuilder: (context, imageProvider) => CircleAvatar(
+              radius: screenWidth * 0.15,
+              backgroundImage: imageProvider,
             ),
-          ]
-        )
-      )
-    );
+            placeholder: (context, url) => CircleAvatar(
+              radius: screenWidth * 0.15,
+              child: const CircularProgressIndicator(),
+            ),
+            errorWidget: (context, url, error) => CircleAvatar(
+              radius: screenWidth * 0.15,
+              child: const Icon(Icons.error),
+            ),
+          ),
+          SizedBox(height: screenWidth * 0.04),
+          Text(
+            result[0].name,
+            style: TextStyle(
+              fontSize: screenWidth * 0.06,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ])));
   }
 
   Widget _buildInfoSection(List result, double screenWidth) {
@@ -170,6 +189,7 @@ class Mypage extends StatelessWidget {
             icon: Icons.edit,
             label: '내정보 수정',
             onPressed: () {
+              loginHandler.imageFile = null;
               Get.to(MyinfoUpdate(), arguments: result[0].id)!.then(
                 (value) => loginHandler.selectMyinfo(),
               );

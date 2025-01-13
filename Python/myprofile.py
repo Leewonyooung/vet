@@ -25,21 +25,6 @@ UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-
-
-# 마이페이지 쿼리
-@mypage_router.get('/select_mypage')
-def select_mypage(id:str):
-    conn = hosts.connect()
-    curs = conn.cursor()
-    sql = 'select * from user where id=%s'
-    curs.execute(sql,(id))
-    rows = curs.fetchone()
-    conn.close()
-    print(rows)
-    return {'result' : rows}
-
-
 # 유저 이름 수정
 @mypage_router.get('/name_update')
 def update_mypage (name:str=None,id:str=None,):

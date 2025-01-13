@@ -182,9 +182,9 @@ class LoginHandler extends UserHandler {
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];
-
     if (result == 'OK') {
-    } else {}
+    } else {
+    }
   }
 
   // 로그아웃 및 비우기
