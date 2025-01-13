@@ -158,14 +158,14 @@ alt="IMAGE ALT TEXT HERE" width="720" height="480" border="10" /></a>
   -  이원영 : 라우터 설계, 
   -  신정섭 : //
   -  안창빈 : //
-  -  이종남 : //
+  -  이종남 : 병원 긴급예약 시스템 설계
   -  정정영 : //
   
   View
   -  이원영 : 채팅 방, 채팅 목록, 스플래시, persitent_nav_bar를 통한 탭바 페이지, 컨트롤러를 통한 페이지 상태 관리 
   -  신정섭 : 병원 검색 페이지, 병원 상세 페이지,  google map을 활용한 지도페이지, 마이페이지
   -  안창빈 : //
-  -  이종남 : //
+  -  이종남 : 긴급예약 페이지, 
   -  정정영 : //
 
   View Model
@@ -173,7 +173,7 @@ alt="IMAGE ALT TEXT HERE" width="720" height="480" border="10" /></a>
      GetXController 설계, 모듈화 및 분리 앱, 태블릿 ChatsController 
   -  신정섭 : app locationController
   -  안창빈 : //
-  -  이종남 : //
+  -  이종남 : app reservationController, 태블릿 reservationController
   -  정정영 : //
  
     
