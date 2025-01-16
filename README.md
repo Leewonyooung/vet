@@ -142,38 +142,4 @@ alt="IMAGE ALT TEXT HERE" width="720" height="480" border="10" /></a>
   앱스토어 배포를 위해 로컬서버에서 Cloud로 서버 이관
   이미지 로딩 속도 개선을 위한 CachedNetworkImage 패키지 사용 및 Redis 서버 추가 및 연동
   
-
-## Contribution
-
-  요약
-  - 현재 시간을 기준으로 30분 혹은 1시간 이내로 예약 가능한 동물병원들을 리스트 뷰로 보여주고 리스트타일을 클릭하면 병원의 정보를 보여주고
-    현재 위치정보를 기반으로 구글맵 API를 통해 길찾기 기능을 제공, 사용자 별로 반려동물을 등록 가능하며 예약하려는 병원과 채팅을 통해
-    간단한 상담 또는 일정 조율을 할 수 있습니다.
-
- 백엔드
-  서버
-  -  이원영: AWS S3, Redis, CloudType 연동
-    
-  Python
-  -  이원영 : 라우터 설계, 
-  -  신정섭 : //
-  -  안창빈 : //
-  -  이종남 : 병원 긴급예약 시스템 설계
-  -  정정영 : //
-  
-  View
-  -  이원영 : 채팅 방, 채팅 목록, 스플래시, persitent_nav_bar를 통한 탭바 페이지, 컨트롤러를 통한 페이지 상태 관리 
-  -  신정섭 : 병원 검색 페이지, 병원 상세 페이지,  google map을 활용한 지도페이지, 마이페이지
-  -  안창빈 : //
-  -  이종남 : 긴급예약 페이지, 
-  -  정정영 : //
-
-  View Model
-  -  이원영 :
-     GetXController 설계, 모듈화 및 분리 앱, 태블릿 ChatsController 
-  -  신정섭 : app locationController
-  -  안창빈 : //
-  -  이종남 : app reservationController, 태블릿 reservationController
-  -  정정영 : //
- 
     
